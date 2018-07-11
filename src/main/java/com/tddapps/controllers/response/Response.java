@@ -1,4 +1,4 @@
-package com.tddapps;
+package com.tddapps.controllers.response;
 
 import java.util.Map;
 

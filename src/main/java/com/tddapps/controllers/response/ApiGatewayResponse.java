@@ -1,4 +1,4 @@
-package com.tddapps;
+package com.tddapps.controllers.response;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
