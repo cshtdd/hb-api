@@ -106,4 +106,4 @@ resources:
     StatusLogGroup:
       Type: AWS::Logs::LogGroup
       Properties:
-        RetentionInDays: "30"
+        RetentionInDays: "14"
