@@ -7,12 +7,11 @@ import com.tddapps.controllers.response.ApiGatewayResponse;
 import java.util.Map;
 
 public class Status implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
-
-	@Override
-	public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
-		return ApiGatewayResponse.builder()
-				.setStatusCode(200)
-				.setObjectBody("OK")
-				.build();
-	}
+    @Override
+    public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
+        return ApiGatewayResponse.builder()
+                .setStatusCode(200)
+                .setObjectBody("OK")
+                .build();
+    }
 }
