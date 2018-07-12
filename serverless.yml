@@ -107,3 +107,5 @@ resources:
       Type: AWS::Logs::LogGroup
       Properties:
         RetentionInDays: "14"
+    HeartBeatsQueue:
+      Type: "AWS::SQS::Queue"
