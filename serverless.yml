@@ -54,7 +54,7 @@ functions:
     handler: com.tddapps.controllers.Status
     events:
       - http:
-          path: /status
+          path: /v1/status
           method: get
 
 #    The following are a few example events you can configure
