@@ -124,8 +124,10 @@ resources:
       Type: AWS::Logs::LogGroup
       Properties:
         RetentionInDays: "14"
+
     HeartBeatsQueue:
       Type: "AWS::SQS::Queue"
+
     ApiGatewayResourceV1Beats:
       Type: "AWS::ApiGateway::Resource"
       Properties:
@@ -134,6 +136,47 @@ resources:
         PathPart: beats
         RestApiId:
           Ref: ApiGatewayRestApi
+
+    HeartBeatsApiMethodRole:
+      Type: AWS::IAM::Role
+      Properties:
+#        Path: /my/cust/path/
+#        RoleName: MyCustRole0
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+                  - apigateway.amazonaws.com
+              Action: sts:AssumeRole
+#        Policies:
+#          - PolicyName: myPolicyName
+#            PolicyDocument:
+#              Version: '2017'
+#              Statement:
+#                - Effect: Allow
+#                  Action:
+#                    - logs:CreateLogGroup
+#                    - logs:CreateLogStream
+#                    - logs:PutLogEvents
+#                  Resource:
+#                    - 'Fn::Join':
+#                      - ':'
+#                      -
+#                        - 'arn:aws:logs'
+#                        - Ref: 'AWS::Region'
+#                        - Ref: 'AWS::AccountId'
+#                        - 'log-group:/aws/lambda/*:*:*'
+##                - Effect: Allow
+##                  Action:
+##                    - ec2:CreateNetworkInterface
+##                    - ec2:DescribeNetworkInterfaces
+##                    - ec2:DetachNetworkInterface
+##                    - ec2:DeleteNetworkInterface
+##                  Resource: "*"
+
     HeartBeatsApiMethod:
       Type: "AWS::ApiGateway::Method"
       Properties:
@@ -149,7 +192,7 @@ resources:
         Integration:
           Credentials:
             Fn::GetAtt:
-              - IamRoleLambdaExecution
+              - HeartBeatsApiMethodRole
               - Arn
           IntegrationHttpMethod: "POST"
           IntegrationResponses:
