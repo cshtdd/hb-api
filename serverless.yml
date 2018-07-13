@@ -197,4 +197,9 @@ resources:
                   - QueueName
           RequestParameters:
             integration.request.querystring.Action: "'SendMessage'"
+            integration.request.querystring.MessageAttribute.1.Value.DataType: "'String'"
+            integration.request.querystring.MessageAttribute.1.Value.StringValue: "method.request.body.userid"
+            integration.request.querystring.MessageAttribute.1.Name: "'userid'"
             integration.request.querystring.MessageBody: "method.request.body"
+          RequestTemplates:
+            "application/json": "{statusCode:200}"
