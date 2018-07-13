@@ -25,6 +25,23 @@ provider:
 #  stage: dev
 #  region: us-east-1
 
+  iamRoleStatements:
+#    - Effect: Allow
+#      Action: sts:AssumeRole
+#      Principal:
+#        Service:
+#          - lambda.amazonaws.com
+#          - apigateway.amazonaws.com
+
+#    - Effect: "Allow"
+#      Action:
+#        - "sqs:SendMessage"
+#        - "sqs:ReceiveMessage"
+#      Resource:
+#        Fn::GetAtt:
+#          - HeartBeatsQueue
+#          - Arn
+
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -109,3 +126,43 @@ resources:
         RetentionInDays: "14"
     HeartBeatsQueue:
       Type: "AWS::SQS::Queue"
+    ApiGatewayResourceV1Beats:
+      Type: "AWS::ApiGateway::Resource"
+      Properties:
+        ParentId:
+          Ref: ApiGatewayResourceV1
+        PathPart: beats
+        RestApiId:
+          Ref: ApiGatewayRestApi
+    HeartBeatsApiMethod:
+      Type: "AWS::ApiGateway::Method"
+      Properties:
+        AuthorizationType: "NONE"
+        ApiKeyRequired: "true"
+        HttpMethod: "POST"
+        ResourceId:
+          Ref: ApiGatewayResourceV1Beats
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        MethodResponses:
+        - StatusCode: 200
+        Integration:
+          Credentials:
+            Fn::GetAtt:
+              - IamRoleLambdaExecution
+              - Arn
+          IntegrationHttpMethod: "POST"
+          IntegrationResponses:
+          - StatusCode: 200
+          Type: "AWS"
+          Uri:
+            Fn::Join:
+              - ''
+              -
+                - 'arn:aws:apigateway:'
+                - Ref: 'AWS::Region'
+                - ':sqs:action/SendMessage'
+          RequestParameters:
+#            integration.request.querystring.QueueUrl:
+#              Sub: HeartBeatsQueue
+            integration.request.querystring.MessageBody: "method.request.body"
