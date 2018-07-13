@@ -25,7 +25,7 @@ provider:
 #  stage: dev
 #  region: us-east-1
 
-  iamRoleStatements:
+#  iamRoleStatements:
 #    - Effect: Allow
 #      Action: sts:AssumeRole
 #      Principal:
@@ -140,8 +140,6 @@ resources:
     HeartBeatsApiMethodRole:
       Type: AWS::IAM::Role
       Properties:
-#        Path: /my/cust/path/
-#        RoleName: MyCustRole0
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -151,31 +149,18 @@ resources:
                   - lambda.amazonaws.com
                   - apigateway.amazonaws.com
               Action: sts:AssumeRole
-#        Policies:
-#          - PolicyName: myPolicyName
-#            PolicyDocument:
-#              Version: '2017'
-#              Statement:
-#                - Effect: Allow
-#                  Action:
-#                    - logs:CreateLogGroup
-#                    - logs:CreateLogStream
-#                    - logs:PutLogEvents
-#                  Resource:
-#                    - 'Fn::Join':
-#                      - ':'
-#                      -
-#                        - 'arn:aws:logs'
-#                        - Ref: 'AWS::Region'
-#                        - Ref: 'AWS::AccountId'
-#                        - 'log-group:/aws/lambda/*:*:*'
-##                - Effect: Allow
-##                  Action:
-##                    - ec2:CreateNetworkInterface
-##                    - ec2:DescribeNetworkInterfaces
-##                    - ec2:DetachNetworkInterface
-##                    - ec2:DeleteNetworkInterface
-##                  Resource: "*"
+        Policies:
+          - PolicyName: AllowPublishMessagesToHeartBeatQueue
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+              - Effect: "Allow"
+                Action:
+                  - "sqs:SendMessage"
+                Resource:
+                  Fn::GetAtt:
+                    - HeartBeatsQueue
+                    - Arn
 
     HeartBeatsApiMethod:
       Type: "AWS::ApiGateway::Method"
@@ -197,15 +182,19 @@ resources:
           IntegrationHttpMethod: "POST"
           IntegrationResponses:
           - StatusCode: 200
-          Type: "AWS"
+          Type: AWS
           Uri:
             Fn::Join:
               - ''
               -
                 - 'arn:aws:apigateway:'
                 - Ref: 'AWS::Region'
-                - ':sqs:action/SendMessage'
+                - ':sqs:path//'
+                - Ref: AWS::AccountId
+                - '/'
+                - Fn::GetAtt:
+                  - HeartBeatsQueue
+                  - QueueName
           RequestParameters:
-#            integration.request.querystring.QueueUrl:
-#              Sub: HeartBeatsQueue
+            integration.request.querystring.Action: "'SendMessage'"
             integration.request.querystring.MessageBody: "method.request.body"
