@@ -19,7 +19,7 @@ sh ./dev/create_api_key.sh
 ## Deployment  
 
 ```bash
-mvn clean install && sls deploy
+sh ./dev/deploy.sh
 ```
 
 ## API Validation  
