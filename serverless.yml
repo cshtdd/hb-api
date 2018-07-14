@@ -21,6 +21,14 @@ provider:
   name: aws
   runtime: java8
 
+  usagePlan:
+    quota:
+      limit: 1000000
+      period: DAY
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
+
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
