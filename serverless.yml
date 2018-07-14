@@ -17,7 +17,7 @@ provider:
       rateLimit: 10
 
 # you can overwrite defaults here
-#  stage: dev
+  stage: ${opt:stage, 'dev'}
 #  region: us-east-1
 
 #  iamRoleStatements:
@@ -59,7 +59,7 @@ provider:
 
 # you can add packaging information here
 package:
-  artifact: target/hb-api-dev.jar
+  artifact: target/hb-api-${self:provider.stage}.jar
 
 functions:
   Status:
