@@ -77,6 +77,7 @@ functions:
     handler: com.tddapps.controllers.HeartBeatPost
     events:
       - http:
+          private: true
           path: /v1/hearbeat
           method: post
 
