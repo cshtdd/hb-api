@@ -76,6 +76,17 @@ functions:
           path: /v1/hearbeat
           method: post
 
+plugins:
+  - serverless-domain-manager
+
+custom:
+  domainName: ${opt:domainName, 'hbapidev.tddapps.com'}
+  customDomain:
+    domainName: ${self:custom.domainName}
+    stage: ${self:provider.stage}
+    basePath: ''
+    createRoute53Record: false
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
