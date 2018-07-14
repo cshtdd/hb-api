@@ -10,6 +10,12 @@ Heartbeat api backed by AWS lambdas
 mvn clean install
 ```
 
+## Create API Keys  
+
+```bash
+sh ./dev/create_api_key.sh
+```
+
 ## Deployment  
 
 ```bash
