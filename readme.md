@@ -22,6 +22,26 @@ sh ./dev/create_api_key.sh
 mvn clean install && sls deploy
 ```
 
+## API Validation  
+
+Prerequisite, store the api key in a variable
+
+```bash
+ HB_API_KEY=SUPER_SECRET_KEY
+```
+
+The status page should be up
+
+```bash
+curl -w "\n%{http_code}\n" https://hbapidev.tddapps.com/v1/status
+```
+
+Posting a heartbeat should succeed
+
+```bash
+ curl -w "\n%{http_code}\n" -H "x-api-key: $HB_API_KEY" -d "" -X POST https://hbapidev.tddapps.com/v1/hearbeat
+```
+
 ## Create the Custom Domain
   
 1- Manually create a certificate using AWS ACM. They are free
