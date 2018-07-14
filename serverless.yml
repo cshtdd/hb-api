@@ -67,12 +67,18 @@ package:
   artifact: target/hb-api-dev.jar
 
 functions:
-  status:
+  Status:
     handler: com.tddapps.controllers.Status
     events:
       - http:
           path: /v1/status
           method: get
+  HeartBeatPost:
+    handler: com.tddapps.controllers.HeartBeatPost
+    events:
+      - http:
+          path: /v1/hearbeat
+          method: post
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -124,3 +130,7 @@ resources:
       Type: AWS::Logs::LogGroup
       Properties:
         RetentionInDays: "14"
+    HeartBeatPostLogGroup:
+          Type: AWS::Logs::LogGroup
+          Properties:
+            RetentionInDays: "14"
