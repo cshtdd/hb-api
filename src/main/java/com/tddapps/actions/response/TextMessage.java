@@ -1,5 +1,7 @@
 package com.tddapps.actions.response;
 
+import java.util.Objects;
+
 import static com.tddapps.utils.StringExtensions.*;
 
 public class TextMessage {
@@ -21,7 +23,7 @@ public class TextMessage {
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return Objects.hash(message);
     }
 
     @Override
