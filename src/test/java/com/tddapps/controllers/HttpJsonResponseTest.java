@@ -18,6 +18,11 @@ public class HttpJsonResponseTest {
                 HttpJsonResponse.BadRequest(TextMessage.create("missing parameter"))
 
         );
+
+        shouldBeEqual(
+                new HttpJsonResponse<>(400, TextMessage.create("missing parameter")),
+                HttpJsonResponse.BadRequestWithMessage("missing parameter")
+        );
     }
 
     @Test

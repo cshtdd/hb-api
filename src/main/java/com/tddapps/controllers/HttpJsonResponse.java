@@ -29,6 +29,10 @@ public class HttpJsonResponse<T> {
         return new HttpJsonResponse<>(400, body);
     }
 
+    public static HttpJsonResponse BadRequestWithMessage(String message){
+        return BadRequest(TextMessage.create(message));
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof HttpJsonResponse)){
