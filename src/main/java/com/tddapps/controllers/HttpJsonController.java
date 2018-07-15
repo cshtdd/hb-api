@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class HttpJsonController {
     private final HttpJsonAction action;
+    private final ObjectMapper jsonDeserializer = new ObjectMapper();
 
     private static final Logger LOG = LogManager.getLogger(HttpJsonController.class);
 
@@ -18,34 +19,28 @@ public class HttpJsonController {
     }
 
     public HttpJsonResponse process(Map<String, Object> input){
-        String requestBody = readBodyFrom(input);
-
-        LOG.debug(String.format("Body: %s", requestBody));
-
-        if (requestBody.isEmpty() ||
-            requestBody.trim().isEmpty()){
-            return HttpJsonResponse.BadRequestWithMessage("Empty Request Body");
-        }
-
-        JsonNode body;
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            body = mapper.readTree(requestBody);
+            String requestBody = readBodyFrom(input);
+            LOG.debug(String.format("Body: %s", requestBody));
+
+            if (requestBody.trim().isEmpty()){
+                return HttpJsonResponse.BadRequestWithMessage("Empty Request Body");
+            }
+
+            JsonNode jsonBody = jsonDeserializer.readTree(requestBody);
+            Object parsedBody = action.parse(jsonBody);
+            return action.process(parsedBody);
+
         } catch (IOException e) {
+            LOG.warn("Invalid json in request body", e);
             return HttpJsonResponse.BadRequestWithMessage("Invalid json in request body");
         }
-
-        Object parsedBody;
-
-        try {
-            parsedBody = action.parse(body);
-        } catch (BodyParseException e) {
+        catch (BodyParseException e) {
+            LOG.warn("Body parsing failed", e);
             return HttpJsonResponse.BadRequestWithMessage(e.getMessage());
         }
-
-        try {
-            return action.process(parsedBody);
-        } catch (BodyProcessException e) {
+        catch (BodyProcessException e) {
+            LOG.error("Body processing failed", e);
             return HttpJsonResponse.ServerErrorWithMessage(e.getMessage());
         }
     }
@@ -54,7 +49,7 @@ public class HttpJsonController {
         Object bodyObject = input.getOrDefault("body", "");
 
         if (bodyObject == null){
-            bodyObject = "";
+            return "";
         }
 
         return bodyObject.toString();
