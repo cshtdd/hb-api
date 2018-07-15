@@ -21,41 +21,47 @@ public class TextMessageTest {
     @Test
     public void CanBeCompared(){
         TextMessage message1 = new TextMessage("sample1");
-        assertEquals(message1, message1);
-        assertEquals(message1.hashCode(), message1.hashCode());
+        shouldEqual(message1, message1);
 
-        assertNotEquals(null, message1);
-        assertNotEquals(message1, null);
-
+        shouldNotBeEqual(null, message1);
 
         TextMessage message1Equivalent = new TextMessage("sample1");
-        assertEquals(message1, message1Equivalent);
-        assertEquals(message1.hashCode(), message1Equivalent.hashCode());
-        assertEquals(message1Equivalent, message1);
-        assertEquals(message1Equivalent.hashCode(), message1.hashCode());
+        shouldEqual(message1, message1Equivalent);
 
-        assertEquals(new TextMessage(null), new TextMessage(null));
-        assertEquals(new TextMessage(null).hashCode(), new TextMessage(null).hashCode());
-        assertEquals(new TextMessage(""), new TextMessage(""));
-        assertEquals(new TextMessage("").hashCode(), new TextMessage("").hashCode());
-        assertEquals(new TextMessage(""), new TextMessage(null));
-        assertEquals(new TextMessage("").hashCode(), new TextMessage(null).hashCode());
-        assertEquals(new TextMessage(null), new TextMessage(""));
-        assertEquals(new TextMessage(null).hashCode(), new TextMessage("").hashCode());
+        shouldEqual(new TextMessage(null), new TextMessage(null));
+        shouldEqual(new TextMessage(""), new TextMessage(""));
+        shouldEqual(new TextMessage(""), new TextMessage(null));
+        shouldEqual(new TextMessage(null), new TextMessage(""));
 
-        assertEquals(new TextMessage("sample1"), new TextMessage("sample1"));
-        assertEquals(new TextMessage("sample1").hashCode(), new TextMessage("sample1").hashCode());
-        assertEquals(new TextMessage("sample1"), new TextMessage("sam" + "ple1"));
-        assertEquals(new TextMessage("sample1").hashCode(), new TextMessage("sam" + "ple1").hashCode());
+        shouldEqual(new TextMessage("sample1"), new TextMessage("sample1"));
+        shouldEqual(new TextMessage("sample1"), new TextMessage("sam" + "ple1"));
 
-        assertNotEquals(new TextMessage("sample1"), new TextMessage("sample2"));
-        assertNotEquals(new TextMessage("sample1").hashCode(), new TextMessage("sample2").hashCode());
-        assertNotEquals(new TextMessage("sample2"), new TextMessage("sample1"));
-        assertNotEquals(new TextMessage("sample2").hashCode(), new TextMessage("sample1").hashCode());
+        shouldNotBeEqual(new TextMessage("sample1"), new TextMessage("sample2"));
+        shouldNotBeEqual(new TextMessage("sample2"), new TextMessage("sample1"));
     }
 
     @Test
     public void PredefinedMessages(){
         assertEquals("OK", TextMessage.OK.getMessage());
+    }
+
+    private void shouldEqual(TextMessage t1, TextMessage t2){
+        assertEquals(t1, t2);
+        assertEquals(t2, t1);
+
+        if (t1 != null && t2 != null){
+            assertEquals(t1.hashCode(), t2.hashCode());
+            assertEquals(t2.hashCode(), t1.hashCode());
+        }
+    }
+
+    private void shouldNotBeEqual(TextMessage t1, TextMessage t2){
+        assertNotEquals(t1, t2);
+        assertNotEquals(t2, t1);
+
+        if (t1 != null && t2 != null){
+            assertNotEquals(t1.hashCode(), t2.hashCode());
+            assertNotEquals(t2.hashCode(), t1.hashCode());
+        }
     }
 }
