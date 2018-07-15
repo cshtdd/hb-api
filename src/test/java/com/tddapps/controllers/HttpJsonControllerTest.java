@@ -57,6 +57,18 @@ public class HttpJsonControllerTest {
         );
     }
 
+    @Test
+    public void ReturnsTheProcessedParsedBody(){
+        actionStub.setSeededParsedBody("parsed body");
+        actionStub.setSeededResultBody("result body");
+        actionStub.setSeededStatusCode(200);
+
+        assertEquals(
+                HttpJsonResponse.Success("result body"),
+                processBody("{\"userId\": \"jdoe\"}")
+        );
+    }
+
     private HttpJsonResponse processBody(String body){
         Map<String, Object> input = new HashMap<String, Object>(){{
             put("body", body);
