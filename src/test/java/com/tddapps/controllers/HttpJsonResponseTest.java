@@ -4,6 +4,8 @@ import com.tddapps.actions.response.TextMessage;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
+import static com.tddapps.utils.EqualityAssertions.*;
+
 
 public class HttpJsonResponseTest {
     @Test
@@ -95,25 +97,5 @@ public class HttpJsonResponseTest {
                 "HttpJsonResponse(100) 234",
                 new HttpJsonResponse<Integer>(100, 234).toString()
         );
-    }
-
-    private void shouldBeEqual(HttpJsonResponse r1, HttpJsonResponse r2){
-        assertEquals(r1, r2);
-        assertEquals(r2, r1);
-
-        if (r1 != null && r2 != null){
-            assertEquals(r1.hashCode(), r2.hashCode());
-            assertEquals(r2.hashCode(), r1.hashCode());
-        }
-    }
-
-    private void shouldNotBeEqual(HttpJsonResponse r1, HttpJsonResponse r2){
-        assertNotEquals(r1, r2);
-        assertNotEquals(r2, r1);
-
-        if (r1 != null && r2 != null) {
-            assertNotEquals(r1.hashCode(), r2.hashCode());
-            assertNotEquals(r2.hashCode(), r1.hashCode());
-        }
     }
 }

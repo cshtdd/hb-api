@@ -1,6 +1,8 @@
 package com.tddapps.actions.response;
 
 import org.junit.jupiter.api.Test;
+
+import static com.tddapps.utils.EqualityAssertions.*;
 import static org.junit.Assert.*;
 
 public class TextMessageTest {
@@ -21,20 +23,20 @@ public class TextMessageTest {
     @Test
     public void CanBeCompared(){
         TextMessage message1 = TextMessage.create("sample1");
-        shouldEqual(message1, message1);
+        shouldBeEqual(message1, message1);
 
         shouldNotBeEqual(null, message1);
 
         TextMessage message1Equivalent = TextMessage.create("sample1");
-        shouldEqual(message1, message1Equivalent);
+        shouldBeEqual(message1, message1Equivalent);
 
-        shouldEqual(TextMessage.create(null), TextMessage.create(null));
-        shouldEqual(TextMessage.create(""), TextMessage.create(""));
-        shouldEqual(TextMessage.create(""), TextMessage.create(null));
-        shouldEqual(TextMessage.create(null), TextMessage.create(""));
+        shouldBeEqual(TextMessage.create(null), TextMessage.create(null));
+        shouldBeEqual(TextMessage.create(""), TextMessage.create(""));
+        shouldBeEqual(TextMessage.create(""), TextMessage.create(null));
+        shouldBeEqual(TextMessage.create(null), TextMessage.create(""));
 
-        shouldEqual(TextMessage.create("sample1"), TextMessage.create("sample1"));
-        shouldEqual(TextMessage.create("sample1"), TextMessage.create("sam" + "ple1"));
+        shouldBeEqual(TextMessage.create("sample1"), TextMessage.create("sample1"));
+        shouldBeEqual(TextMessage.create("sample1"), TextMessage.create("sam" + "ple1"));
 
         shouldNotBeEqual(TextMessage.create("sample1"), TextMessage.create("sample2"));
         shouldNotBeEqual(TextMessage.create("sample2"), TextMessage.create("sample1"));
@@ -45,23 +47,4 @@ public class TextMessageTest {
         assertEquals("OK", TextMessage.OK.getMessage());
     }
 
-    private void shouldEqual(TextMessage t1, TextMessage t2){
-        assertEquals(t1, t2);
-        assertEquals(t2, t1);
-
-        if (t1 != null && t2 != null){
-            assertEquals(t1.hashCode(), t2.hashCode());
-            assertEquals(t2.hashCode(), t1.hashCode());
-        }
-    }
-
-    private void shouldNotBeEqual(TextMessage t1, TextMessage t2){
-        assertNotEquals(t1, t2);
-        assertNotEquals(t2, t1);
-
-        if (t1 != null && t2 != null){
-            assertNotEquals(t1.hashCode(), t2.hashCode());
-            assertNotEquals(t2.hashCode(), t1.hashCode());
-        }
-    }
 }
