@@ -7,9 +7,13 @@ import static com.tddapps.utils.StringExtensions.*;
 public class TextMessage {
     private final String message;
 
-    public static final TextMessage OK = new TextMessage("OK");
+    public static final TextMessage OK = TextMessage.create("OK");
 
-    public TextMessage(String message) {
+    public static TextMessage create(String message){
+        return new TextMessage(message);
+    }
+
+    private TextMessage(String message) {
         this.message = message;
     }
 

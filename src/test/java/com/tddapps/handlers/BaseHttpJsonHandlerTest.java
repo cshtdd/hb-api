@@ -25,7 +25,7 @@ public class BaseHttpJsonHandlerTest {
         }};
 
         when(controllerMock.process(input)).thenReturn(new HttpJsonResponse<>(
-                200, new TextMessage("pepe")
+                200, TextMessage.create("pepe")
         ));
 
         ApiGatewayResponse response = handler.handleRequest(input, seededContext);

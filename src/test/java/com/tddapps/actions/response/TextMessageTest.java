@@ -6,38 +6,38 @@ import static org.junit.Assert.*;
 public class TextMessageTest {
     @Test
     public void ReturnsARelevantStringRepresentation(){
-        assertEquals("TextMessage:", new TextMessage(null).toString());
-        assertEquals("TextMessage:", new TextMessage("").toString());
-        assertEquals("TextMessage:sample", new TextMessage("sample").toString());
+        assertEquals("TextMessage:", TextMessage.create(null).toString());
+        assertEquals("TextMessage:", TextMessage.create("").toString());
+        assertEquals("TextMessage:sample", TextMessage.create("sample").toString());
     }
 
     @Test
     public void CanBeConvertedAsJson(){
-        assertEquals("{\"message\": \"\"}", new TextMessage(null).asJson());
-        assertEquals("{\"message\": \"\"}", new TextMessage("").asJson());
-        assertEquals("{\"message\": \"sample\"}", new TextMessage("sample").asJson());
+        assertEquals("{\"message\": \"\"}", TextMessage.create(null).asJson());
+        assertEquals("{\"message\": \"\"}", TextMessage.create("").asJson());
+        assertEquals("{\"message\": \"sample\"}", TextMessage.create("sample").asJson());
     }
 
     @Test
     public void CanBeCompared(){
-        TextMessage message1 = new TextMessage("sample1");
+        TextMessage message1 = TextMessage.create("sample1");
         shouldEqual(message1, message1);
 
         shouldNotBeEqual(null, message1);
 
-        TextMessage message1Equivalent = new TextMessage("sample1");
+        TextMessage message1Equivalent = TextMessage.create("sample1");
         shouldEqual(message1, message1Equivalent);
 
-        shouldEqual(new TextMessage(null), new TextMessage(null));
-        shouldEqual(new TextMessage(""), new TextMessage(""));
-        shouldEqual(new TextMessage(""), new TextMessage(null));
-        shouldEqual(new TextMessage(null), new TextMessage(""));
+        shouldEqual(TextMessage.create(null), TextMessage.create(null));
+        shouldEqual(TextMessage.create(""), TextMessage.create(""));
+        shouldEqual(TextMessage.create(""), TextMessage.create(null));
+        shouldEqual(TextMessage.create(null), TextMessage.create(""));
 
-        shouldEqual(new TextMessage("sample1"), new TextMessage("sample1"));
-        shouldEqual(new TextMessage("sample1"), new TextMessage("sam" + "ple1"));
+        shouldEqual(TextMessage.create("sample1"), TextMessage.create("sample1"));
+        shouldEqual(TextMessage.create("sample1"), TextMessage.create("sam" + "ple1"));
 
-        shouldNotBeEqual(new TextMessage("sample1"), new TextMessage("sample2"));
-        shouldNotBeEqual(new TextMessage("sample2"), new TextMessage("sample1"));
+        shouldNotBeEqual(TextMessage.create("sample1"), TextMessage.create("sample2"));
+        shouldNotBeEqual(TextMessage.create("sample2"), TextMessage.create("sample1"));
     }
 
     @Test
