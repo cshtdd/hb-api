@@ -9,53 +9,63 @@ public class HttpJsonResponseTest {
     @Test
     public void CanBeCompared(){
         HttpJsonResponse<TextMessage> response1 = new HttpJsonResponse<>(200, TextMessage.OK);
-        assertEquals(response1, response1);
-        assertEquals(response1.hashCode(), response1.hashCode());
+        shouldBeEqual(response1, response1);
 
         HttpJsonResponse<TextMessage> response1Clone = new HttpJsonResponse<>(200, TextMessage.OK);
-        assertEquals(response1, response1Clone);
-        assertEquals(response1Clone, response1);
-        assertEquals(response1Clone.hashCode(), response1.hashCode());
+        shouldBeEqual(response1, response1Clone);
 
-        assertNotEquals(null, response1);
-        assertNotEquals(response1, null);
+        shouldNotBeEqual(null, response1);
 
-        assertEquals(
+        shouldBeEqual(
                 new HttpJsonResponse<>(200, TextMessage.OK),
                 new HttpJsonResponse<>(200, TextMessage.OK)
         );
-        assertEquals(
+        shouldBeEqual(
                 new HttpJsonResponse<>(500, "blah"),
                 new HttpJsonResponse<>(500, "blah")
         );
-        assertEquals(
-                new HttpJsonResponse<>(500, "blah").hashCode(),
-                new HttpJsonResponse<>(500, "blah").hashCode()
-        );
-        assertNotEquals(
+
+        shouldNotBeEqual(
                 new HttpJsonResponse<>(500, "foo"),
                 new HttpJsonResponse<>(500, "bar")
         );
-        assertNotEquals(
+        shouldNotBeEqual(
                 new HttpJsonResponse<>(501, "blah"),
                 new HttpJsonResponse<>(500, "blah")
         );
-        assertNotEquals(
-                new HttpJsonResponse<>(501, "blah").hashCode(),
-                new HttpJsonResponse<>(500, "blah").hashCode()
-        );
 
-        assertEquals(
+        shouldBeEqual(
                 new HttpJsonResponse<>(200, null),
                 new HttpJsonResponse<>(200, null)
         );
-        assertNotEquals(
+
+        shouldNotBeEqual(
                 new HttpJsonResponse<>(200, TextMessage.OK),
                 new HttpJsonResponse<>(200, null)
         );
-        assertNotEquals(
+        shouldNotBeEqual(
                 new HttpJsonResponse<>(200, null),
                 new HttpJsonResponse<>(200, TextMessage.OK)
         );
+    }
+
+    private void shouldBeEqual(HttpJsonResponse r1, HttpJsonResponse r2){
+        assertEquals(r1, r2);
+        assertEquals(r2, r1);
+
+        if (r1 != null && r2 != null){
+            assertEquals(r1.hashCode(), r2.hashCode());
+            assertEquals(r2.hashCode(), r1.hashCode());
+        }
+    }
+
+    private void shouldNotBeEqual(HttpJsonResponse r1, HttpJsonResponse r2){
+        assertNotEquals(r1, r2);
+        assertNotEquals(r2, r1);
+
+        if (r1 != null && r2 != null) {
+            assertNotEquals(r1.hashCode(), r2.hashCode());
+            assertNotEquals(r2.hashCode(), r1.hashCode());
+        }
     }
 }
