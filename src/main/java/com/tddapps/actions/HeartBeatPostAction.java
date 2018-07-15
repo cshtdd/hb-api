@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionInput> {
+public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionInput, String> {
     private static final Logger LOG = LogManager.getLogger(HeartBeatPostAction .class);
 
     @Override
@@ -25,9 +25,9 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     }
 
     @Override
-    public HttpJsonResponse process(HeartBeatPostActionInput body) {
+    public HttpJsonResponse<String> process(HeartBeatPostActionInput body) {
         LOG.info(String.format("hostId: %s", body.getHostId()));
 
-        return new HttpJsonResponse(200, "OK");
+        return new HttpJsonResponse<>(200, "OK");
     }
 }

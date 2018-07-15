@@ -1,10 +1,10 @@
 package com.tddapps.controllers;
 
-public class HttpJsonResponse {
+public class HttpJsonResponse<T> {
     private final int statusCode;
-    private final Object body;
+    private final T body;
 
-    public HttpJsonResponse(int statusCode, Object body) {
+    public HttpJsonResponse(int statusCode, T body) {
         this.statusCode = statusCode;
         this.body = body;
     }
@@ -13,7 +13,7 @@ public class HttpJsonResponse {
         return statusCode;
     }
 
-    public Object getBody() {
+    public T getBody() {
         return body;
     }
 }
