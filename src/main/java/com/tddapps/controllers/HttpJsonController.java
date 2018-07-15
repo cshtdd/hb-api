@@ -25,7 +25,7 @@ public class HttpJsonController {
         if (requestBody == null ||
             requestBody.isEmpty() ||
             requestBody.trim().isEmpty()){
-            return new HttpJsonResponse(400, "Empty request body");
+            return new HttpJsonResponse<>(400, "Empty request body");
         }
 
         JsonNode body;
@@ -33,7 +33,7 @@ public class HttpJsonController {
         try {
             body = mapper.readTree(requestBody);
         } catch (IOException e) {
-            return new HttpJsonResponse(400, "Invalid json in request body");
+            return new HttpJsonResponse<>(400, "Invalid json in request body");
         }
 
         Object parsedBody;
@@ -41,7 +41,7 @@ public class HttpJsonController {
         try {
             parsedBody = action.parse(body);
         } catch (BodyParseException e) {
-            return new HttpJsonResponse(400, e.getMessage());
+            return new HttpJsonResponse<>(400, e.getMessage());
         }
 
         return action.process(parsedBody);
