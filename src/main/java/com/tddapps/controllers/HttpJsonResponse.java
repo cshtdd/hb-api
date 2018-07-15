@@ -1,5 +1,7 @@
 package com.tddapps.controllers;
 
+import com.tddapps.actions.response.TextMessage;
+
 import java.util.Objects;
 
 public class HttpJsonResponse<T> {
@@ -17,6 +19,14 @@ public class HttpJsonResponse<T> {
 
     public T getBody() {
         return body;
+    }
+
+    public static <T> HttpJsonResponse Success(T body){
+        return new HttpJsonResponse<>(200, body);
+    }
+
+    public static <T> HttpJsonResponse BadRequest(T body) {
+        return new HttpJsonResponse<>(400, body);
     }
 
     @Override

@@ -7,6 +7,20 @@ import static org.junit.Assert.*;
 
 public class HttpJsonResponseTest {
     @Test
+    public void PredefinedResponses(){
+        shouldBeEqual(
+                new HttpJsonResponse<>(200, TextMessage.OK),
+                HttpJsonResponse.Success(TextMessage.OK)
+        );
+
+        shouldBeEqual(
+                new HttpJsonResponse<>(400, new TextMessage("missing parameter")),
+                HttpJsonResponse.BadRequest(new TextMessage("missing parameter"))
+
+        );
+    }
+
+    @Test
     public void CanBeCompared(){
         HttpJsonResponse<TextMessage> response1 = new HttpJsonResponse<>(200, TextMessage.OK);
         shouldBeEqual(response1, response1);
