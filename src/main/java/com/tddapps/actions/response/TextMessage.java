@@ -5,6 +5,8 @@ import static com.tddapps.utils.StringExtensions.*;
 public class TextMessage {
     private final String message;
 
+    public static final TextMessage OK = new TextMessage("OK");
+
     public TextMessage(String message) {
         this.message = message;
     }

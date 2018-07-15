@@ -41,4 +41,9 @@ public class TextMessageTest {
         assertNotEquals(new TextMessage("sample1"), new TextMessage("sample2"));
         assertNotEquals(new TextMessage("sample2"), new TextMessage("sample1"));
     }
+
+    @Test
+    public void PredefinedMessages(){
+        assertEquals("OK", TextMessage.OK.getMessage());
+    }
 }
