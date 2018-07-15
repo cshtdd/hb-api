@@ -1,10 +1,10 @@
-package com.tddapps.controllers;
+package com.tddapps.handlers;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tddapps.controllers.response.ApiGatewayResponse;
+import com.tddapps.handlers.response.ApiGatewayResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

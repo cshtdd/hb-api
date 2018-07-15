@@ -63,13 +63,13 @@ package:
 
 functions:
   Status:
-    handler: com.tddapps.controllers.Status
+    handler: com.tddapps.handlers.StatusGet
     events:
       - http:
           path: /v1/status
           method: get
   HeartBeatPost:
-    handler: com.tddapps.controllers.HeartBeatPost
+    handler: com.tddapps.handlers.HeartBeatPost
     events:
       - http:
           private: true
