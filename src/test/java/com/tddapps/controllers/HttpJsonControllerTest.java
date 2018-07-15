@@ -5,13 +5,12 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
 
 
 public class HttpJsonControllerTest {
-    private final HttpJsonAction actionMock = mock(HttpJsonAction.class);
-    private final HttpJsonController controller = new HttpJsonController(actionMock);
+    private final HttpJsonActionStub actionStub = new HttpJsonActionStub();
+    private final HttpJsonController controller = new HttpJsonController(actionStub);
 
     @Test
     public void ReturnsBadRequestWhenBodyMissing(){
@@ -48,6 +47,16 @@ public class HttpJsonControllerTest {
         );
     }
 
+    @Test
+    public void ReturnsBadRequestWhenBodyIsNotTheExpectedJson(){
+        actionStub.setSeededParseException(new BodyParseException("userId expected"));
+
+        assertEquals(
+                HttpJsonResponse.BadRequestWithMessage("userId expected"),
+                processBody("{\"name\": \"jsmith\"}")
+        );
+    }
+
     private HttpJsonResponse processBody(String body){
         Map<String, Object> input = new HashMap<String, Object>(){{
             put("body", body);
@@ -56,3 +65,4 @@ public class HttpJsonControllerTest {
         return controller.process(input);
     }
 }
+

@@ -40,7 +40,7 @@ public class HttpJsonController {
         try {
             parsedBody = action.parse(body);
         } catch (BodyParseException e) {
-            return new HttpJsonResponse<>(400, e.getMessage());
+            return HttpJsonResponse.BadRequestWithMessage(e.getMessage());
         }
 
         return action.process(parsedBody);
