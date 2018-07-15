@@ -68,6 +68,24 @@ public class HttpJsonResponseTest {
         );
     }
 
+    @Test
+    public void CreatesDecentStringRepresentations(){
+        assertEquals(
+                "HttpJsonResponse(400) TextMessage:sample",
+                HttpJsonResponse.BadRequestWithMessage("sample").toString()
+        );
+
+        assertEquals(
+                "HttpJsonResponse(100) null",
+                new HttpJsonResponse<String>(100, null).toString()
+        );
+
+        assertEquals(
+                "HttpJsonResponse(100) 234",
+                new HttpJsonResponse<Integer>(100, 234).toString()
+        );
+    }
+
     private void shouldBeEqual(HttpJsonResponse r1, HttpJsonResponse r2){
         assertEquals(r1, r2);
         assertEquals(r2, r1);

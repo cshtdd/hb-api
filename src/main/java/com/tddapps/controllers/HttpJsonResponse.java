@@ -56,4 +56,9 @@ public class HttpJsonResponse<T> {
     public int hashCode() {
         return Objects.hash(statusCode, body);
     }
+
+    @Override
+    public String toString() {
+        return String.format("HttpJsonResponse(%d) %s", statusCode, body);
+    }
 }
