@@ -40,6 +40,14 @@ public class HttpJsonControllerTest {
         );
     }
 
+    @Test
+    public void ReturnsBadRequestWhenBodyIsAnInvalidJson(){
+        assertEquals(
+                HttpJsonResponse.BadRequestWithMessage("Invalid json in request body"),
+                processBody("this is incorrect")
+        );
+    }
+
     private HttpJsonResponse processBody(String body){
         Map<String, Object> input = new HashMap<String, Object>(){{
             put("body", body);

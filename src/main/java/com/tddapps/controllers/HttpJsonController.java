@@ -32,7 +32,7 @@ public class HttpJsonController {
         try {
             body = mapper.readTree(requestBody);
         } catch (IOException e) {
-            return new HttpJsonResponse<>(400, "Invalid json in request body");
+            return HttpJsonResponse.BadRequestWithMessage("Invalid json in request body");
         }
 
         Object parsedBody;
