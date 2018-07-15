@@ -18,14 +18,13 @@ public class HttpJsonController {
     }
 
     public HttpJsonResponse process(Map<String, Object> input){
-        String requestBody = input.getOrDefault("body", "").toString();
+        String requestBody = readBodyFrom(input);
 
         LOG.debug(String.format("Body: %s", requestBody));
 
-        if (requestBody == null ||
-            requestBody.isEmpty() ||
+        if (requestBody.isEmpty() ||
             requestBody.trim().isEmpty()){
-            return new HttpJsonResponse<>(400, "Empty request body");
+            return HttpJsonResponse.BadRequestWithMessage("Empty Request Body");
         }
 
         JsonNode body;
@@ -45,6 +44,16 @@ public class HttpJsonController {
         }
 
         return action.process(parsedBody);
+    }
+
+    private String readBodyFrom(Map<String, Object> input){
+        Object bodyObject = input.getOrDefault("body", "");
+
+        if (bodyObject == null){
+            bodyObject = "";
+        }
+
+        return bodyObject.toString();
     }
 }
 
