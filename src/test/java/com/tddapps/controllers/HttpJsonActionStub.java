@@ -7,6 +7,7 @@ import static com.tddapps.utils.StringExtensions.*;
 public class HttpJsonActionStub implements HttpJsonAction<String, String>{
     private BodyParseException seededParseException = null;
     private String seededParsedBody = null;
+    private BodyProcessException seededProcessException = null;
     private int seededStatusCode = -1;
     private String seededResultBody = null;
 
@@ -20,7 +21,11 @@ public class HttpJsonActionStub implements HttpJsonAction<String, String>{
     }
 
     @Override
-    public HttpJsonResponse<String> process(String body) {
+    public HttpJsonResponse<String> process(String body) throws BodyProcessException{
+        if (seededProcessException != null){
+            throw seededProcessException;
+        }
+
         if (!EmptyWhenNull(seededParsedBody).equals(EmptyWhenNull(body))){
             throw new RuntimeException(String.format(
                     "Received unexpected process call. Expected: \"%s\", Actual: \"%s\"",
@@ -62,5 +67,13 @@ public class HttpJsonActionStub implements HttpJsonAction<String, String>{
 
     public void setSeededStatusCode(int seededStatusCode) {
         this.seededStatusCode = seededStatusCode;
+    }
+
+    public BodyProcessException getSeededProcessException() {
+        return seededProcessException;
+    }
+
+    public void setSeededProcessException(BodyProcessException seededProcessException) {
+        this.seededProcessException = seededProcessException;
     }
 }

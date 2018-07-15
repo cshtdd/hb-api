@@ -58,6 +58,16 @@ public class HttpJsonControllerTest {
     }
 
     @Test
+    public void ReturnsServerErrorWhenProcessingFails(){
+        actionStub.setSeededProcessException(new BodyProcessException("database is down"));
+
+        assertEquals(
+                HttpJsonResponse.ServerErrorWithMessage("database is down"),
+                processBody("{\"name\": \"jsmith\"}")
+        );
+    }
+
+    @Test
     public void ReturnsTheProcessedParsedBody(){
         actionStub.setSeededParsedBody("parsed body");
         actionStub.setSeededResultBody("result body");

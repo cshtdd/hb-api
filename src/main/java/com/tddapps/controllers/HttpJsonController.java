@@ -43,7 +43,11 @@ public class HttpJsonController {
             return HttpJsonResponse.BadRequestWithMessage(e.getMessage());
         }
 
-        return action.process(parsedBody);
+        try {
+            return action.process(parsedBody);
+        } catch (BodyProcessException e) {
+            return HttpJsonResponse.ServerErrorWithMessage(e.getMessage());
+        }
     }
 
     private String readBodyFrom(Map<String, Object> input){

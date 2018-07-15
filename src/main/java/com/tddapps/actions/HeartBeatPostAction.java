@@ -2,6 +2,7 @@ package com.tddapps.actions;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.tddapps.controllers.BodyParseException;
+import com.tddapps.controllers.BodyProcessException;
 import com.tddapps.controllers.HttpJsonAction;
 import com.tddapps.controllers.HttpJsonResponse;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +26,7 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     }
 
     @Override
-    public HttpJsonResponse<String> process(HeartBeatPostActionInput body) {
+    public HttpJsonResponse<String> process(HeartBeatPostActionInput body) throws BodyProcessException {
         LOG.info(String.format("hostId: %s", body.getHostId()));
 
         return new HttpJsonResponse<>(200, "OK");
