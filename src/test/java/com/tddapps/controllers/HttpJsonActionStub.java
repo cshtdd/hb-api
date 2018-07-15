@@ -22,7 +22,11 @@ public class HttpJsonActionStub implements HttpJsonAction<String, String>{
     @Override
     public HttpJsonResponse<String> process(String body) {
         if (!EmptyWhenNull(seededParsedBody).equals(EmptyWhenNull(body))){
-            throw new RuntimeException("Received unexpected process call");
+            throw new RuntimeException(String.format(
+                    "Received unexpected process call. Expected: \"%s\", Actual: \"%s\"",
+                    seededParsedBody,
+                    body
+            ));
         }
 
         return new HttpJsonResponse<>(seededStatusCode, seededResultBody);
