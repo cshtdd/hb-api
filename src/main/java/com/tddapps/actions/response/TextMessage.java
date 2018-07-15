@@ -10,4 +10,10 @@ public class TextMessage {
     public String getMessage() {
         return message;
     }
+
+    public String asJson() {
+        String sanitizedMessage = message == null ? "" : message;
+
+        return String.format("{\"message\": \"%s\"}", sanitizedMessage);
+    }
 }
