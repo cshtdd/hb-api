@@ -33,6 +33,14 @@ public class HttpJsonResponse<T> {
         return BadRequest(TextMessage.create(message));
     }
 
+    public static <T> HttpJsonResponse ServerError(T body) {
+        return new HttpJsonResponse<>(500, body);
+    }
+
+    public static HttpJsonResponse ServerErrorWithMessage(String message){
+        return ServerError(TextMessage.create(message));
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof HttpJsonResponse)){

@@ -23,6 +23,17 @@ public class HttpJsonResponseTest {
                 new HttpJsonResponse<>(400, TextMessage.create("missing parameter")),
                 HttpJsonResponse.BadRequestWithMessage("missing parameter")
         );
+
+        shouldBeEqual(
+                new HttpJsonResponse<>(500, TextMessage.create("database error")),
+                HttpJsonResponse.ServerError(TextMessage.create("database error"))
+
+        );
+
+        shouldBeEqual(
+                new HttpJsonResponse<>(500, TextMessage.create("database error")),
+                HttpJsonResponse.ServerErrorWithMessage("database error")
+        );
     }
 
     @Test
