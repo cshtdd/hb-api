@@ -1,5 +1,7 @@
 package com.tddapps.actions.response;
 
+import static com.tddapps.utils.StringExtensions.*;
+
 public class TextMessage {
     private final String message;
 
@@ -12,8 +14,6 @@ public class TextMessage {
     }
 
     public String asJson() {
-        String sanitizedMessage = message == null ? "" : message;
-
-        return String.format("{\"message\": \"%s\"}", sanitizedMessage);
+        return String.format("{\"message\": \"%s\"}", EmptyWhenNull(message));
     }
 }
