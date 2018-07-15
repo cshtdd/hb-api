@@ -23,29 +23,28 @@ public class HttpJsonControllerTest {
     }
 
     @Test
-    public void ReturnsBadRequestWhenBodyIsNull(){
-        Map<String, Object> input = new HashMap<String, Object>(){{
-            put("body", null);
-        }};
+    public void ReturnsBadRequestWhenBodyIsInvalid(){
+        assertEquals(
+                HttpJsonResponse.BadRequestWithMessage("Empty Request Body"),
+                processBody(null)
+        );
 
-        assertEquals(HttpJsonResponse.BadRequestWithMessage("Empty Request Body"), controller.process(input));
+        assertEquals(
+                HttpJsonResponse.BadRequestWithMessage("Empty Request Body"),
+                processBody("")
+        );
+
+        assertEquals(
+                HttpJsonResponse.BadRequestWithMessage("Empty Request Body"),
+                processBody("   ")
+        );
     }
 
-    @Test
-    public void ReturnsBadRequestWhenBodyIsEmpty(){
+    private HttpJsonResponse processBody(String body){
         Map<String, Object> input = new HashMap<String, Object>(){{
-            put("body", "");
+            put("body", body);
         }};
 
-        assertEquals(HttpJsonResponse.BadRequestWithMessage("Empty Request Body"), controller.process(input));
-    }
-
-    @Test
-    public void ReturnsBadRequestWhenBodyIsBlank(){
-        Map<String, Object> input = new HashMap<String, Object>(){{
-            put("body", "   ");
-        }};
-
-        assertEquals(HttpJsonResponse.BadRequestWithMessage("Empty Request Body"), controller.process(input));
+        return controller.process(input);
     }
 }
