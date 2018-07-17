@@ -19,6 +19,13 @@ public class HeartBeatPostActionTest {
         assertEquals("superhost1", input.getHostId());
     }
 
+    @Test
+    public void ParsingFailsWhenHostIdIsMissing(){
+        parseShouldThrow("{}");
+        parseShouldThrow("{\"hostId\": \"\"}");
+        parseShouldThrow("{\"hostId\": \"   \"}");
+    }
+
     private void parseShouldThrow(String body){
         try {
             parseInternal(body);

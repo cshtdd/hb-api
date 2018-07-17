@@ -14,7 +14,13 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
 
     @Override
     public HeartBeatPostActionInput parse(JsonNode body) throws BodyParseException {
-        String hostId = body.get("hostId").asText();
+        JsonNode hostIdNode = body.get("hostId");
+
+        String hostId = "";
+
+        if (hostIdNode != null){
+            hostId = hostIdNode.asText();
+        }
 
         if (hostId == null ||
             hostId.isEmpty() ||
