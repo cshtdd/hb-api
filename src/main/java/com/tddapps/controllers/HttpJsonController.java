@@ -1,7 +1,7 @@
 package com.tddapps.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tddapps.utils.JsonNodeHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class HttpJsonController {
     private final HttpJsonAction action;
-    private final ObjectMapper jsonDeserializer = new ObjectMapper();
 
     private static final Logger LOG = LogManager.getLogger(HttpJsonController.class);
 
@@ -27,7 +26,7 @@ public class HttpJsonController {
                 return HttpJsonResponse.BadRequestWithMessage("Empty Request Body");
             }
 
-            JsonNode jsonBody = jsonDeserializer.readTree(requestBody);
+            JsonNode jsonBody = JsonNodeHelper.parse(requestBody);
             Object parsedBody = action.parse(jsonBody);
             return action.process(parsedBody);
 
