@@ -8,27 +8,31 @@ import com.tddapps.controllers.HttpJsonResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
+
 
 public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionInput, String> {
     private static final Logger LOG = LogManager.getLogger(HeartBeatPostAction .class);
 
     @Override
     public HeartBeatPostActionInput parse(JsonNode body) throws BodyParseException {
-        JsonNode hostIdNode = body.get("hostId");
+        String hostId = readHostId(body);
 
-        String hostId = "";
-
-        if (hostIdNode != null){
-            hostId = hostIdNode.asText();
-        }
-
-        if (hostId == null ||
-            hostId.isEmpty() ||
-            hostId.trim().isEmpty()){
+        if (hostId.trim().isEmpty()){
             throw new BodyParseException("Invalid hostId");
         }
 
         return new HeartBeatPostActionInput(hostId);
+    }
+
+    private static String readHostId(JsonNode body){
+        JsonNode hostIdNode = body.get("hostId");
+
+        if (hostIdNode == null){
+            return "";
+        }
+
+        return EmptyWhenNull(hostIdNode.asText());
     }
 
     @Override
