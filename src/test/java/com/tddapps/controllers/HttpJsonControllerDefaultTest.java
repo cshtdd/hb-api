@@ -8,9 +8,9 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 
-public class HttpJsonControllerTest {
+public class HttpJsonControllerDefaultTest {
     private final HttpJsonActionStub actionStub = new HttpJsonActionStub();
-    private final HttpJsonController controller = new HttpJsonController(actionStub);
+    private final HttpJsonControllerDefault controller = new HttpJsonControllerDefault(actionStub);
 
     @Test
     public void ReturnsBadRequestWhenBodyMissing(){
