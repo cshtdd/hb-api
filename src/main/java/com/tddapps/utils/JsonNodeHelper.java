@@ -22,7 +22,7 @@ public class JsonNodeHelper {
             return defaultValue;
         }
 
-        return value.asText();
+        return value.asText(defaultValue);
     }
 
     public static int readInt(JsonNode body, String parameterName, int defaultValue){
@@ -32,6 +32,6 @@ public class JsonNodeHelper {
             return defaultValue;
         }
 
-        return value.asInt();
+        return value.asInt(defaultValue);
     }
 }
