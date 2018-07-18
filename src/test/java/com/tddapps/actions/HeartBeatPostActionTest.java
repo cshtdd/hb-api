@@ -26,6 +26,30 @@ public class HeartBeatPostActionTest {
     }
 
     @Test
+    public void ReadsTheIntervalMs(){
+        HeartBeatPostActionInput input = parse("{\"hostId\": \"superHost1\", \"intervalMs\": 3000}");
+
+        assertEquals("superHost1", input.getHostId());
+        assertEquals(3000, input.getIntervalMs());
+    }
+
+    @Test
+    public void ReadsTheIntervalMsWhenTheValueIsAFloat(){
+        HeartBeatPostActionInput input = parse("{\"hostId\": \"superHost1\", \"intervalMs\": 3000.45}");
+
+        assertEquals("superHost1", input.getHostId());
+        assertEquals(3000, input.getIntervalMs());
+    }
+
+    @Test
+    public void ReadsTheIntervalMsWhenTheProvidedValueIsAString(){
+        HeartBeatPostActionInput input = parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"3000\"}");
+
+        assertEquals("superHost1", input.getHostId());
+        assertEquals(3000, input.getIntervalMs());
+    }
+
+    @Test
     public void ReadsTheMaximumLengthHostId(){
         HeartBeatPostActionInput input = parse(String.format(
                 "{\"hostId\": \"%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
@@ -50,6 +74,22 @@ public class HeartBeatPostActionTest {
         parseShouldThrow(String.format(
                 "{\"hostId\": \"X%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
         ));
+    }
+
+    @Test
+    public void ParsingFailsWhenIntervalMsIsNotNumeric(){
+        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": null}");
+        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": \"\"}");
+        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": \" \"}");
+        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": \"pete\"}");
+    }
+
+    @Test
+    public void ParsingFailsWhenIntervalMsIsOutOfBoundaries(){
+        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": 999}");
+        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": \"999\"}");
+        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": 43200001}");
+        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": \"43200001\"}");
     }
 
     @Test

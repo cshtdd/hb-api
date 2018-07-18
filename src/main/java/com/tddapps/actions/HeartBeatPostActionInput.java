@@ -5,6 +5,8 @@ import java.util.Objects;
 import static com.tddapps.utils.StringExtensions.*;
 
 public class HeartBeatPostActionInput {
+    public static final int MIN_INTERVAL_MS = 1000;
+    public static final int MAX_INTERVAL_MS = 12*60*60*1000;
     public static final int DEFAULT_INTERVAL_MS = 10*60*1000;
 
     private final String hostId;

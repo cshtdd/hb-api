@@ -18,6 +18,12 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     @Override
     public HeartBeatPostActionInput parse(JsonNode body) throws ActionBodyParseException {
         String hostId = readHostId(body);
+        int intervalMs = readIntervalMs(body);
+
+        if (intervalMs < HeartBeatPostActionInput.MIN_INTERVAL_MS ||
+                intervalMs > HeartBeatPostActionInput.MAX_INTERVAL_MS){
+            throw new ActionBodyParseException("Invalid intervalMs");
+        }
 
         if (!StringUtils.isAlphanumeric(hostId)){
             throw new ActionBodyParseException("Invalid hostId");
@@ -27,17 +33,27 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
             throw new ActionBodyParseException("Invalid hostId");
         }
 
-        return new HeartBeatPostActionInput(hostId, HeartBeatPostActionInput.DEFAULT_INTERVAL_MS);
+        return new HeartBeatPostActionInput(hostId, intervalMs);
     }
 
     private static String readHostId(JsonNode body){
-        JsonNode hostIdNode = body.get("hostId");
+        JsonNode value = body.get("hostId");
 
-        if (hostIdNode == null){
+        if (value == null){
             return "";
         }
 
-        return EmptyWhenNull(hostIdNode.asText());
+        return EmptyWhenNull(value.asText());
+    }
+
+    private static int readIntervalMs(JsonNode body){
+        JsonNode value = body.get("intervalMs");
+
+        if (value == null){
+            return HeartBeatPostActionInput.DEFAULT_INTERVAL_MS;
+        }
+
+        return value.asInt();
     }
 
     @Override
