@@ -1,4 +1,4 @@
-package com.tddapps.handlers;
+package com.tddapps.handlers.infrastructure;
 
 import com.tddapps.controllers.HttpJsonController;
 

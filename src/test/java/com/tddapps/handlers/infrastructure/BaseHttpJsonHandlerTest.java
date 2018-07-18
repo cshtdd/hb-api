@@ -1,10 +1,9 @@
-package com.tddapps.handlers;
+package com.tddapps.handlers.infrastructure;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.HttpJsonController;
 import com.tddapps.controllers.HttpJsonResponse;
-import com.tddapps.handlers.response.ApiGatewayResponse;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

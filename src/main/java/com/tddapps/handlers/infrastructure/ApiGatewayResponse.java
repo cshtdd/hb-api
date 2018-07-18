@@ -1,4 +1,4 @@
-package com.tddapps.handlers.response;
+package com.tddapps.handlers.infrastructure;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

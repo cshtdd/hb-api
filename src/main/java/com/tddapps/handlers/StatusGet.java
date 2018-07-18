@@ -2,7 +2,7 @@ package com.tddapps.handlers;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.tddapps.handlers.response.ApiGatewayResponse;
+import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 
 import java.util.Map;
 
