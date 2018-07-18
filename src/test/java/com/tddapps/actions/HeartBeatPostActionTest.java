@@ -14,9 +14,9 @@ public class HeartBeatPostActionTest {
 
     @Test
     public void ReadsTheHostId(){
-        HeartBeatPostActionInput input = parseShouldSucceed("{\"hostId\": \"superhost1\"}");
+        HeartBeatPostActionInput input = parseShouldSucceed("{\"hostId\": \"superHost1\"}");
 
-        assertEquals("superhost1", input.getHostId());
+        assertEquals("superHost1", input.getHostId());
     }
 
     @Test
@@ -24,6 +24,11 @@ public class HeartBeatPostActionTest {
         parseShouldThrow("{}");
         parseShouldThrow("{\"hostId\": \"\"}");
         parseShouldThrow("{\"hostId\": \"   \"}");
+    }
+
+    @Test
+    public void ParsingFailsWhenHostIdIsNotAlphanumeric(){
+        parseShouldThrow("{\"hostId\": \"-!@#$$%^%^ &^&\"}");
     }
 
     private void parseShouldThrow(String body){

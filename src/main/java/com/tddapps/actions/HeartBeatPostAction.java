@@ -5,6 +5,7 @@ import com.tddapps.controllers.BodyParseException;
 import com.tddapps.controllers.BodyProcessException;
 import com.tddapps.controllers.HttpJsonAction;
 import com.tddapps.controllers.HttpJsonResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +20,10 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
         String hostId = readHostId(body);
 
         if (hostId.trim().isEmpty()){
+            throw new BodyParseException("Invalid hostId");
+        }
+
+        if (!StringUtils.isAlphanumeric(hostId)){
             throw new BodyParseException("Invalid hostId");
         }
 
