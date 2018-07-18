@@ -64,6 +64,15 @@ sls create_domain
 
 # Code Architecture
 
-Function handlers should be placed in `com.tddapps.handlers`. Aim for these to have no code. These classes have some knowledge of the serverless framework. Most likely, they won't be unit tested.  
-Function handlers will directly invoke classes from the `com.tddapps.controllers` package. This is where our application logic will start to take place. Most of the controllers will have 90% of the same code. Probably we will only have one or two classes in the `com.tddapps.controllers` package.  
-The actual implementation of the functions will live under the `com.tddapps.actions` package. This will receive and return boundary objects. These classes will be framework agnostic.      
+## `handlers` package  
+Should be placed in `com.tddapps.handlers`. Aim for these to have almost no code. These classes have some knowledge of the serverless framework.  
+
+`BaseHttpJsonHandler` will help reduce the boilerplate code for handlers. Most of them should inherit from it. The unit tests for these classes will be limited to guarantee they return the correct kind.  
+
+## `controllers` package  
+
+Contains some middleware to reduce boilerplate code around request parsing and response construction. New functionality will rarely require any changes in this area. This layer might be removed altogether and merged into the `handlers.infrastructure` package at some point.  
+
+## `actions` package  
+
+The actual implementation of the functions will live under the `com.tddapps.actions` package. This will receive and return boundary objects. These classes will be framework agnostic.  
