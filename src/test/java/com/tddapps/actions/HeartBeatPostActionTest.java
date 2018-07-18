@@ -1,8 +1,8 @@
 package com.tddapps.actions;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.tddapps.controllers.BodyParseException;
-import com.tddapps.controllers.BodyProcessException;
+import com.tddapps.controllers.ActionBodyParseException;
+import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.utils.JsonNodeHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -61,7 +61,7 @@ public class HeartBeatPostActionTest {
         try {
             parseInternal(body);
             fail("Expected Exception to have been thrown");
-        } catch (BodyParseException e) {
+        } catch (ActionBodyParseException e) {
             assertNotNull(e);
         }
     }
@@ -69,13 +69,13 @@ public class HeartBeatPostActionTest {
     private HeartBeatPostActionInput parse(String body){
         try {
             return parseInternal(body);
-        } catch (BodyParseException e) {
+        } catch (ActionBodyParseException e) {
             fail("Parse should not have thrown", e);
             return null;
         }
     }
 
-    private HeartBeatPostActionInput parseInternal(String body) throws BodyParseException{
+    private HeartBeatPostActionInput parseInternal(String body) throws ActionBodyParseException {
         JsonNode seededBody = null;
         try {
             seededBody = JsonNodeHelper.parse(body);
@@ -88,7 +88,7 @@ public class HeartBeatPostActionTest {
     private HttpJsonResponse<String> process(String hostId){
         try {
             return action.process(new HeartBeatPostActionInput(hostId));
-        } catch (BodyProcessException e) {
+        } catch (ActionProcessException e) {
             fail("Process should not have thrown", e);
             return null;
         }

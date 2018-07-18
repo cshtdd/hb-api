@@ -1,8 +1,8 @@
 package com.tddapps.actions;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.tddapps.controllers.BodyParseException;
-import com.tddapps.controllers.BodyProcessException;
+import com.tddapps.controllers.ActionBodyParseException;
+import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonAction;
 import com.tddapps.controllers.HttpJsonResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -16,15 +16,15 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     private static final Logger LOG = LogManager.getLogger(HeartBeatPostAction .class);
 
     @Override
-    public HeartBeatPostActionInput parse(JsonNode body) throws BodyParseException {
+    public HeartBeatPostActionInput parse(JsonNode body) throws ActionBodyParseException {
         String hostId = readHostId(body);
 
         if (!StringUtils.isAlphanumeric(hostId)){
-            throw new BodyParseException("Invalid hostId");
+            throw new ActionBodyParseException("Invalid hostId");
         }
 
         if (hostId.length() > 100){
-            throw new BodyParseException("Invalid hostId");
+            throw new ActionBodyParseException("Invalid hostId");
         }
 
         return new HeartBeatPostActionInput(hostId);
@@ -41,7 +41,7 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     }
 
     @Override
-    public HttpJsonResponse<String> process(HeartBeatPostActionInput body) throws BodyProcessException {
+    public HttpJsonResponse<String> process(HeartBeatPostActionInput body) throws ActionProcessException {
         LOG.info(String.format("hostId: %s", body.getHostId()));
 
         return new HttpJsonResponse<>(200, "OK");

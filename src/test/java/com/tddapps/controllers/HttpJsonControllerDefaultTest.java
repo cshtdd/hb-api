@@ -49,7 +49,7 @@ public class HttpJsonControllerDefaultTest {
 
     @Test
     public void ReturnsBadRequestWhenBodyIsNotTheExpectedJson(){
-        actionStub.setSeededParseException(new BodyParseException("userId expected"));
+        actionStub.setSeededParseException(new ActionBodyParseException("userId expected"));
 
         assertEquals(
                 HttpJsonResponse.BadRequestWithMessage("userId expected"),
@@ -59,7 +59,7 @@ public class HttpJsonControllerDefaultTest {
 
     @Test
     public void ReturnsServerErrorWhenProcessingFails(){
-        actionStub.setSeededProcessException(new BodyProcessException("database is down"));
+        actionStub.setSeededProcessException(new ActionProcessException("database is down"));
 
         assertEquals(
                 HttpJsonResponse.ServerErrorWithMessage("database is down"),

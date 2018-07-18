@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import static com.tddapps.utils.StringExtensions.*;
 
 public class HttpJsonActionStub implements HttpJsonAction<String, String>{
-    private BodyParseException seededParseException = null;
+    private ActionBodyParseException seededParseException = null;
     private String seededParsedBody = null;
-    private BodyProcessException seededProcessException = null;
+    private ActionProcessException seededProcessException = null;
     private int seededStatusCode = -1;
     private String seededResultBody = null;
 
     @Override
-    public String parse(JsonNode body) throws BodyParseException {
+    public String parse(JsonNode body) throws ActionBodyParseException {
         if (seededParseException != null){
             throw seededParseException;
         }
@@ -21,7 +21,7 @@ public class HttpJsonActionStub implements HttpJsonAction<String, String>{
     }
 
     @Override
-    public HttpJsonResponse<String> process(String body) throws BodyProcessException{
+    public HttpJsonResponse<String> process(String body) throws ActionProcessException {
         if (seededProcessException != null){
             throw seededProcessException;
         }
@@ -37,11 +37,11 @@ public class HttpJsonActionStub implements HttpJsonAction<String, String>{
         return new HttpJsonResponse<>(seededStatusCode, seededResultBody);
     }
 
-    public BodyParseException getSeededParseException() {
+    public ActionBodyParseException getSeededParseException() {
         return seededParseException;
     }
 
-    public void setSeededParseException(BodyParseException seededParseException) {
+    public void setSeededParseException(ActionBodyParseException seededParseException) {
         this.seededParseException = seededParseException;
     }
 
@@ -69,11 +69,11 @@ public class HttpJsonActionStub implements HttpJsonAction<String, String>{
         this.seededStatusCode = seededStatusCode;
     }
 
-    public BodyProcessException getSeededProcessException() {
+    public ActionProcessException getSeededProcessException() {
         return seededProcessException;
     }
 
-    public void setSeededProcessException(BodyProcessException seededProcessException) {
+    public void setSeededProcessException(ActionProcessException seededProcessException) {
         this.seededProcessException = seededProcessException;
     }
 }
