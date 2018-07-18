@@ -19,11 +19,11 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     public HeartBeatPostActionInput parse(JsonNode body) throws BodyParseException {
         String hostId = readHostId(body);
 
-        if (hostId.trim().isEmpty()){
+        if (!StringUtils.isAlphanumeric(hostId)){
             throw new BodyParseException("Invalid hostId");
         }
 
-        if (!StringUtils.isAlphanumeric(hostId)){
+        if (hostId.length() > 100){
             throw new BodyParseException("Invalid hostId");
         }
 
