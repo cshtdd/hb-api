@@ -6,18 +6,19 @@ import com.tddapps.controllers.ActionBodyParseException;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonAction;
 import com.tddapps.controllers.HttpJsonResponse;
-import com.tddapps.utils.JsonNodeHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import static com.tddapps.utils.JsonNodeHelper.*;
 
 public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionInput, TextMessage> {
     private static final Logger LOG = LogManager.getLogger(HeartBeatPostAction.class);
 
     @Override
     public HeartBeatPostActionInput parse(JsonNode body) throws ActionBodyParseException {
-        String hostId = readHostId(body);
-        int intervalMs = JsonNodeHelper.readInt(body, "intervalMs", HeartBeatPostActionInput.DEFAULT_INTERVAL_MS);
+        String hostId = readString(body, "hostId");
+        int intervalMs = readInt(body, "intervalMs", HeartBeatPostActionInput.DEFAULT_INTERVAL_MS);
 
         if (intervalMs < HeartBeatPostActionInput.MIN_INTERVAL_MS ||
                 intervalMs > HeartBeatPostActionInput.MAX_INTERVAL_MS){
@@ -33,16 +34,6 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
         }
 
         return new HeartBeatPostActionInput(hostId, intervalMs);
-    }
-
-    private static String readHostId(JsonNode body){
-        JsonNode value = body.get("hostId");
-
-        if (value == null){
-            return "";
-        }
-
-        return value.asText();
     }
 
     @Override

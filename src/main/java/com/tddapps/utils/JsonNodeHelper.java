@@ -11,6 +11,20 @@ public class JsonNodeHelper {
         return jsonDeserializer.readTree(str);
     }
 
+    public static String readString(JsonNode body, String parameterName){
+        return readString(body, parameterName, "");
+    }
+
+    public static String readString(JsonNode body, String parameterName, String defaultValue){
+        JsonNode value = body.get(parameterName);
+
+        if (value == null){
+            return defaultValue;
+        }
+
+        return value.asText();
+    }
+
     public static int readInt(JsonNode body, String parameterName, int defaultValue){
         JsonNode value = body.get(parameterName);
 
