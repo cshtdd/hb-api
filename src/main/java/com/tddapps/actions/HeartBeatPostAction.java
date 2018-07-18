@@ -43,7 +43,7 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
             return "";
         }
 
-        return EmptyWhenNull(value.asText());
+        return value.asText();
     }
 
     private static int readIntervalMs(JsonNode body){
