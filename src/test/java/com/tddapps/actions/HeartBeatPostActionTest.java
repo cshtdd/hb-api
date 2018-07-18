@@ -2,6 +2,8 @@ package com.tddapps.actions;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.tddapps.controllers.BodyParseException;
+import com.tddapps.controllers.BodyProcessException;
+import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.utils.JsonNodeHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -16,14 +18,14 @@ public class HeartBeatPostActionTest {
 
     @Test
     public void ReadsTheHostId(){
-        HeartBeatPostActionInput input = parseShouldSucceed("{\"hostId\": \"superHost1\"}");
+        HeartBeatPostActionInput input = parse("{\"hostId\": \"superHost1\"}");
 
         assertEquals("superHost1", input.getHostId());
     }
 
     @Test
     public void ReadsTheMaximumLengthHostId(){
-        HeartBeatPostActionInput input = parseShouldSucceed(String.format(
+        HeartBeatPostActionInput input = parse(String.format(
                 "{\"hostId\": \"%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
         ));
         assertEquals(MAXIMUM_LENGTH_ALLOWED_STRING, input.getHostId());
@@ -48,6 +50,13 @@ public class HeartBeatPostActionTest {
         ));
     }
 
+    @Test
+    public void ProcessReturnsSuccess(){
+        HttpJsonResponse<String> result = process("host1");
+
+        assertEquals(HttpJsonResponse.Success("OK"), result);
+    }
+
     private void parseShouldThrow(String body){
         try {
             parseInternal(body);
@@ -57,7 +66,7 @@ public class HeartBeatPostActionTest {
         }
     }
 
-    private HeartBeatPostActionInput parseShouldSucceed(String body){
+    private HeartBeatPostActionInput parse(String body){
         try {
             return parseInternal(body);
         } catch (BodyParseException e) {
@@ -74,5 +83,14 @@ public class HeartBeatPostActionTest {
             fail("Parsing seeded body shouldn't throw", e);
         }
         return action.parse(seededBody);
+    }
+
+    private HttpJsonResponse<String> process(String hostId){
+        try {
+            return action.process(new HeartBeatPostActionInput(hostId));
+        } catch (BodyProcessException e) {
+            fail("Process should not have thrown", e);
+            return null;
+        }
     }
 }
