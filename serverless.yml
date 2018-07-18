@@ -62,7 +62,7 @@ package:
   artifact: target/hb-api-${self:provider.stage}.jar
 
 functions:
-  Status:
+  StatusGet:
     handler: com.tddapps.handlers.StatusGet
     events:
       - http:
@@ -133,7 +133,7 @@ custom:
 #       Value: "Some output value"
 resources:
   Resources:
-    StatusLogGroup:
+    StatusGetLogGroup:
       Type: AWS::Logs::LogGroup
       Properties:
         RetentionInDays: "14"
