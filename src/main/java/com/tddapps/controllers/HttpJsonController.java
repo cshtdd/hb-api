@@ -13,6 +13,10 @@ public class HttpJsonController {
 
     private static final Logger LOG = LogManager.getLogger(HttpJsonController.class);
 
+    public HttpJsonAction getAction() {
+        return action;
+    }
+
     public HttpJsonController(HttpJsonAction action) {
         this.action = action;
     }
