@@ -6,23 +6,31 @@ import static com.tddapps.utils.StringExtensions.*;
 
 public class HeartBeatPostActionInput {
     private final String hostId;
+    private final int intervalMs;
 
-    public HeartBeatPostActionInput(String hostId) {
+    public HeartBeatPostActionInput(String hostId){
         this.hostId = hostId;
+        intervalMs = -1;
     }
 
-    public String getHostId() {
-        return hostId;
+    public HeartBeatPostActionInput(String hostId, int intervalMs) {
+        this.hostId = hostId;
+        this.intervalMs = intervalMs;
     }
 
     @Override
     public String toString() {
-        return String.format("%s, hostId: %s", getClass().getSimpleName(), EmptyWhenNull(hostId));
+        return String.format(
+                "%s, intervalMs: %d, hostId: %s",
+                getClass().getSimpleName(),
+                getIntervalMs(),
+                EmptyWhenNull(hostId)
+        );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hostId);
+        return Objects.hash(intervalMs, hostId);
     }
 
     @Override
@@ -33,6 +41,18 @@ public class HeartBeatPostActionInput {
 
         HeartBeatPostActionInput that = (HeartBeatPostActionInput)obj;
 
+        if (this.intervalMs != that.intervalMs){
+            return false;
+        }
+
         return EmptyWhenNull(this.hostId).equals(EmptyWhenNull(that.hostId));
+    }
+
+    public String getHostId() {
+        return hostId;
+    }
+
+    public Integer getIntervalMs() {
+        return intervalMs;
     }
 }
