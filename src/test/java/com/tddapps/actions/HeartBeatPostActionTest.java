@@ -1,6 +1,7 @@
 package com.tddapps.actions;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionBodyParseException;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
@@ -52,9 +53,9 @@ public class HeartBeatPostActionTest {
 
     @Test
     public void ProcessReturnsSuccess(){
-        HttpJsonResponse<String> result = process("host1");
+        HttpJsonResponse<TextMessage> result = process("host1");
 
-        assertEquals(HttpJsonResponse.Success("OK"), result);
+        assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
     }
 
     private void parseShouldThrow(String body){
@@ -85,7 +86,7 @@ public class HeartBeatPostActionTest {
         return action.parse(seededBody);
     }
 
-    private HttpJsonResponse<String> process(String hostId){
+    private HttpJsonResponse<TextMessage> process(String hostId){
         try {
             return action.process(new HeartBeatPostActionInput(hostId));
         } catch (ActionProcessException e) {
