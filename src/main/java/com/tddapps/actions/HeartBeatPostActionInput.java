@@ -5,13 +5,10 @@ import java.util.Objects;
 import static com.tddapps.utils.StringExtensions.*;
 
 public class HeartBeatPostActionInput {
+    public static final int DEFAULT_INTERVAL_MS = 10*60*1000;
+
     private final String hostId;
     private final int intervalMs;
-
-    public HeartBeatPostActionInput(String hostId){
-        this.hostId = hostId;
-        intervalMs = -1;
-    }
 
     public HeartBeatPostActionInput(String hostId, int intervalMs) {
         this.hostId = hostId;

@@ -27,7 +27,7 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
             throw new ActionBodyParseException("Invalid hostId");
         }
 
-        return new HeartBeatPostActionInput(hostId);
+        return new HeartBeatPostActionInput(hostId, HeartBeatPostActionInput.DEFAULT_INTERVAL_MS);
     }
 
     private static String readHostId(JsonNode body){

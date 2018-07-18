@@ -21,7 +21,10 @@ public class HeartBeatPostActionTest {
     public void ReadsTheHostId(){
         HeartBeatPostActionInput input = parse("{\"hostId\": \"superHost1\"}");
 
-        assertEquals("superHost1", input.getHostId());
+        assertEquals(
+                new HeartBeatPostActionInput("superHost1", HeartBeatPostActionInput.DEFAULT_INTERVAL_MS),
+                input
+        );
     }
 
     @Test
@@ -88,7 +91,7 @@ public class HeartBeatPostActionTest {
 
     private HttpJsonResponse<TextMessage> process(String hostId){
         try {
-            return action.process(new HeartBeatPostActionInput(hostId));
+            return action.process(new HeartBeatPostActionInput(hostId, HeartBeatPostActionInput.DEFAULT_INTERVAL_MS));
         } catch (ActionProcessException e) {
             fail("Process should not have thrown", e);
             return null;
