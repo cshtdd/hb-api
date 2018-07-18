@@ -13,7 +13,7 @@ import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
 
 public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionInput, String> {
-    private static final Logger LOG = LogManager.getLogger(HeartBeatPostAction .class);
+    private static final Logger LOG = LogManager.getLogger(HeartBeatPostAction.class);
 
     @Override
     public HeartBeatPostActionInput parse(JsonNode body) throws ActionBodyParseException {
