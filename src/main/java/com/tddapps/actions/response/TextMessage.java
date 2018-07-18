@@ -41,6 +41,6 @@ public class TextMessage {
 
     @Override
     public String toString() {
-        return String.format("TextMessage:%s", EmptyWhenNull(message));
+        return String.format("%s:%s", getClass().getSimpleName(), EmptyWhenNull(message));
     }
 }

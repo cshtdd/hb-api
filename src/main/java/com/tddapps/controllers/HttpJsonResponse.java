@@ -67,6 +67,6 @@ public class HttpJsonResponse<T> {
 
     @Override
     public String toString() {
-        return String.format("HttpJsonResponse(%d) %s", statusCode, body);
+        return String.format("%s(%d) %s", getClass().getSimpleName(), statusCode, body);
     }
 }

@@ -17,7 +17,7 @@ public class HeartBeatPostActionInput {
 
     @Override
     public String toString() {
-        return String.format("HeartBeatPostActionInput, hostId: %s", EmptyWhenNull(hostId));
+        return String.format("%s, hostId: %s", getClass().getSimpleName(), EmptyWhenNull(hostId));
     }
 
     @Override
