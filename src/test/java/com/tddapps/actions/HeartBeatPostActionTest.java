@@ -21,10 +21,8 @@ public class HeartBeatPostActionTest {
     public void ReadsTheHostId(){
         HeartBeatPostActionInput input = parse("{\"hostId\": \"superHost1\"}");
 
-        assertEquals(
-                new HeartBeatPostActionInput("superHost1", HeartBeatPostActionInput.DEFAULT_INTERVAL_MS),
-                input
-        );
+        assertEquals("superHost1", input.getHostId());
+        assertEquals(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS, input.getIntervalMs());
     }
 
     @Test

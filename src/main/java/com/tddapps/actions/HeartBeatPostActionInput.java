@@ -49,7 +49,7 @@ public class HeartBeatPostActionInput {
         return hostId;
     }
 
-    public Integer getIntervalMs() {
+    public int getIntervalMs() {
         return intervalMs;
     }
 }
