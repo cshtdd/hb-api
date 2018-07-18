@@ -75,13 +75,13 @@ public class HeartBeatPostActionTest {
                 "{\"hostId\": \"X%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
         ));
     }
-
+    
     @Test
-    public void ParsingFailsWhenIntervalMsIsNotNumeric(){
-        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": null}");
-        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": \"\"}");
-        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": \" \"}");
-        parseShouldThrow("{\"hostId\": \"host1\", \"intervalMs\": \"pete\"}");
+    public void ParsingAssumesDefaultWhenIntervalMsIsNotNumeric(){
+        assertEquals(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS, parse("{\"hostId\": \"superHost1\", \"intervalMs\": null}").getIntervalMs());
+        assertEquals(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS, parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"\"}").getIntervalMs());
+        assertEquals(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS, parse("{\"hostId\": \"superHost1\", \"intervalMs\": \" \"}").getIntervalMs());
+        assertEquals(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS, parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"pete\"}").getIntervalMs());
     }
 
     @Test
