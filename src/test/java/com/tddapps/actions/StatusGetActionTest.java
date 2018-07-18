@@ -12,7 +12,7 @@ public class StatusGetActionTest {
 
     @Test
     public void ReturnsOk(){
-        assertEquals(HttpJsonResponse.Success(TextMessage.create("OK")), process());
+        assertEquals(HttpJsonResponse.Success(TextMessage.OK), process());
     }
 
     private HttpJsonResponse<TextMessage> process(){

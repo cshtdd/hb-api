@@ -12,6 +12,6 @@ public class StatusGetAction implements HttpSupplierAction<TextMessage> {
 
     @Override
     public HttpJsonResponse<TextMessage> process() throws ActionProcessException {
-        return HttpJsonResponse.Success(TextMessage.create("OK"));
+        return HttpJsonResponse.Success(TextMessage.OK);
     }
 }
