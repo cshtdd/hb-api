@@ -1,18 +1,14 @@
 package com.tddapps.handlers;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
-
-import java.util.Map;
+import com.tddapps.actions.StatusGetAction;
+import com.tddapps.controllers.HttpJsonController;
+import com.tddapps.controllers.HttpJsonControllerSupplier;
+import com.tddapps.handlers.infrastructure.BaseHttpJsonHandler;
 
 @SuppressWarnings("unused")
-public class StatusGet implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+public class StatusGet extends BaseHttpJsonHandler {
     @Override
-    public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
-        return ApiGatewayResponse.builder()
-                .setStatusCode(200)
-                .setObjectBody("OK")
-                .build();
+    protected HttpJsonController getController() {
+        return new HttpJsonControllerSupplier(new StatusGetAction());
     }
 }
