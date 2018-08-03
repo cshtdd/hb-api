@@ -114,10 +114,10 @@ resources:
       Properties:
         RetentionInDays: "14"
 
-    HostsTable:
+    HeartBeatsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.tablePrefix}hosts
+        TableName: ${self:custom.tablePrefix}heartbeats
         AttributeDefinitions:
           - AttributeName: host_id
             AttributeType: S
