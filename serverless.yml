@@ -31,7 +31,7 @@ provider:
 
 # you can add packaging information here
 package:
-  artifact: target/hb-api-${self:provider.stage}.jar
+  artifact: target/${self:service}-${self:provider.stage}.jar
 
 functions:
   StatusGet:
