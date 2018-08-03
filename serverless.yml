@@ -16,7 +16,6 @@ provider:
       burstLimit: 20
       rateLimit: 10
 
-# you can overwrite defaults here
   stage: ${opt:stage, 'dev'}
 #  region: us-east-1
   iamRoleStatements:
@@ -52,6 +51,7 @@ plugins:
   - serverless-domain-manager
 
 custom:
+  tablePrefix: ${self:service}-${self:provider.stage}-
   domainName: ${opt:domainName, 'hbapidev.tddapps.com'}
   customDomain:
     domainName: ${self:custom.domainName}
@@ -117,7 +117,7 @@ resources:
     HostsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: hosts_table
+        TableName: ${self:custom.tablePrefix}hosts
         AttributeDefinitions:
           - AttributeName: host_id
             AttributeType: S
