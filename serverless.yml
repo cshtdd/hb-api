@@ -19,39 +19,11 @@ provider:
 # you can overwrite defaults here
   stage: ${opt:stage, 'dev'}
 #  region: us-east-1
-
-#  iamRoleStatements:
-#    - Effect: Allow
-#      Action: sts:AssumeRole
-#      Principal:
-#        Service:
-#          - lambda.amazonaws.com
-#          - apigateway.amazonaws.com
-
-#    - Effect: "Allow"
-#      Action:
-#        - "sqs:SendMessage"
-#        - "sqs:ReceiveMessage"
-#      Resource:
-#        Fn::GetAtt:
-#          - HeartBeatsQueue
-#          - Arn
-
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:*"
+      Resource: "*"
 
 # you can define service wide environment variables here
 #  environment:
@@ -138,6 +110,20 @@ resources:
       Properties:
         RetentionInDays: "14"
     HeartBeatPostLogGroup:
-          Type: AWS::Logs::LogGroup
-          Properties:
-            RetentionInDays: "14"
+      Type: AWS::Logs::LogGroup
+      Properties:
+        RetentionInDays: "14"
+
+    HostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: hosts_table
+        AttributeDefinitions:
+          - AttributeName: host_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: host_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
