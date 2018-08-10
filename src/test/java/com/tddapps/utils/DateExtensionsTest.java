@@ -8,7 +8,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import static com.tddapps.utils.DateExtensions.ToUtcString;
+import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.Assert.assertEquals;
 
 public class DateExtensionsTest {
@@ -44,5 +44,12 @@ public class DateExtensionsTest {
         Date date = Date.from(dateTime.toInstant(ZoneOffset.ofHours(3)));
 
         assertEquals("2017-07-17T17:05:31Z[UTC]", ToUtcString(date));
+    }
+
+    @Test
+    public void UtcNowReturnsTheCorrectValue(){
+        Date expected = Date.from(ZonedDateTime.now(ZoneId.of("UTC")).toInstant());
+
+        assertEquals(expected, UtcNow());
     }
 }
