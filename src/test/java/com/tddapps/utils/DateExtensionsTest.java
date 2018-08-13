@@ -89,6 +89,10 @@ public class DateExtensionsTest {
 
     @Test
     public void AreAlmostEqualsWorksAsExpected(){
+        assertTrue(AreAlmostEquals(null, null));
+        assertFalse(AreAlmostEquals(UtcNow(), null));
+        assertFalse(AreAlmostEquals(null, UtcNow()));
+
         assertTrue(AreAlmostEquals(UtcNow(), UtcNow()));
 
         assertFalse(AreAlmostEquals(UtcNow(), UtcNowPlusMs(400)));

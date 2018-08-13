@@ -42,6 +42,10 @@ public abstract class DateExtensions {
     }
 
     public static boolean AreAlmostEquals(Date date1, Date date2, int deltaMs){
+        if (date1 == null || date2 == null){
+            return date1 == null && date2 == null;
+        }
+
         Duration delta = Duration.between(date1.toInstant(), date2.toInstant());
         return abs(delta.toMillis()) < abs(deltaMs);
     }
