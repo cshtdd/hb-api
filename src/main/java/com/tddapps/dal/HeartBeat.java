@@ -4,12 +4,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Objects;
 
+import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
+import static com.tddapps.utils.DateExtensions.ToUtcString;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
 @DynamoDBTable(tableName = "hb-api-dev-heartbeats")
@@ -43,14 +42,35 @@ public class HeartBeat {
 
     @Override
     public String toString() {
-        Instant instant = getExpirationUtc().toInstant();
-        ZonedDateTime utcDatetime = ZonedDateTime.ofInstant(instant, ZoneId.of("UTC"));
-
         return String.format(
                 "%s, expirationUtc: %s, hostId: %s",
                 getClass().getSimpleName(),
-                utcDatetime.format(DateTimeFormatter.ISO_DATE_TIME),
+                ToUtcString(getExpirationUtc(), "null"),
                 EmptyWhenNull(hostId)
         );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hostId, expirationUtc);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof HeartBeat)){
+            return false;
+        }
+
+        HeartBeat that = (HeartBeat)obj;
+
+        if (!EmptyWhenNull(this.hostId).equals(EmptyWhenNull(that.hostId))){
+            return false;
+        }
+
+        if (this.expirationUtc == null && that.expirationUtc != null){
+            return false;
+        }
+
+        return this.expirationUtc.equals(that.expirationUtc);
     }
 }
