@@ -45,9 +45,12 @@ public class DateExtensionsTest {
 
     @Test
     public void UtcNowReturnsTheCorrectValue(){
-        Date expected = Date.from(ZonedDateTime.now(ZoneId.of("UTC")).toInstant());
+        Instant expected = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
+        Instant actual = UtcNow().toInstant();
 
-        assertEquals(expected, UtcNow());
+        long delta = Duration.between(expected, actual).toMillis();
+
+        assertTrue(delta < 100);
     }
 
     @Test
