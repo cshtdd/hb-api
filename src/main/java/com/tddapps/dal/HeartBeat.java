@@ -7,7 +7,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import java.util.Date;
 import java.util.Objects;
 
-import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
 import static com.tddapps.utils.DateExtensions.ToUtcString;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
