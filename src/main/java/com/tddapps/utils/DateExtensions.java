@@ -1,10 +1,13 @@
 package com.tddapps.utils;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import static java.lang.Math.abs;
 
 public abstract class DateExtensions {
     public static String ToUtcString(Date value) {
@@ -29,8 +32,17 @@ public abstract class DateExtensions {
 
     public static Date UtcNowPlusMs(int milliseconds){
         Instant result = ZonedDateTime.now(ZoneId.of("UTC"))
-                .plusNanos(milliseconds * 1000)
+                .plus(Duration.ofMillis(milliseconds))
                 .toInstant();
         return Date.from(result);
+    }
+
+    public static boolean AreAlmostEquals(Date date1, Date date2){
+        return AreAlmostEquals(date1, date2, 100);
+    }
+
+    public static boolean AreAlmostEquals(Date date1, Date date2, int deltaMs){
+        Duration delta = Duration.between(date1.toInstant(), date2.toInstant());
+        return abs(delta.toMillis()) < abs(deltaMs);
     }
 }

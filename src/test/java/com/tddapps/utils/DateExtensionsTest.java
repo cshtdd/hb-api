@@ -63,6 +63,16 @@ public class DateExtensionsTest {
     }
 
     @Test
+    public void UtcNowPlusDoesNotReturnNow(){
+        Instant now = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
+        Instant actual = UtcNowPlusMs(400).toInstant();
+
+        long delta = Duration.between(now, actual).toMillis();
+
+        assertTrue(delta > 100);
+    }
+
+    @Test
     public void UtcNowPlusSupportsNegativeParameters(){
         Instant expected = ZonedDateTime.now(ZoneId.of("UTC"))
                 .plusNanos(-45000)
@@ -72,5 +82,29 @@ public class DateExtensionsTest {
         long delta = Duration.between(expected, actual).toMillis();
 
         assertTrue(delta < 100);
+    }
+
+    @Test
+    public void AreAlmostEqualsWorksAsExpected(){
+        assertTrue(AreAlmostEquals(UtcNow(), UtcNow()));
+
+        assertFalse(AreAlmostEquals(UtcNow(), UtcNowPlusMs(400)));
+        assertFalse(AreAlmostEquals(UtcNowPlusMs(400), UtcNow()));
+
+        assertFalse(AreAlmostEquals(UtcNow(), UtcNowPlusMs(-400)));
+        assertFalse(AreAlmostEquals(UtcNowPlusMs(-400), UtcNow()));
+
+        Date date1 = Date.from(ZonedDateTime.now(ZoneId.of("UTC"))
+                .plusNanos(80000)
+                .toInstant());
+
+        assertTrue(AreAlmostEquals(date1, UtcNowPlusMs(80)));
+        assertTrue(AreAlmostEquals(UtcNowPlusMs(80), date1));
+
+        assertTrue(AreAlmostEquals(date1, UtcNowPlusMs(85)));
+        assertTrue(AreAlmostEquals(UtcNowPlusMs(85), date1));
+
+        assertFalse(AreAlmostEquals(date1, UtcNowPlusMs(385)));
+        assertFalse(AreAlmostEquals(UtcNowPlusMs(385), date1));
     }
 }
