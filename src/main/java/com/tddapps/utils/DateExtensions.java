@@ -1,7 +1,6 @@
 package com.tddapps.utils;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +22,15 @@ public abstract class DateExtensions {
     }
 
     public static Date UtcNow(){
-        Instant now = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
+        Instant now = ZonedDateTime.now(ZoneId.of("UTC"))
+                .toInstant();
         return Date.from(now);
+    }
+
+    public static Date UtcNowPlusMs(int milliseconds){
+        Instant result = ZonedDateTime.now(ZoneId.of("UTC"))
+                .plusNanos(milliseconds * 1000)
+                .toInstant();
+        return Date.from(result);
     }
 }

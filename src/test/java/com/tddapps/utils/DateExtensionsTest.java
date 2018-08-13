@@ -2,14 +2,11 @@ package com.tddapps.utils;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Date;
 
 import static com.tddapps.utils.DateExtensions.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class DateExtensionsTest {
     @Test
@@ -51,5 +48,29 @@ public class DateExtensionsTest {
         Date expected = Date.from(ZonedDateTime.now(ZoneId.of("UTC")).toInstant());
 
         assertEquals(expected, UtcNow());
+    }
+
+    @Test
+    public void UtcNowPlusAddsTheCorrectNumberOfMilliseconds(){
+        Instant expected = ZonedDateTime.now(ZoneId.of("UTC"))
+                .plusNanos(40000)
+                .toInstant();
+        Instant actual = UtcNowPlusMs(40).toInstant();
+
+        long delta = Duration.between(expected, actual).toMillis();
+
+        assertTrue(delta < 100);
+    }
+
+    @Test
+    public void UtcNowPlusSupportsNegativeParameters(){
+        Instant expected = ZonedDateTime.now(ZoneId.of("UTC"))
+                .plusNanos(-45000)
+                .toInstant();
+        Instant actual = UtcNowPlusMs(-45).toInstant();
+
+        long delta = Duration.between(expected, actual).toMillis();
+
+        assertTrue(delta < 100);
     }
 }
