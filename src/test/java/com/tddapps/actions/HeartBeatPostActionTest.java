@@ -5,16 +5,23 @@ import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionBodyParseException;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
+import com.tddapps.dal.HeartBeatRepository;
 import com.tddapps.utils.JsonNodeHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
+import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class HeartBeatPostActionTest {
-    private final HeartBeatPostAction action = new HeartBeatPostAction();
+    private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
+    private final HeartBeatPostAction action = new HeartBeatPostAction(heartBeatRepository);
     private final String MAXIMUM_LENGTH_ALLOWED_STRING = StringUtils.leftPad("", 100, "0");
 
     @Test
@@ -97,6 +104,10 @@ public class HeartBeatPostActionTest {
         HttpJsonResponse<TextMessage> result = process("host1");
 
         assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
+        verify(heartBeatRepository).Save(argThat(t ->
+            t.getHostId() == "host1" &&
+                    AreAlmostEquals(t.getExpirationUtc(), UtcNowPlusMs(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS))
+        ));
     }
 
     private void parseShouldThrow(String body){

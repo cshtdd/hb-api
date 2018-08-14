@@ -6,14 +6,21 @@ import com.tddapps.controllers.ActionBodyParseException;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonAction;
 import com.tddapps.controllers.HttpJsonResponse;
+import com.tddapps.dal.HeartBeatRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.tddapps.utils.JsonNodeHelper.*;
+import static com.tddapps.utils.JsonNodeHelper.readInt;
+import static com.tddapps.utils.JsonNodeHelper.readString;
 
 public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionInput, TextMessage> {
     private static final Logger LOG = LogManager.getLogger(HeartBeatPostAction.class);
+    private final HeartBeatRepository heartBeatRepository;
+
+    public HeartBeatPostAction(HeartBeatRepository heartBeatRepository){
+        this.heartBeatRepository = heartBeatRepository;
+    }
 
     @Override
     public HeartBeatPostActionInput parse(JsonNode body) throws ActionBodyParseException {
@@ -51,6 +58,8 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     @Override
     public HttpJsonResponse<TextMessage> process(HeartBeatPostActionInput body) throws ActionProcessException {
         LOG.info(String.format("hostId: %s", body.getHostId()));
+
+        heartBeatRepository.Save(body.toHeartBeat());
 
         return new HttpJsonResponse<>(200, TextMessage.OK);
     }
