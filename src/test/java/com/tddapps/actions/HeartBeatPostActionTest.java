@@ -101,13 +101,13 @@ public class HeartBeatPostActionTest {
     }
 
     @Test
-    public void ProcessReturnsSuccess(){
+    public void ProcessWritesTheHeartBeat(){
         HeartBeat expectedHeartBeat = new HeartBeat(
-                "host1",
-                UtcNowPlusMs(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS)
+                "testHostA",
+                UtcNowPlusMs(34000)
         );
 
-        HttpJsonResponse<TextMessage> result = process("host1");
+        HttpJsonResponse<TextMessage> result = process("testHostA", 34000);
 
         assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
         verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
@@ -141,9 +141,9 @@ public class HeartBeatPostActionTest {
         return action.parse(seededBody);
     }
 
-    private HttpJsonResponse<TextMessage> process(String hostId){
+    private HttpJsonResponse<TextMessage> process(String hostId, int intervalMs){
         try {
-            return action.process(new HeartBeatPostActionInput(hostId, HeartBeatPostActionInput.DEFAULT_INTERVAL_MS));
+            return action.process(new HeartBeatPostActionInput(hostId, intervalMs));
         } catch (ActionProcessException e) {
             fail("Process should not have thrown", e);
             return null;
