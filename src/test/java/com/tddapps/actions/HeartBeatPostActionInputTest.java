@@ -3,12 +3,11 @@ package com.tddapps.actions;
 import com.tddapps.dal.HeartBeat;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-
-import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
-import static com.tddapps.utils.EqualityAssertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
+import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class HeartBeatPostActionInputTest {
@@ -40,11 +39,10 @@ public class HeartBeatPostActionInputTest {
 
     @Test
     public void CanBeConvertedToAHeartBeat(){
-        Date expectedDate = UtcNowPlusMs(5000);
-        HeartBeatPostActionInput input = new HeartBeatPostActionInput("foo", 5000);
-        HeartBeat hb = input.toHeartBeat();
+        HeartBeat expected = new HeartBeat("foo", UtcNowPlusMs(5000));
 
-        assertEquals("foo", hb.getHostId());
-        assertTrue(AreAlmostEquals(expectedDate, hb.getExpirationUtc()));
+        HeartBeat actual = new HeartBeatPostActionInput("foo", 5000).toHeartBeat();
+
+        assertTrue(expected.almostEquals(actual));
     }
 }

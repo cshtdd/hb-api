@@ -5,6 +5,7 @@ import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionBodyParseException;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
+import com.tddapps.dal.HeartBeat;
 import com.tddapps.dal.HeartBeatRepository;
 import com.tddapps.utils.JsonNodeHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -101,13 +102,15 @@ public class HeartBeatPostActionTest {
 
     @Test
     public void ProcessReturnsSuccess(){
+        HeartBeat expectedHeartBeat = new HeartBeat(
+                "host1",
+                UtcNowPlusMs(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS)
+        );
+
         HttpJsonResponse<TextMessage> result = process("host1");
 
         assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
-        verify(heartBeatRepository).Save(argThat(t ->
-            t.getHostId() == "host1" &&
-                    AreAlmostEquals(t.getExpirationUtc(), UtcNowPlusMs(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS))
-        ));
+        verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
     }
 
     private void parseShouldThrow(String body){

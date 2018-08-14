@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import java.util.Date;
 import java.util.Objects;
 
+import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
 import static com.tddapps.utils.DateExtensions.ToUtcString;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
@@ -62,14 +63,22 @@ public class HeartBeat {
 
         HeartBeat that = (HeartBeat)obj;
 
-        if (!EmptyWhenNull(this.hostId).equals(EmptyWhenNull(that.hostId))){
-            return false;
-        }
-
-        if (this.expirationUtc == null && that.expirationUtc != null){
+        if (!this.almostEquals(that)){
             return false;
         }
 
         return this.expirationUtc.equals(that.expirationUtc);
+    }
+
+    public boolean almostEquals(HeartBeat that) {
+        if (that == null){
+            return false;
+        }
+
+        if (!EmptyWhenNull(this.hostId).equals(EmptyWhenNull(that.hostId))){
+            return false;
+        }
+
+        return AreAlmostEquals(this.expirationUtc, that.expirationUtc);
     }
 }

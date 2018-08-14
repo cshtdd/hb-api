@@ -52,4 +52,28 @@ public class HeartBeatTest {
         shouldNotBeEqual(hb1, hb1DifferentDate);
         shouldNotBeEqual(hb1, hb1ReallyCloseDate);
     }
+
+    @Test
+    public void HasAnAlmostEqualMethod(){
+        Date date1 = UtcNow();
+
+        HeartBeat hbNoHost = new HeartBeat(null, date1);
+        HeartBeat hbEmptyHost = new HeartBeat("", date1);
+        HeartBeat hbNoDate = new HeartBeat("host1", null);
+        HeartBeat hb1 = new HeartBeat("host1", date1);
+        HeartBeat hb1Copy = new HeartBeat("host1", date1);
+        HeartBeat hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1));
+        HeartBeat hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000));
+        HeartBeat hb2 = new HeartBeat("host2", date1);
+
+        assertTrue(hb1.almostEquals(hb1Copy));
+        assertTrue(hbEmptyHost.almostEquals(hbNoHost));
+        assertTrue(hb1.almostEquals(hb1ReallyCloseDate));
+
+        assertFalse(hb1.almostEquals(null));
+        assertFalse(hb1.almostEquals(hbNoHost));
+        assertFalse(hb1.almostEquals(hbNoDate));
+        assertFalse(hb1.almostEquals(hb2));
+        assertFalse(hb1.almostEquals(hb1DifferentDate));
+    }
 }
