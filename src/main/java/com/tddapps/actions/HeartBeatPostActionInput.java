@@ -1,7 +1,10 @@
 package com.tddapps.actions;
 
+import com.tddapps.dal.HeartBeat;
+
 import java.util.Objects;
 
+import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static com.tddapps.utils.StringExtensions.*;
 
 public class HeartBeatPostActionInput {
@@ -53,5 +56,9 @@ public class HeartBeatPostActionInput {
 
     public int getIntervalMs() {
         return intervalMs;
+    }
+
+    public HeartBeat toHeartBeat() {
+        return new HeartBeat(hostId, UtcNowPlusMs(intervalMs));
     }
 }
