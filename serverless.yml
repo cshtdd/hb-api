@@ -7,6 +7,8 @@ service: hb-api
 provider:
   name: aws
   runtime: java8
+  environment:
+    TABLE_PREFIX: ${self:custom.tablePrefix}
 
   usagePlan:
     quota:
