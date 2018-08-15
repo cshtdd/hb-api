@@ -11,7 +11,7 @@ import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
 import static com.tddapps.utils.DateExtensions.ToUtcString;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
-@DynamoDBTable(tableName = "hb-api-dev-heartbeats")
+@DynamoDBTable(tableName = "heartbeats")
 public class HeartBeat {
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;

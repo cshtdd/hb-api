@@ -3,6 +3,7 @@ package com.tddapps.handlers;
 import com.tddapps.actions.HeartBeatPostAction;
 import com.tddapps.controllers.HttpJsonController;
 import com.tddapps.controllers.HttpJsonControllerDefault;
+import com.tddapps.dal.DynamoDBMapperFactoryWithTablePrefix;
 import com.tddapps.dal.HeartBeatRepositoryDynamo;
 import com.tddapps.handlers.infrastructure.BaseHttpJsonHandler;
 
@@ -10,7 +11,8 @@ import com.tddapps.handlers.infrastructure.BaseHttpJsonHandler;
 public class HeartBeatPost extends BaseHttpJsonHandler {
     @Override
     protected HttpJsonController getController() {
-        HeartBeatPostAction action = new HeartBeatPostAction(new HeartBeatRepositoryDynamo());
+        HeartBeatRepositoryDynamo repository = new HeartBeatRepositoryDynamo(new DynamoDBMapperFactoryWithTablePrefix());
+        HeartBeatPostAction action = new HeartBeatPostAction(repository);
         return new HttpJsonControllerDefault(action);
     }
 }
