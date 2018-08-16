@@ -48,6 +48,11 @@ functions:
           private: true
           path: /v1/hearbeat
           method: post
+  NotificationCalculator:
+    handler: com.tddapps.handlers.NotificationCalculator
+    events:
+    - schedule:
+        rate: cron(* * * * ? *)
 
 plugins:
   - serverless-domain-manager
@@ -112,6 +117,10 @@ resources:
       Properties:
         RetentionInDays: "14"
     HeartBeatPostLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        RetentionInDays: "14"
+    NotificationCalculatorLogGroup:
       Type: AWS::Logs::LogGroup
       Properties:
         RetentionInDays: "14"
