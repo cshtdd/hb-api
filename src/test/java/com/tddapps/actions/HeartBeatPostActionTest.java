@@ -129,8 +129,7 @@ public class HeartBeatPostActionTest {
             fail("Process Should have thrown an error");
         } catch (ActionProcessException e) {
             assertEquals("Save failed", e.getMessage());
-        }
-        catch (DalException e) {
+        } catch (DalException e) {
             fail("Save should not have thrown", e);
         }
     }

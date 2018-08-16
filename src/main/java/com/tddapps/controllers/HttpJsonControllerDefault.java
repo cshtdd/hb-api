@@ -38,12 +38,10 @@ public class HttpJsonControllerDefault implements HttpJsonController {
         } catch (IOException e) {
             LOG.warn("Invalid json in request body", e);
             return HttpJsonResponse.BadRequestWithMessage("Invalid json in request body");
-        }
-        catch (ActionBodyParseException e) {
+        } catch (ActionBodyParseException e) {
             LOG.warn("Action parsing failed", e);
             return HttpJsonResponse.BadRequestWithMessage(e.getMessage());
-        }
-        catch (ActionProcessException e) {
+        } catch (ActionProcessException e) {
             LOG.error("Action processing failed", e);
             return HttpJsonResponse.ServerErrorWithMessage(e.getMessage());
         }
