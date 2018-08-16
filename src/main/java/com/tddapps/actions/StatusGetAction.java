@@ -7,6 +7,7 @@ import com.tddapps.controllers.HttpSupplierAction;
 import com.tddapps.dal.DalException;
 import com.tddapps.dal.HeartBeat;
 import com.tddapps.dal.HeartBeatRepository;
+import com.tddapps.infrastructure.KeysCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,15 +17,17 @@ public class StatusGetAction implements HttpSupplierAction<TextMessage> {
     private static final Logger LOG = LogManager.getLogger(StatusGetAction.class);
 
     private final HeartBeatRepository heartBeatRepository;
+    private final KeysCache cache;
 
-    public StatusGetAction(HeartBeatRepository heartBeatRepository) {
+    public StatusGetAction(HeartBeatRepository heartBeatRepository, KeysCache cache) {
         this.heartBeatRepository = heartBeatRepository;
+        this.cache = cache;
     }
 
     @Override
     public HttpJsonResponse<TextMessage> process() throws ActionProcessException {
         if (ShouldReturnCachedResponse()){
-            return HttpJsonResponse.Success(TextMessage.OK);
+            return getCachedResponse();
         }
 
         LOG.info("Cache miss");
@@ -37,10 +40,23 @@ public class StatusGetAction implements HttpSupplierAction<TextMessage> {
             throw new ActionProcessException(e.getMessage());
         }
 
+        CacheResponse();
+        return getCachedResponse();
+    }
+
+    private HttpJsonResponse getCachedResponse() {
         return HttpJsonResponse.Success(TextMessage.OK);
     }
 
+    private void CacheResponse() {
+        cache.Add(getCacheKey());
+    }
+
     private boolean ShouldReturnCachedResponse() {
-        return false;
+        return cache.Contains(getCacheKey());
+    }
+
+    private String getCacheKey() {
+        return getClass().getName();
     }
 }
