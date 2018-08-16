@@ -9,6 +9,8 @@ import com.tddapps.dal.HeartBeatRepositoryDynamo;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.PicoContainer;
 
+import static org.picocontainer.Characteristics.CACHE;
+
 public class IocContainer {
     private static final IocContainer sharedInstance = new IocContainer();
 
@@ -28,9 +30,9 @@ public class IocContainer {
 
     private PicoContainer RegisterBindings() {
         return new DefaultPicoContainer()
-                .addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class)
-                .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
                 .addComponent(HeartBeatPostAction.class)
-                .addComponent(StatusGetAction.class);
+                .addComponent(StatusGetAction.class)
+                .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
+                .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class);
     }
 }

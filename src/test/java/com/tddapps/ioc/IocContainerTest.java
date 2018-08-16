@@ -11,9 +11,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class IocContainerTest {
     @Test
+    public void DependenciesAreNotSingletonByDefault(){
+        HeartBeatRepository repository1 = IocContainer.getInstance().Resolve(HeartBeatRepository.class);
+        HeartBeatRepository repository2 = IocContainer.getInstance().Resolve(HeartBeatRepository.class);
+
+        assertFalse(repository1 == repository2);
+    }
+
+    @Test
     public void RegisterDependencies(){
-        assertTrue(IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class) instanceof DynamoDBMapperFactoryWithTablePrefix);
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatRepository.class) instanceof HeartBeatRepositoryDynamo);
+    }
+
+    @Test
+    public void RegistersDynamoDBMapperFactoryAsASingleton(){
+        assertTrue(IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class) instanceof DynamoDBMapperFactoryWithTablePrefix);
+
+        DynamoDBMapperFactory factory1 = IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class);
+        DynamoDBMapperFactory factory2 = IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class);
+
+        assertTrue(factory1 == factory2);
     }
 
     @Test
