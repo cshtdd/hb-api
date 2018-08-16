@@ -32,16 +32,24 @@ public class StatusGetAction implements HttpSupplierAction<TextMessage> {
 
         LOG.info("Cache miss");
 
-        HeartBeat hb = new HeartBeat(getClass().getSimpleName(), UtcNowPlusMs(4*60*60*1000), true);
+        VerifyDatabase();
+
+        CacheResponse();
+        return getCachedResponse();
+    }
+
+    private void VerifyDatabase() throws ActionProcessException {
+        HeartBeat hb = new HeartBeat(
+                getClass().getSimpleName(),
+                UtcNowPlusMs(4*60*60*1000),
+                true
+        );
 
         try {
             heartBeatRepository.Save(hb);
         } catch (DalException e) {
             throw new ActionProcessException(e.getMessage());
         }
-
-        CacheResponse();
-        return getCachedResponse();
     }
 
     private HttpJsonResponse getCachedResponse() {
