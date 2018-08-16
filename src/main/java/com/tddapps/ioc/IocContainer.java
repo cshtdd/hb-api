@@ -6,6 +6,8 @@ import com.tddapps.dal.DynamoDBMapperFactory;
 import com.tddapps.dal.DynamoDBMapperFactoryWithTablePrefix;
 import com.tddapps.dal.HeartBeatRepository;
 import com.tddapps.dal.HeartBeatRepositoryDynamo;
+import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
+import com.tddapps.infrastructure.KeysCache;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.PicoContainer;
 
@@ -33,6 +35,7 @@ public class IocContainer {
                 .addComponent(HeartBeatPostAction.class)
                 .addComponent(StatusGetAction.class)
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
-                .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class);
+                .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class)
+                .as(CACHE).addComponent(KeysCache.class, InMemoryKeysCacheWithExpiration.class);
     }
 }
