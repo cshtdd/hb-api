@@ -1,6 +1,7 @@
 package com.tddapps.ioc;
 
 import com.tddapps.actions.HeartBeatPostAction;
+import com.tddapps.actions.NotificationCalculatorAction;
 import com.tddapps.actions.StatusGetAction;
 import com.tddapps.dal.DynamoDBMapperFactory;
 import com.tddapps.dal.DynamoDBMapperFactoryWithTablePrefix;
@@ -34,6 +35,7 @@ public class IocContainer {
         return new DefaultPicoContainer()
                 .addComponent(HeartBeatPostAction.class)
                 .addComponent(StatusGetAction.class)
+                .addComponent(NotificationCalculatorAction.class)
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
                 .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class)
                 .as(CACHE).addComponent(KeysCache.class, InMemoryKeysCacheWithExpiration.class);

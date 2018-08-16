@@ -1,6 +1,7 @@
 package com.tddapps.ioc;
 
 import com.tddapps.actions.HeartBeatPostAction;
+import com.tddapps.actions.NotificationCalculatorAction;
 import com.tddapps.actions.StatusGetAction;
 import com.tddapps.dal.DynamoDBMapperFactory;
 import com.tddapps.dal.DynamoDBMapperFactoryWithTablePrefix;
@@ -49,5 +50,6 @@ public class IocContainerTest {
     public void RegistersActions(){
         assertNotNull(IocContainer.getInstance().Resolve(HeartBeatPostAction.class));
         assertNotNull(IocContainer.getInstance().Resolve(StatusGetAction.class));
+        assertNotNull(IocContainer.getInstance().Resolve(NotificationCalculatorAction.class));
     }
 }
