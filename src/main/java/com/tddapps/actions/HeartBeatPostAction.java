@@ -6,6 +6,7 @@ import com.tddapps.controllers.ActionBodyParseException;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonAction;
 import com.tddapps.controllers.HttpJsonResponse;
+import com.tddapps.dal.DalException;
 import com.tddapps.dal.HeartBeatRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -59,7 +60,11 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     public HttpJsonResponse<TextMessage> process(HeartBeatPostActionInput body) throws ActionProcessException {
         LOG.info(String.format("hostId: %s", body.getHostId()));
 
-        heartBeatRepository.Save(body.toHeartBeat());
+        try {
+            heartBeatRepository.Save(body.toHeartBeat());
+        } catch (DalException e) {
+            throw new ActionProcessException(e.getMessage());
+        }
 
         return new HttpJsonResponse<>(200, TextMessage.OK);
     }

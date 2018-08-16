@@ -5,6 +5,7 @@ import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionBodyParseException;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
+import com.tddapps.dal.DalException;
 import com.tddapps.dal.HeartBeat;
 import com.tddapps.dal.HeartBeatRepository;
 import com.tddapps.utils.JsonNodeHelper;
@@ -13,11 +14,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
+import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 public class HeartBeatPostActionTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
@@ -106,10 +106,33 @@ public class HeartBeatPostActionTest {
                 UtcNowPlusMs(34000)
         );
 
-        HttpJsonResponse<TextMessage> result = process("testHostA", 34000);
+        try {
+            HttpJsonResponse<TextMessage> result = action.process(new HeartBeatPostActionInput("testHostA", 34000));
 
-        assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
-        verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
+            assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
+            verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
+        } catch (ActionProcessException e) {
+            fail("Process should not have thrown", e);
+        } catch (DalException e) {
+            fail("Save should not have thrown", e);
+        }
+    }
+
+    @Test
+    public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved(){
+        try {
+            doThrow(new DalException("Save failed"))
+                    .when(heartBeatRepository)
+                    .Save(any(HeartBeat.class));
+
+            action.process(new HeartBeatPostActionInput("testHostA", 34000));
+            fail("Process Should have thrown an error");
+        } catch (ActionProcessException e) {
+            assertEquals("Save failed", e.getMessage());
+        }
+        catch (DalException e) {
+            fail("Save should not have thrown", e);
+        }
     }
 
     private void parseShouldThrow(String body){
@@ -140,12 +163,4 @@ public class HeartBeatPostActionTest {
         return action.parse(seededBody);
     }
 
-    private HttpJsonResponse<TextMessage> process(String hostId, int intervalMs){
-        try {
-            return action.process(new HeartBeatPostActionInput(hostId, intervalMs));
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-            return null;
-        }
-    }
 }
