@@ -2,6 +2,7 @@ package com.tddapps.dal;
 
 import org.junit.jupiter.api.Test;
 
+import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
 import static com.tddapps.utils.DateExtensions.UtcNow;
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
@@ -26,6 +27,29 @@ public class HeartBeatTest {
     @Test
     public void HasSensibleStringRepresentationForEmptyObject(){
         assertEquals("HeartBeat, expirationUtc: null, hostId: , isTest: false", new HeartBeat().toString());
+    }
+
+    @Test
+    public void NoNeedToSpecifyIsTestByDefault(){
+        HeartBeat hb = new HeartBeat("host1", UtcNowPlusMs(6000));
+        assertFalse(hb.isTest());
+    }
+
+    @Test
+    public void IsTestIsConsideredForEquality(){
+        Date date1 = UtcNow();
+
+        HeartBeat hb1 = new HeartBeat("host1", date1);
+        HeartBeat hb1Clone = new HeartBeat("host1", date1, false);
+        HeartBeat hb1CloneReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
+        HeartBeat hb1Test = new HeartBeat("host1", date1, true);
+        HeartBeat hb1TestReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), true);
+
+        shouldBeEqual(hb1, hb1Clone);
+        shouldNotBeEqual(hb1, hb1Test);
+
+        assertTrue(hb1.almostEquals(hb1CloneReallyCloseDate));
+        assertFalse(hb1.almostEquals(hb1TestReallyCloseDate));
     }
 
     @Test

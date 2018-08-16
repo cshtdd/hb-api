@@ -24,8 +24,12 @@ public class HeartBeat {
 
     public HeartBeat(){ }
     public HeartBeat(String hostId, Date expirationUtc){
+        this(hostId, expirationUtc, false);
+    }
+    public HeartBeat(String hostId, Date expirationUtc, boolean isTest){
         this.hostId = hostId;
         this.expirationUtc = expirationUtc;
+        this.isTest = isTest;
     }
 
     public String getHostId() {
@@ -65,7 +69,7 @@ public class HeartBeat {
 
     @Override
     public int hashCode() {
-        return Objects.hash(hostId, expirationUtc);
+        return Objects.hash(isTest, hostId, expirationUtc);
     }
 
     @Override
@@ -85,6 +89,10 @@ public class HeartBeat {
 
     public boolean almostEquals(HeartBeat that) {
         if (that == null){
+            return false;
+        }
+
+        if(this.isTest != that.isTest){
             return false;
         }
 
