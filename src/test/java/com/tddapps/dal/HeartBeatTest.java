@@ -20,12 +20,12 @@ public class HeartBeatTest {
 
         HeartBeat heartBeat = new HeartBeat("myHost", expirationUtc);
 
-        assertEquals("HeartBeat, expirationUtc: 2017-07-17T20:05:31Z[UTC], hostId: myHost", heartBeat.toString());
+        assertEquals("HeartBeat, expirationUtc: 2017-07-17T20:05:31Z[UTC], hostId: myHost, isTest: false", heartBeat.toString());
     }
 
     @Test
     public void HasSensibleStringRepresentationForEmptyObject(){
-        assertEquals("HeartBeat, expirationUtc: null, hostId: ", new HeartBeat().toString());
+        assertEquals("HeartBeat, expirationUtc: null, hostId: , isTest: false", new HeartBeat().toString());
     }
 
     @Test

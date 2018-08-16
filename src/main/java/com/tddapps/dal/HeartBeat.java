@@ -15,6 +15,10 @@ import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 public class HeartBeat {
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
+
+    @DynamoDBAttribute(attributeName = "is_test")
+    private boolean isTest;
+
     @DynamoDBAttribute(attributeName = "expiration_utc_datetime")
     private Date expirationUtc;
 
@@ -40,13 +44,22 @@ public class HeartBeat {
         this.expirationUtc = expirationUtc;
     }
 
+    public boolean isTest() {
+        return isTest;
+    }
+
+    public void setTest(boolean test) {
+        isTest = test;
+    }
+
     @Override
     public String toString() {
         return String.format(
-                "%s, expirationUtc: %s, hostId: %s",
+                "%s, expirationUtc: %s, hostId: %s, isTest: %s",
                 getClass().getSimpleName(),
                 ToUtcString(getExpirationUtc(), "null"),
-                EmptyWhenNull(hostId)
+                EmptyWhenNull(hostId),
+                isTest
         );
     }
 
