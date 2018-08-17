@@ -8,16 +8,15 @@ import com.tddapps.dal.HeartBeat;
 import com.tddapps.dal.HeartBeatRepository;
 import com.tddapps.infrastructure.KeysCacheStub;
 import org.junit.jupiter.api.Test;
-import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.verification.VerificationMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tddapps.utils.DateExtensions.*;
+import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 public class StatusGetActionTest {
