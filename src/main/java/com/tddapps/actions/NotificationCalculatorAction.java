@@ -4,6 +4,7 @@ import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.controllers.HttpSupplierAction;
+import com.tddapps.dal.DalException;
 import com.tddapps.dal.HeartBeatRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,12 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
     @Override
     public HttpJsonResponse<TextMessage> process() throws ActionProcessException {
         LOG.info("calculating notifications");
+
+        try {
+            heartBeatRepository.All();
+        } catch (DalException e) {
+            throw new ActionProcessException(e.getMessage());
+        }
 
         return HttpJsonResponse.Success(TextMessage.OK);
     }
