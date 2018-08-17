@@ -3,13 +3,16 @@ package com.tddapps.actions;
 import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
+import com.tddapps.dal.HeartBeatRepository;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
 
 public class NotificationCalculatorActionTest {
-    private final NotificationCalculatorAction action = new NotificationCalculatorAction();
+    private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
+    private final NotificationCalculatorAction action = new NotificationCalculatorAction(heartBeatRepository);
 
     @Test
     public void ReturnsSuccess(){
