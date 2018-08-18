@@ -49,6 +49,8 @@ functions:
     events:
     - schedule:
         rate: cron(* * * * ? *)
+    environment:
+      TOPIC_NAME: ${self:resources.Outputs.HeartBeatNotificationsTopicArn.Value}
 
 plugins:
   - serverless-domain-manager
@@ -96,3 +98,8 @@ resources:
       Properties:
         DisplayName: ${self:custom.tablePrefix}heartbeat-notifications
         TopicName: ${self:custom.tablePrefix}heartbeat-notifications
+
+  Outputs:
+    HeartBeatNotificationsTopicArn:
+      Value:
+        Ref: HeartBeatNotificationsTopic
