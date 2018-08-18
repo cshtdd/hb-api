@@ -119,4 +119,8 @@ public class HeartBeat {
 
         return UtcNow().compareTo(expirationUtc) >= 0;
     }
+
+    public boolean isNotExpired(){
+        return !isExpired();
+    }
 }

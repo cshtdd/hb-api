@@ -105,21 +105,26 @@ public class HeartBeatTest {
     @Test
     public void HeartBeatsWithCloseExpirationAreNotExpired(){
         assertFalse(new HeartBeat("", UtcNowPlusMs(50)).isExpired());
+        assertTrue(new HeartBeat("", UtcNowPlusMs(50)).isNotExpired());
         assertFalse(new HeartBeat("", UtcNowPlusMs(-50)).isExpired());
+        assertTrue(new HeartBeat("", UtcNowPlusMs(-50)).isNotExpired());
     }
 
     @Test
     public void FutureHeartBeatsAreNotExpired(){
         assertFalse(new HeartBeat("", UtcNowPlusMs(5000)).isExpired());
+        assertTrue(new HeartBeat("", UtcNowPlusMs(5000)).isNotExpired());
     }
 
     @Test
     public void PastHeartBeatsAreExpired(){
         assertTrue(new HeartBeat("", UtcNowPlusMs(-5000)).isExpired());
+        assertFalse(new HeartBeat("", UtcNowPlusMs(-5000)).isNotExpired());
     }
 
     @Test
     public void HeartBeatsWithNoExpirationAreExpired(){
         assertTrue(new HeartBeat("", null).isExpired());
+        assertFalse(new HeartBeat("", null).isNotExpired());
     }
 }
