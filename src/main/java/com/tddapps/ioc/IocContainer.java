@@ -34,6 +34,7 @@ public class IocContainer {
                 .addComponent(StatusGetAction.class)
                 .addComponent(NotificationCalculatorAction.class)
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
+                .addComponent(NotificationSender.class, NotificationSenderSns.class)
                 .addComponent(SettingsReader.class, EnvironmentSettingsReader.class)
                 .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class)
                 .as(CACHE).addComponent(KeysCache.class, InMemoryKeysCacheWithExpiration.class);
