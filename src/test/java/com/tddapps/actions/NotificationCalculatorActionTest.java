@@ -52,11 +52,13 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void SendsNotificationsForEachExpiredHeartBeat(){
+        HeartBeat hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000));
+        HeartBeat hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000));
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
-                new HeartBeat("hbExpired1", UtcNowPlusMs(-5000)),
+                hbExpired1,
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000)),
-                new HeartBeat("hbExpired2", UtcNowPlusMs(-15000)),
+                hbExpired2,
                 new HeartBeat("hb2", UtcNowPlusMs(25000))
         };
         try {
@@ -70,12 +72,15 @@ public class NotificationCalculatorActionTest {
         try {
             action.process();
 
-            verify(notificationSender, times(2))
-                    .Send(any(String.class), any(String.class));
-            verify(notificationSender)
-                    .Send("Host hbExpired1 missing", "Host hbExpired1 missing");
-            verify(notificationSender)
-                    .Send("Host hbExpired2 missing", "Host hbExpired2 missing");
+            String expectedSubject = "Hosts missing [hbExpired1, hbExpired2]";
+            String expectedBody = "Hosts missing [hbExpired1, hbExpired2]\n" +
+                    "\n" +
+                    hbExpired1.toString() +
+                    "\n" +
+                    hbExpired2.toString() +
+                    "\n" +
+                    "--";
+            verify(notificationSender).Send(expectedBody, expectedSubject);
         } catch (ActionProcessException e) {
             fail("Process should not have thrown", e);
         } catch (DalException e) {

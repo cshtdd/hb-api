@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class NotificationCalculatorAction implements HttpSupplierAction<TextMessage> {
     private static final Logger LOG = LogManager.getLogger(NotificationCalculatorAction.class);
@@ -34,11 +35,24 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
                     .toArray(HeartBeat[]::new);
 
             for (HeartBeat hb : expiredHeartBeats){
-                String subject = String.format("Host %s missing", hb.getHostId());
-                LOG.info(String.format("%s; %s", subject, hb));
-
-                notificationSender.Send(subject, subject);
+                LOG.info(String.format("Host missing; %s", hb.toString()));
             }
+
+            String[] expiredHostIds = Arrays.stream(expiredHeartBeats)
+                    .map(HeartBeat::getHostId)
+                    .toArray(String[]::new);
+
+            String concatenatedHostsIds = String.join(", ", expiredHostIds);
+            String notificationSubject = String.format("Hosts missing [%s]", concatenatedHostsIds);
+
+
+            String[] heartBeatsDescriptionArray = Arrays.stream(expiredHeartBeats)
+                    .map(HeartBeat::toString)
+                    .toArray(String[]::new);
+            String heartBeatsDescriptions = String.join("\n", heartBeatsDescriptionArray);
+            String notificationBody = String.format("%s\n\n%s\n--", notificationSubject, heartBeatsDescriptions);
+
+            notificationSender.Send(notificationBody , notificationSubject);
         } catch (DalException e) {
             throw new ActionProcessException(e.getMessage());
         }
