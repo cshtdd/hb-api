@@ -25,6 +25,7 @@ provider:
     - Effect: "Allow"
       Action:
         - "dynamodb:*"
+        - "SNS:Publish"
       Resource: "*"
 
 package:
