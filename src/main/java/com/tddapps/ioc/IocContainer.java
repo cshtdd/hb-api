@@ -3,10 +3,7 @@ package com.tddapps.ioc;
 import com.tddapps.actions.HeartBeatPostAction;
 import com.tddapps.actions.NotificationCalculatorAction;
 import com.tddapps.actions.StatusGetAction;
-import com.tddapps.dal.DynamoDBMapperFactory;
-import com.tddapps.dal.DynamoDBMapperFactoryWithTablePrefix;
-import com.tddapps.dal.HeartBeatRepository;
-import com.tddapps.dal.HeartBeatRepositoryDynamo;
+import com.tddapps.dal.*;
 import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
 import com.tddapps.infrastructure.KeysCache;
 import org.picocontainer.DefaultPicoContainer;
@@ -37,6 +34,7 @@ public class IocContainer {
                 .addComponent(StatusGetAction.class)
                 .addComponent(NotificationCalculatorAction.class)
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
+                .addComponent(SettingsReader.class, EnvironmentSettingsReader.class)
                 .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class)
                 .as(CACHE).addComponent(KeysCache.class, InMemoryKeysCacheWithExpiration.class);
     }
