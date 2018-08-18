@@ -101,4 +101,25 @@ public class HeartBeatTest {
         assertFalse(hb1.almostEquals(hb2));
         assertFalse(hb1.almostEquals(hb1DifferentDate));
     }
+
+    @Test
+    public void HeartBeatsWithCloseExpirationAreNotExpired(){
+        assertFalse(new HeartBeat("", UtcNowPlusMs(50)).isExpired());
+        assertFalse(new HeartBeat("", UtcNowPlusMs(-50)).isExpired());
+    }
+
+    @Test
+    public void FutureHeartBeatsAreNotExpired(){
+        assertFalse(new HeartBeat("", UtcNowPlusMs(5000)).isExpired());
+    }
+
+    @Test
+    public void PastHeartBeatsAreExpired(){
+        assertTrue(new HeartBeat("", UtcNowPlusMs(-5000)).isExpired());
+    }
+
+    @Test
+    public void HeartBeatsWithNoExpirationAreExpired(){
+        assertTrue(new HeartBeat("", null).isExpired());
+    }
 }

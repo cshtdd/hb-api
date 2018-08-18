@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
 import static com.tddapps.utils.DateExtensions.ToUtcString;
+import static com.tddapps.utils.DateExtensions.UtcNow;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
 @DynamoDBTable(tableName = "heartbeats")
@@ -105,5 +106,17 @@ public class HeartBeat {
         }
 
         return AreAlmostEquals(this.expirationUtc, that.expirationUtc);
+    }
+
+    public boolean isExpired() {
+        if (expirationUtc == null){
+            return true;
+        }
+
+        if (AreAlmostEquals(UtcNow(), expirationUtc)){
+            return false;
+        }
+
+        return UtcNow().compareTo(expirationUtc) >= 0;
     }
 }
