@@ -90,3 +90,9 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+
+    HeartBeatNotificationsTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: ${self:custom.tablePrefix}heartbeat-notifications
+        TopicName: ${self:custom.tablePrefix}heartbeat-notifications
