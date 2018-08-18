@@ -38,7 +38,7 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
             if (heartBeats != null) {
                 Arrays.stream(heartBeats).forEach(hb -> {
                     LOG.info(hb.toString());
-                    notificationSender.publish(topicName, hb.toString());
+//                    notificationSender.publish(topicName, hb.toString());
                 });
             }
         } catch (DalException e) {
