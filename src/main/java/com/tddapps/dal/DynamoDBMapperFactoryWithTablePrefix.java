@@ -10,8 +10,8 @@ import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 public class DynamoDBMapperFactoryWithTablePrefix implements DynamoDBMapperFactory {
     private final DynamoDBMapper mapper;
 
-    public DynamoDBMapperFactoryWithTablePrefix(){
-        String tablePrefix = EmptyWhenNull(System.getenv("TABLE_PREFIX"));
+    public DynamoDBMapperFactoryWithTablePrefix(SettingsReader settingsReader){
+        String tablePrefix = settingsReader.ReadString(Settings.TABLE_PREFIX);
 
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.defaultClient();
         DynamoDBMapperConfig.TableNameOverride tableNameOverride =

@@ -5,6 +5,7 @@ import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.dal.DalException;
 import com.tddapps.dal.HeartBeatRepository;
+import com.tddapps.dal.SettingsReader;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +16,8 @@ import static org.mockito.Mockito.verify;
 
 public class NotificationCalculatorActionTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
-    private final NotificationCalculatorAction action = new NotificationCalculatorAction(heartBeatRepository);
+    private final SettingsReader settingsReader = mock(SettingsReader.class);
+    private final NotificationCalculatorAction action = new NotificationCalculatorAction(heartBeatRepository, settingsReader);
 
     @Test
     public void ReadsAllTheHeartBeats(){
