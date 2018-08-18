@@ -52,6 +52,10 @@ public class HeartBeat {
         return isTest;
     }
 
+    public boolean isNotTest(){
+        return !isTest();
+    }
+
     public void setTest(boolean test) {
         isTest = test;
     }
