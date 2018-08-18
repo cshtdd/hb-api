@@ -35,6 +35,7 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
 
             for (HeartBeat hb : expiredHeartBeats){
                 String subject = String.format("Host %s missing", hb.getHostId());
+                LOG.info(String.format("%s; %s", subject, hb));
 
                 notificationSender.Send(subject, subject);
             }
