@@ -1,8 +1,6 @@
 package com.tddapps.dal;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 
 import java.util.Date;
 import java.util.Objects;
@@ -53,6 +51,7 @@ public class HeartBeat {
         return isTest;
     }
 
+    @DynamoDBIgnore
     public boolean isNotTest(){
         return !isTest();
     }
@@ -108,6 +107,7 @@ public class HeartBeat {
         return AreAlmostEquals(this.expirationUtc, that.expirationUtc);
     }
 
+    @DynamoDBIgnore
     public boolean isExpired() {
         if (expirationUtc == null){
             return true;
@@ -120,6 +120,7 @@ public class HeartBeat {
         return UtcNow().compareTo(expirationUtc) >= 0;
     }
 
+    @DynamoDBIgnore
     public boolean isNotExpired(){
         return !isExpired();
     }
