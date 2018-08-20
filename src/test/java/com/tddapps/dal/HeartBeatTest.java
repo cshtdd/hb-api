@@ -150,4 +150,14 @@ public class HeartBeatTest {
         assertTrue(new HeartBeat("", null).isExpired());
         assertFalse(new HeartBeat("", null).isNotExpired());
     }
+
+    @Test
+    public void CloneWithUpdatedExpirationUtcReturnsACopyOfTheOriginalHeartBeatWithADifferentExpiration(){
+        HeartBeat expectedHeartBeat = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+
+        HeartBeat actualHeartBeat = new HeartBeat("host1", UtcNow(), false)
+                .clone(UtcNowPlusMs(3000));
+
+        assertTrue(expectedHeartBeat.almostEquals(actualHeartBeat));
+    }
 }

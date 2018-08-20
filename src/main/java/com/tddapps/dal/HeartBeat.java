@@ -114,6 +114,14 @@ public class HeartBeat implements Cloneable{
         return new HeartBeat(this);
     }
 
+    public HeartBeat clone(Date updateExpirationUtc){
+        HeartBeat result = (HeartBeat)this.clone();
+
+        result.setExpirationUtc(updateExpirationUtc);
+
+        return result;
+    }
+
     @DynamoDBIgnore
     public boolean isExpired() {
         if (expirationUtc == null){
