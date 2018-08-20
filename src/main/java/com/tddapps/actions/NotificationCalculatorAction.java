@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class NotificationCalculatorAction implements HttpSupplierAction<TextMessage> {
     private static final Logger LOG = LogManager.getLogger(NotificationCalculatorAction.class);
@@ -29,14 +28,8 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
         LOG.info("calculating notifications");
 
         try {
-            HeartBeat[] expiredHeartBeats = Arrays.stream(readHeartBeats())
-                    .filter(HeartBeat::isNotTest)
-                    .filter(HeartBeat::isExpired)
-                    .toArray(HeartBeat[]::new);
-
-            for (HeartBeat hb : expiredHeartBeats){
-                LOG.info(String.format("Host missing; %s", hb.toString()));
-            }
+            HeartBeat[] expiredHeartBeats = readExpiredHeartBeats();
+            logExpiredHeartBeats(expiredHeartBeats);
 
             String[] expiredHostIds = Arrays.stream(expiredHeartBeats)
                     .map(HeartBeat::getHostId)
@@ -44,7 +37,6 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
 
             String concatenatedHostsIds = String.join(", ", expiredHostIds);
             String notificationSubject = String.format("Hosts missing [%s]", concatenatedHostsIds);
-
 
             String[] heartBeatsDescriptionArray = Arrays.stream(expiredHeartBeats)
                     .map(HeartBeat::toString)
@@ -58,6 +50,19 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
         }
 
         return HttpJsonResponse.Success(TextMessage.OK);
+    }
+
+    private HeartBeat[] readExpiredHeartBeats() throws DalException {
+        return Arrays.stream(readHeartBeats())
+                .filter(HeartBeat::isNotTest)
+                .filter(HeartBeat::isExpired)
+                .toArray(HeartBeat[]::new);
+    }
+
+    private void logExpiredHeartBeats(HeartBeat[] expiredHeartBeats) {
+        for (HeartBeat hb : expiredHeartBeats){
+            LOG.info(String.format("Host missing; %s", hb.toString()));
+        }
     }
 
     private HeartBeat[] readHeartBeats() throws DalException {
