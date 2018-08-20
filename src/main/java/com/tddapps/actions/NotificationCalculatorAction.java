@@ -12,6 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.Date;
+
+import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 
 public class NotificationCalculatorAction implements HttpSupplierAction<TextMessage> {
     private static final Logger LOG = LogManager.getLogger(NotificationCalculatorAction.class);
@@ -45,11 +48,25 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
             String notificationBody = String.format("%s\n\n%s\n--", notificationSubject, heartBeatsDescriptions);
 
             notificationSender.Send(notificationBody , notificationSubject);
+
+            updateExpiredHeartBeats(expiredHeartBeats);
         } catch (DalException e) {
             throw new ActionProcessException(e.getMessage());
         }
 
         return HttpJsonResponse.Success(TextMessage.OK);
+    }
+
+    private void updateExpiredHeartBeats(HeartBeat[] expiredHeartBeats) throws DalException {
+        Date updatedDate = UtcNowPlusMs(24*60*60*1000);
+
+        HeartBeat[] updatedHeartbeats = Arrays.stream(expiredHeartBeats)
+                .map(hb -> hb.clone(updatedDate))
+                .toArray(HeartBeat[]::new);
+
+        for (HeartBeat hb : updatedHeartbeats) {
+            heartBeatRepository.Save(hb);
+        }
     }
 
     private HeartBeat[] readExpiredHeartBeats() throws DalException {
