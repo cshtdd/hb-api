@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
 import static com.tddapps.utils.DateExtensions.UtcNow;
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
@@ -76,6 +77,28 @@ public class HeartBeatTest {
         shouldNotBeEqual(hb1, hb2);
         shouldNotBeEqual(hb1, hb1DifferentDate);
         shouldNotBeEqual(hb1, hb1ReallyCloseDate);
+    }
+
+    @Test
+    public void CanBeCloned(){
+        HeartBeat hb = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+        HeartBeat hbClone = (HeartBeat) hb.clone();
+
+        assertFalse(hb == hbClone);
+        assertTrue(hb.almostEquals(hbClone));
+        assertEquals(hb, hbClone);
+
+        assertEquals(hb.getHostId(), hbClone.getHostId());
+        assertTrue(AreAlmostEquals(hb.getExpirationUtc(), hbClone.getExpirationUtc()));
+        assertEquals(hb.isTest(), hbClone.isTest());
+
+        hb.setHostId("different");
+        hb.setExpirationUtc(UtcNowPlusMs(100000));
+        hb.setTest(true);
+
+        assertNotEquals(hb.getHostId(), hbClone.getHostId());
+        assertFalse(AreAlmostEquals(hb.getExpirationUtc(), hbClone.getExpirationUtc()));
+        assertNotEquals(hb.isTest(), hbClone.isTest());
     }
 
     @Test

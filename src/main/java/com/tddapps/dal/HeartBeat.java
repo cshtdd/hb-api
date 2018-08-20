@@ -11,7 +11,7 @@ import static com.tddapps.utils.DateExtensions.UtcNow;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
 @DynamoDBTable(tableName = "heartbeats")
-public class HeartBeat {
+public class HeartBeat implements Cloneable{
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
 
@@ -29,6 +29,9 @@ public class HeartBeat {
         this.hostId = hostId;
         this.expirationUtc = expirationUtc;
         this.isTest = isTest;
+    }
+    protected HeartBeat(HeartBeat that){
+        this(that.hostId, that.expirationUtc, that.isTest);
     }
 
     public String getHostId() {
@@ -105,6 +108,10 @@ public class HeartBeat {
         }
 
         return AreAlmostEquals(this.expirationUtc, that.expirationUtc);
+    }
+
+    public Object clone(){
+        return new HeartBeat(this);
     }
 
     @DynamoDBIgnore
