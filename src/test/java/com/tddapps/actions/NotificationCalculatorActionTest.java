@@ -83,6 +83,30 @@ public class NotificationCalculatorActionTest {
     }
 
     @Test
+    public void ProcessThrowsAnActionProcessExceptionWhenNotificationsCouldNotBeSent() throws DalException {
+        HeartBeat[] seededHeartBeats = new HeartBeat[]{
+                new HeartBeat("hbExpired1", UtcNowPlusMs(-5000))
+        };
+        doReturn(seededHeartBeats)
+                .when(heartBeatRepository)
+                .All();
+        doThrow(new DalException("Send failed"))
+                .when(notificationSender)
+                .Send(anyString(), anyString());
+
+        String actualMessage = "";
+
+        try {
+            action.process();
+            fail("Process Should have thrown an error");
+        } catch (ActionProcessException e) {
+            actualMessage = e.getMessage();
+        }
+
+        assertEquals("Send failed", actualMessage);
+    }
+
+    @Test
     public void UpdatesTheExpirationOfExpiredHeartBeats() throws DalException, ActionProcessException {
         HeartBeat hbExpected1 = new HeartBeat("hbExpired1", UtcNowPlusMs(24 * 60 * 60 * 1000));
         HeartBeat hbExpected2 = new HeartBeat("hbExpired2", UtcNowPlusMs(24 * 60 * 60 * 1000));
@@ -136,9 +160,7 @@ public class NotificationCalculatorActionTest {
                 .when(heartBeatRepository)
                 .All();
 
-
         action.process();
-
 
         verify(notificationSender, times(0))
                 .Send(anyString(), anyString());
@@ -151,14 +173,11 @@ public class NotificationCalculatorActionTest {
                 new HeartBeat("hb1", UtcNowPlusMs(5000)),
                 new HeartBeat("hb2", UtcNowPlusMs(25000))
         };
-
         doReturn(seededHeartBeats)
                 .when(heartBeatRepository)
                 .All();
 
-
         action.process();
-
 
         verify(heartBeatRepository, times(0))
                 .Save(any(HeartBeat.class));
