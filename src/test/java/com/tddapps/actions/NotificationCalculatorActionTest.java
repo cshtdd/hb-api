@@ -104,6 +104,8 @@ public class NotificationCalculatorActionTest {
         }
 
         assertEquals("Send failed", actualMessage);
+        verify(heartBeatRepository, times(0))
+                .Save(any(HeartBeat.class));
     }
 
     @Test
