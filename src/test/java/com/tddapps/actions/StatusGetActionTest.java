@@ -25,76 +25,70 @@ public class StatusGetActionTest {
     private final StatusGetAction action = new StatusGetAction(heartBeatRepository, keysCache);
 
     @Test
-    public void VerifiesHeartBeatsCanBeSaved(){
+    public void VerifiesHeartBeatsCanBeSaved() throws ActionProcessException, DalException {
         HeartBeat expectedHeartBeat = new HeartBeat(
                 "StatusGetAction",
                 UtcNowPlusMs(4*60*60*1000),
                 true
         );
 
-        try {
-            HttpJsonResponse<TextMessage> result = action.process();
 
-            assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
-            verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-        } catch (DalException e) {
-            fail("Save should not have thrown", e);
-        }
+        HttpJsonResponse<TextMessage> result = action.process();
+
+
+        assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
+        verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
     }
 
     @Test
-    public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved(){
-        try {
-            doThrow(new DalException("Save failed"))
-                    .when(heartBeatRepository)
-                    .Save(any(HeartBeat.class));
+    public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved() throws DalException {
+        doThrow(new DalException("Save failed"))
+                .when(heartBeatRepository)
+                .Save(any(HeartBeat.class));
 
+        String actualMessage = "";
+
+        try {
             action.process();
             fail("Process Should have thrown an error");
         } catch (ActionProcessException e) {
-            assertEquals("Save failed", e.getMessage());
-        } catch (DalException e) {
-            fail("Save should not have thrown", e);
+            actualMessage = e.getMessage();
         }
+
+        assertEquals("Save failed", actualMessage);
     }
 
     @Test
-    public void ProcessCachesResult(){
-        try {
-            final List<InvocationOnMock> invocations = new ArrayList<>();
-            doAnswer(invocations::add)
-                    .when(heartBeatRepository)
-                    .Save(any(HeartBeat.class));
+    public void ProcessCachesResult() throws ActionProcessException, DalException {
+        final List<InvocationOnMock> invocations = new ArrayList<>();
+        doAnswer(invocations::add)
+                .when(heartBeatRepository)
+                .Save(any(HeartBeat.class));
 
-            action.process();
-            action.process();
+        action.process();
+        action.process();
 
-            assertTrue(keysCache.Contains(StatusGetAction.class.getName()));
-            assertEquals(1, invocations.size());
+        assertTrue(keysCache.Contains(StatusGetAction.class.getName()));
+        assertEquals(1, invocations.size());
 
-            keysCache.getKeys().clear();
-            action.process();
+        keysCache.getKeys().clear();
+        action.process();
 
-            assertTrue(keysCache.Contains(StatusGetAction.class.getName()));
-            assertEquals(2, invocations.size());
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-        } catch (DalException e) {
-            fail("Save should not have thrown", e);
-        }
+        assertTrue(keysCache.Contains(StatusGetAction.class.getName()));
+        assertEquals(2, invocations.size());
     }
 
     @Test
-    public void ProcessDoesNotCacheFailures(){
-        try {
-            doThrow(new DalException("Save failed"))
-                    .when(heartBeatRepository)
-                    .Save(any(HeartBeat.class));
+    public void ProcessDoesNotCacheFailures() throws DalException, ActionProcessException {
+        doThrow(new DalException("Save failed"))
+                .when(heartBeatRepository)
+                .Save(any(HeartBeat.class));
 
+        try {
             action.process();
-        } catch (ActionProcessException | DalException e) { }
+            fail("Process Should have thrown an error");
+        } catch (ActionProcessException e) {}
+
 
         assertFalse(keysCache.Contains(StatusGetAction.class.getName()));
     }

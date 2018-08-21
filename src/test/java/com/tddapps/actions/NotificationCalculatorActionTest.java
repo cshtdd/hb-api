@@ -27,37 +27,33 @@ public class NotificationCalculatorActionTest {
     private final NotificationCalculatorAction action = new NotificationCalculatorAction(heartBeatRepository, notificationSender);
 
     @Test
-    public void ReadsAllTheHeartBeats(){
-        try {
-            HttpJsonResponse<TextMessage> result = action.process();
+    public void ReadsAllTheHeartBeats() throws ActionProcessException, DalException {
+        HttpJsonResponse<TextMessage> result = action.process();
 
-            verify(heartBeatRepository).All();
-            assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-        } catch (DalException e) {
-            fail("All should not have thrown", e);
-        }
+        verify(heartBeatRepository).All();
+        assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
     }
 
     @Test
-    public void ProcessThrowsAnActionProcessExceptionWhenHeartBeatsCouldNotBeRead(){
-        try {
-            doThrow(new DalException("All failed"))
-                    .when(heartBeatRepository)
-                    .All();
+    public void ProcessThrowsAnActionProcessExceptionWhenHeartBeatsCouldNotBeRead() throws DalException {
+        doThrow(new DalException("All failed"))
+                .when(heartBeatRepository)
+                .All();
 
+        String actualMessage = "";
+
+        try {
             action.process();
             fail("Process Should have thrown an error");
         } catch (ActionProcessException e) {
-            assertEquals("All failed", e.getMessage());
-        } catch (DalException e) {
-            fail("All should not have thrown", e);
+            actualMessage = e.getMessage();
         }
+
+        assertEquals("All failed", actualMessage);
     }
 
     @Test
-    public void SendsNotificationsForEachExpiredHeartBeat(){
+    public void SendsNotificationsForEachExpiredHeartBeat() throws DalException, ActionProcessException {
         HeartBeat hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000));
         HeartBeat hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000));
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
@@ -67,35 +63,27 @@ public class NotificationCalculatorActionTest {
                 hbExpired2,
                 new HeartBeat("hb2", UtcNowPlusMs(25000))
         };
-        try {
-            doReturn(seededHeartBeats)
-                    .when(heartBeatRepository)
-                    .All();
-        } catch (DalException e) {
-            fail("All should not have thrown", e);
-        }
+        doReturn(seededHeartBeats)
+                .when(heartBeatRepository)
+                .All();
 
-        try {
-            action.process();
 
-            String expectedSubject = "Hosts missing [hbExpired1, hbExpired2]";
-            String expectedBody = "Hosts missing [hbExpired1, hbExpired2]\n" +
-                    "\n" +
-                    hbExpired1.toString() +
-                    "\n" +
-                    hbExpired2.toString() +
-                    "\n" +
-                    "--";
-            verify(notificationSender).Send(expectedBody, expectedSubject);
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-        } catch (DalException e) {
-            fail("Send should not have thrown", e);
-        }
+        action.process();
+
+
+        String expectedSubject = "Hosts missing [hbExpired1, hbExpired2]";
+        String expectedBody = "Hosts missing [hbExpired1, hbExpired2]\n" +
+                "\n" +
+                hbExpired1.toString() +
+                "\n" +
+                hbExpired2.toString() +
+                "\n" +
+                "--";
+        verify(notificationSender).Send(expectedBody, expectedSubject);
     }
 
     @Test
-    public void UpdatesTheExpirationOfExpiredHeartBeats(){
+    public void UpdatesTheExpirationOfExpiredHeartBeats() throws DalException, ActionProcessException {
         HeartBeat hbExpected1 = new HeartBeat("hbExpired1", UtcNowPlusMs(24 * 60 * 60 * 1000));
         HeartBeat hbExpected2 = new HeartBeat("hbExpired2", UtcNowPlusMs(24 * 60 * 60 * 1000));
 
@@ -108,93 +96,72 @@ public class NotificationCalculatorActionTest {
                 hbExpired2,
                 new HeartBeat("hb2", UtcNowPlusMs(25000))
         };
-        try {
-            doReturn(seededHeartBeats)
-                    .when(heartBeatRepository)
-                    .All();
-        } catch (DalException e) {
-            fail("All should not have thrown", e);
-        }
+        doReturn(seededHeartBeats)
+                .when(heartBeatRepository)
+                .All();
 
-        try {
-            final List<InvocationOnMock> invocations = new ArrayList<>();
-            doAnswer(invocations::add)
-                    .when(heartBeatRepository)
-                    .Save(any(HeartBeat.class));
+        final List<InvocationOnMock> invocations = new ArrayList<>();
+        doAnswer(invocations::add)
+                .when(heartBeatRepository)
+                .Save(any(HeartBeat.class));
 
-            action.process();
 
-            assertEquals(2, invocations.size());
-            long[] heartBeatTimeUpdates = new long[]{
-                    invocations
-                            .stream()
-                            .map(i -> (HeartBeat) i.getArgument(0))
-                            .filter(hbExpected1::almostEquals)
-                            .count(),
-                    invocations
-                            .stream()
-                            .map(i -> (HeartBeat) i.getArgument(0))
-                            .filter(hbExpected2::almostEquals)
-                            .count()
-            };
-            assertTrue(Arrays.stream(heartBeatTimeUpdates).allMatch(i -> i == 1));
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-        } catch (DalException e) {
-            fail("Save should not have thrown", e);
-        }
+        action.process();
+
+
+        assertEquals(2, invocations.size());
+        long[] heartBeatTimeUpdates = new long[]{
+                invocations
+                        .stream()
+                        .map(i -> (HeartBeat) i.getArgument(0))
+                        .filter(hbExpected1::almostEquals)
+                        .count(),
+                invocations
+                        .stream()
+                        .map(i -> (HeartBeat) i.getArgument(0))
+                        .filter(hbExpected2::almostEquals)
+                        .count()
+        };
+        assertTrue(Arrays.stream(heartBeatTimeUpdates).allMatch(i -> i == 1));
     }
 
     @Test
-    public void DoesNotSendNotificationWhenNoHeartBeatsExpired(){
+    public void DoesNotSendNotificationWhenNoHeartBeatsExpired() throws ActionProcessException, DalException {
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000)),
                 new HeartBeat("hb2", UtcNowPlusMs(25000))
         };
-        try {
-            doReturn(seededHeartBeats)
-                    .when(heartBeatRepository)
-                    .All();
-        } catch (DalException e) {
-            fail("All should not have thrown", e);
-        }
+        doReturn(seededHeartBeats)
+                .when(heartBeatRepository)
+                .All();
 
-        try {
-            action.process();
 
-            verify(notificationSender, times(0)).Send(anyString(), anyString());
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-        } catch (DalException e) {
-            fail("Send should not have thrown", e);
-        }
+        action.process();
+
+
+        verify(notificationSender, times(0))
+                .Send(anyString(), anyString());
     }
 
     @Test
-    public void DoesNotUpdatedHeartBeatsWhenNoHeartBeatsExpired(){
+    public void DoesNotUpdatedHeartBeatsWhenNoHeartBeatsExpired() throws DalException, ActionProcessException {
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000)),
                 new HeartBeat("hb2", UtcNowPlusMs(25000))
         };
-        try {
-            doReturn(seededHeartBeats)
-                    .when(heartBeatRepository)
-                    .All();
-        } catch (DalException e) {
-            fail("All should not have thrown", e);
-        }
 
-        try {
-            action.process();
+        doReturn(seededHeartBeats)
+                .when(heartBeatRepository)
+                .All();
 
-            verify(heartBeatRepository, times(0)).Save(any(HeartBeat.class));
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-        } catch (DalException e) {
-            fail("Send should not have thrown", e);
-        }
+
+        action.process();
+
+
+        verify(heartBeatRepository, times(0))
+                .Save(any(HeartBeat.class));
     }
 
 }

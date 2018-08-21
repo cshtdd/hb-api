@@ -100,38 +100,34 @@ public class HeartBeatPostActionTest {
     }
 
     @Test
-    public void ProcessWritesTheHeartBeat(){
+    public void ProcessWritesTheHeartBeat() throws ActionProcessException, DalException {
         HeartBeat expectedHeartBeat = new HeartBeat(
                 "testHostA",
                 UtcNowPlusMs(34000)
         );
 
-        try {
-            HttpJsonResponse<TextMessage> result = action.process(new HeartBeatPostActionInput("testHostA", 34000));
+        HttpJsonResponse<TextMessage> result = action.process(new HeartBeatPostActionInput("testHostA", 34000));
 
-            assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
-            verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
-        } catch (ActionProcessException e) {
-            fail("Process should not have thrown", e);
-        } catch (DalException e) {
-            fail("Save should not have thrown", e);
-        }
+        assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
+        verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
     }
 
     @Test
-    public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved(){
-        try {
-            doThrow(new DalException("Save failed"))
-                    .when(heartBeatRepository)
-                    .Save(any(HeartBeat.class));
+    public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved() throws DalException {
+        doThrow(new DalException("Save failed"))
+                .when(heartBeatRepository)
+                .Save(any(HeartBeat.class));
 
+        String actualMessage = "";
+
+        try {
             action.process(new HeartBeatPostActionInput("testHostA", 34000));
             fail("Process Should have thrown an error");
         } catch (ActionProcessException e) {
-            assertEquals("Save failed", e.getMessage());
-        } catch (DalException e) {
-            fail("Save should not have thrown", e);
+            actualMessage = e.getMessage();
         }
+
+        assertEquals("Save failed", actualMessage);
     }
 
     private void parseShouldThrow(String body){
