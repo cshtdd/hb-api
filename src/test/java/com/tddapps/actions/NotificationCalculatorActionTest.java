@@ -144,4 +144,57 @@ public class NotificationCalculatorActionTest {
             fail("Save should not have thrown", e);
         }
     }
+
+    @Test
+    public void DoesNotSendNotificationWhenNoHeartBeatsExpired(){
+        HeartBeat[] seededHeartBeats = new HeartBeat[]{
+                new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
+                new HeartBeat("hb1", UtcNowPlusMs(5000)),
+                new HeartBeat("hb2", UtcNowPlusMs(25000))
+        };
+        try {
+            doReturn(seededHeartBeats)
+                    .when(heartBeatRepository)
+                    .All();
+        } catch (DalException e) {
+            fail("All should not have thrown", e);
+        }
+
+        try {
+            action.process();
+
+            verify(notificationSender, times(0)).Send(anyString(), anyString());
+        } catch (ActionProcessException e) {
+            fail("Process should not have thrown", e);
+        } catch (DalException e) {
+            fail("Send should not have thrown", e);
+        }
+    }
+
+    @Test
+    public void DoesNotUpdatedHeartBeatsWhenNoHeartBeatsExpired(){
+        HeartBeat[] seededHeartBeats = new HeartBeat[]{
+                new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
+                new HeartBeat("hb1", UtcNowPlusMs(5000)),
+                new HeartBeat("hb2", UtcNowPlusMs(25000))
+        };
+        try {
+            doReturn(seededHeartBeats)
+                    .when(heartBeatRepository)
+                    .All();
+        } catch (DalException e) {
+            fail("All should not have thrown", e);
+        }
+
+        try {
+            action.process();
+
+            verify(heartBeatRepository, times(0)).Save(any(HeartBeat.class));
+        } catch (ActionProcessException e) {
+            fail("Process should not have thrown", e);
+        } catch (DalException e) {
+            fail("Send should not have thrown", e);
+        }
+    }
+
 }
