@@ -62,6 +62,40 @@ sls create_domain
 4.1- Make sure there is a basepath in the custom domain. If not, follow the steps in this [Github Issue](https://github.com/amplify-education/serverless-domain-manager/issues/57) to correct it. There is some buggy behavior between CloudFormation and the domain manager plugin
 5- Create a `CNAME` record in the DNS provider for the cloudfront domain
 
+# Usage  
+
+Launch the crontab editor
+
+```bash
+crontab -e
+```
+
+Add the following lines to the file
+
+```bash
+HB_API_KEY=SUPER_SECRET_KEY
+
+*/5 * * * * curl -i -H "x-api-key: $HB_API_KEY" -d '{"hostId": "node05"}' -X POST https://hbapidev.tddapps.com/v1/hearbeat | logger -p local0.notice
+```
+
+Verify the task is scheduled
+
+```bash
+crontab -l
+```
+
+Monitor the task execution
+
+```bash
+watch -n1 grep CRON /var/log/syslog
+```
+
+The task output should also be in `syslog`
+
+```bash
+tail -f /var/log/syslog
+```
+
 # Code Architecture
 
 ## `handlers` package  
