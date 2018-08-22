@@ -74,9 +74,8 @@ Add the following lines to the file
 
 ```bash
 HB_API_KEY=SUPER_SECRET_KEY
-HB_API_HOSTNAME=MYHOST
 
-*/5 * * * * curl -i -H "x-api-key: $HB_API_KEY" -d '{"hostId": "$HB_API_HOSTNAME"}' -X POST https://hbapidev.tddapps.com/v1/hearbeat | logger -p local0.notice
+*/5 * * * * curl -i -H "x-api-key: $HB_API_KEY" -d '{"hostId": "CHANGEME"}' -X POST https://hbapidev.tddapps.com/v1/hearbeat | logger -p local0.notice
 ```
 
 Verify the task is scheduled
