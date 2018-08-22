@@ -34,12 +34,14 @@ package:
 functions:
   StatusGet:
     handler: com.tddapps.handlers.StatusGet
+    timeout: 30
     events:
       - http:
           path: /v1/status
           method: get
   HeartBeatPost:
     handler: com.tddapps.handlers.HeartBeatPost
+    timeout: 30
     events:
       - http:
           private: true
@@ -47,6 +49,7 @@ functions:
           method: post
   NotificationCalculator:
     handler: com.tddapps.handlers.NotificationCalculator
+    timeout: 300
     events:
     - schedule:
         rate: cron(* * * * ? *)
