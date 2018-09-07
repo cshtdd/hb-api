@@ -1,7 +1,10 @@
-package com.tddapps.dal;
+package com.tddapps.dal.aws;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.tddapps.dal.DalException;
+import com.tddapps.dal.HeartBeat;
+import com.tddapps.dal.HeartBeatRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

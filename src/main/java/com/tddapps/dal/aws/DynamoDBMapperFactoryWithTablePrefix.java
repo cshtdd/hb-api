@@ -1,11 +1,11 @@
-package com.tddapps.dal;
+package com.tddapps.dal.aws;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
-
-import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
+import com.tddapps.dal.Settings;
+import com.tddapps.dal.SettingsReader;
 
 public class DynamoDBMapperFactoryWithTablePrefix implements DynamoDBMapperFactory {
     private final DynamoDBMapper mapper;

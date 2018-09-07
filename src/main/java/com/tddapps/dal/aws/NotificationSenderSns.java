@@ -1,7 +1,8 @@
-package com.tddapps.dal;
+package com.tddapps.dal.aws;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.tddapps.dal.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

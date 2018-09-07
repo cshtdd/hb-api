@@ -1,4 +1,4 @@
-package com.tddapps.dal;
+package com.tddapps.dal.aws;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 

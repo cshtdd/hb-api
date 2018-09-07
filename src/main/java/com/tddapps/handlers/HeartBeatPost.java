@@ -3,8 +3,6 @@ package com.tddapps.handlers;
 import com.tddapps.actions.HeartBeatPostAction;
 import com.tddapps.controllers.HttpJsonController;
 import com.tddapps.controllers.HttpJsonControllerDefault;
-import com.tddapps.dal.DynamoDBMapperFactoryWithTablePrefix;
-import com.tddapps.dal.HeartBeatRepositoryDynamo;
 import com.tddapps.handlers.infrastructure.BaseHttpJsonHandler;
 import com.tddapps.ioc.IocContainer;
 
