@@ -1,5 +1,7 @@
 package com.tddapps.dal;
 
+import java.util.Arrays;
+
 public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
     @Override
     public Notification[] build(HeartBeat[] heartBeats) {
@@ -7,9 +9,19 @@ public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
             return NoNotifications();
         }
 
-        String subject = String.format("Hosts missing [%s]", heartBeats[0].getHostId());
+        String hostnames = Arrays.stream(heartBeats)
+                .map(HeartBeat::getHostId)
+                .reduce((a, b) -> String.format("%s, %s", a, b))
+                .orElse("");
 
-        String message = String.format("%s\n\n%s\n--", subject, heartBeats[0]);
+        String heartBeatDetails = Arrays.stream(heartBeats)
+                .map(HeartBeat::toString)
+                .reduce((a, b) -> String.format("%s\n%s", a, b))
+                .orElse("");
+
+        String subject = String.format("Hosts missing [%s]", hostnames);
+
+        String message = String.format("%s\n\n%s\n--", subject, heartBeatDetails);
 
         return new Notification[]{
                 new Notification(subject, message)

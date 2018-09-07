@@ -33,4 +33,28 @@ public class SingleNotificationBuilderTest {
                 "--";
         assertEquals(expectedBody, notification.getMessage());
     }
+
+    @Test
+    public void SendsSingleNotificationForMultipleHeartBeats(){
+        HeartBeat hb1 = new HeartBeat("host1", UtcNow());
+        HeartBeat hb2 = new HeartBeat("host2", UtcNow());
+        HeartBeat[] input = new HeartBeat[]{
+                hb1,
+                hb2
+        };
+
+        Notification[] notifications = builder.build(input);
+        assertEquals(1, notifications.length);
+        Notification notification = notifications[0];
+
+        assertEquals("Hosts missing [host1, host2]", notification.getSubject());
+        String expectedBody = "Hosts missing [host1, host2]\n" +
+                "\n" +
+                hb1.toString() +
+                "\n" +
+                hb2.toString() +
+                "\n" +
+                "--";
+        assertEquals(expectedBody, notification.getMessage());
+    }
 }
