@@ -7,6 +7,7 @@ import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatRepository;
 import com.tddapps.infrastructure.KeysCacheStub;
+import com.tddapps.model.NotificationSenderStatus;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 
@@ -21,8 +22,9 @@ import static org.mockito.Mockito.*;
 
 public class StatusGetActionTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
+    private final NotificationSenderStatus notificationSenderStatus = mock(NotificationSenderStatus.class);
     private final KeysCacheStub keysCache = new KeysCacheStub();
-    private final StatusGetAction action = new StatusGetAction(heartBeatRepository, keysCache);
+    private final StatusGetAction action = new StatusGetAction(heartBeatRepository, notificationSenderStatus, keysCache);
 
     @Test
     public void VerifiesHeartBeatsCanBeSaved() throws ActionProcessException, DalException {
@@ -56,6 +58,31 @@ public class StatusGetActionTest {
         }
 
         assertEquals("Save failed", actualMessage);
+    }
+
+    @Test
+    public void VerifiesNotificationsCanBeSent() throws ActionProcessException, DalException{
+        action.process();
+
+        verify(notificationSenderStatus).Verify();
+    }
+
+    @Test
+    public void ProcessThrowsAnActionProcessExceptionWhenTheNotificationsCannotBeSent() throws DalException {
+        doThrow(new DalException("Sent Notifications Fail"))
+                .when(notificationSenderStatus)
+                .Verify();
+
+        String actualMessage = "";
+
+        try{
+            action.process();
+            fail("Process Should have thrown an error");
+        } catch (ActionProcessException e){
+            actualMessage = e.getMessage();
+        }
+
+        assertEquals("Sent Notifications Fail", actualMessage);
     }
 
     @Test

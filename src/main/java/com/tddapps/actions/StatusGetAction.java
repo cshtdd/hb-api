@@ -8,6 +8,7 @@ import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatRepository;
 import com.tddapps.infrastructure.KeysCache;
+import com.tddapps.model.NotificationSenderStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,10 +19,15 @@ public class StatusGetAction implements HttpSupplierAction<TextMessage> {
 
     private final HeartBeatRepository heartBeatRepository;
     private final KeysCache cache;
+    private final NotificationSenderStatus notificationSenderStatus;
 
-    public StatusGetAction(HeartBeatRepository heartBeatRepository, KeysCache cache) {
+    public StatusGetAction(
+            HeartBeatRepository heartBeatRepository,
+            NotificationSenderStatus notificationSenderStatus,
+            KeysCache cache) {
         this.heartBeatRepository = heartBeatRepository;
         this.cache = cache;
+        this.notificationSenderStatus = notificationSenderStatus;
     }
 
     @Override
@@ -33,9 +39,18 @@ public class StatusGetAction implements HttpSupplierAction<TextMessage> {
         LOG.info("Cache miss");
 
         VerifyDatabase();
+        VerifyNotificationsCanBeSent();
 
         CacheResponse();
         return getCachedResponse();
+    }
+
+    private void VerifyNotificationsCanBeSent() throws ActionProcessException{
+        try {
+            notificationSenderStatus.Verify();
+        } catch (DalException e) {
+            throw new ActionProcessException(e.getMessage());
+        }
     }
 
     private void VerifyDatabase() throws ActionProcessException {
