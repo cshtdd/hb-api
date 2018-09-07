@@ -3,6 +3,7 @@ package com.tddapps.dal;
 import org.junit.jupiter.api.Test;
 
 import static com.tddapps.utils.EqualityAssertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class NotificationTest {
@@ -27,5 +28,12 @@ public class NotificationTest {
         shouldNotBeEqual(n1, n2);
         shouldNotBeEqual(n1, n1DifferentSubject);
         shouldNotBeEqual(n1, n1DifferentMessage);
+    }
+
+    @Test
+    public void HasASensibleStringRepresentation(){
+        String actual = new Notification("you got bills", "your total balance is 1000").toString();
+
+        assertEquals("Notification, subject: you got bills, message: your total balance is 1000", actual);
     }
 }

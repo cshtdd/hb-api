@@ -37,4 +37,14 @@ public class Notification {
         return this.subject.equals(that.subject) &&
                 this.message.equals(that.message);
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s, subject: %s, message: %s",
+                getClass().getSimpleName(),
+                subject,
+                message
+        );
+    }
 }
