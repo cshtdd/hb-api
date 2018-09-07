@@ -6,6 +6,8 @@ import com.tddapps.actions.StatusGetAction;
 import com.tddapps.dal.*;
 import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
 import com.tddapps.infrastructure.KeysCache;
+import com.tddapps.utils.UtcNowReader;
+import com.tddapps.utils.UtcNowReaderImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +23,7 @@ public class IocContainerTest {
 
     @Test
     public void RegisterDependencies(){
+        assertTrue(IocContainer.getInstance().Resolve(UtcNowReader.class) instanceof UtcNowReaderImpl);
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatRepository.class) instanceof HeartBeatRepositoryDynamo);
         assertTrue(IocContainer.getInstance().Resolve(NotificationSender.class) instanceof NotificationSenderSns);
         assertTrue(IocContainer.getInstance().Resolve(SettingsReader.class) instanceof EnvironmentSettingsReader);

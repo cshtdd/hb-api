@@ -6,6 +6,8 @@ import com.tddapps.actions.StatusGetAction;
 import com.tddapps.dal.*;
 import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
 import com.tddapps.infrastructure.KeysCache;
+import com.tddapps.utils.UtcNowReader;
+import com.tddapps.utils.UtcNowReaderImpl;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.PicoContainer;
 
@@ -36,6 +38,7 @@ public class IocContainer {
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
                 .addComponent(NotificationSender.class, NotificationSenderSns.class)
                 .addComponent(SettingsReader.class, EnvironmentSettingsReader.class)
+                .addComponent(UtcNowReader.class, UtcNowReaderImpl.class)
                 .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class)
                 .as(CACHE).addComponent(KeysCache.class, InMemoryKeysCacheWithExpiration.class);
     }
