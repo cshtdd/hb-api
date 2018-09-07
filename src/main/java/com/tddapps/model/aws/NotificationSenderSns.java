@@ -6,7 +6,7 @@ import com.tddapps.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class NotificationSenderSns implements NotificationSender {
+public class NotificationSenderSns implements NotificationSender, NotificationSenderStatus {
     private static final Logger LOG = LogManager.getLogger(NotificationSenderSns.class);
 
     private final SettingsReader settingsReader;
@@ -16,17 +16,42 @@ public class NotificationSenderSns implements NotificationSender {
     }
 
     @Override
-    public void Send(Notification notification) throws DalException {
-        String topicName = settingsReader.ReadString(Settings.TOPIC_NAME);
+    public void Verify() throws DalException {
+        try {
+            String arn = AmazonSNSClientBuilder
+                    .defaultClient()
+                    .getTopicAttributes(getTopicName())
+                    .getAttributes()
+                    .getOrDefault("TopicArn", "");
 
+            if (arn == ""){
+                throw new DalException("Topic Arn could not be read");
+            }
+        }
+        catch (AmazonClientException e){
+            LOG.error("Notification VerifySendCapability Error", e);
+            throw new DalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void Send(Notification notification) throws DalException {
         try{
             AmazonSNSClientBuilder
                     .defaultClient()
-                    .publish(topicName, notification.getMessage(), notification.getSubject());
+                    .publish(
+                            getTopicName(),
+                            notification.getMessage(),
+                            notification.getSubject()
+                    );
         }
         catch (AmazonClientException e){
             LOG.error("Notification Send Error", e);
             throw new DalException(e.getMessage());
         }
+    }
+
+    private String getTopicName() {
+        return settingsReader.ReadString(Settings.TOPIC_NAME);
     }
 }
