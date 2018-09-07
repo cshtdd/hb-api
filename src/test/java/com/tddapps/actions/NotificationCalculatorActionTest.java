@@ -8,7 +8,6 @@ import com.tddapps.dal.HeartBeat;
 import com.tddapps.dal.HeartBeatRepository;
 import com.tddapps.dal.NotificationSender;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.verification.Times;
 import org.mockito.invocation.InvocationOnMock;
 
 import java.util.ArrayList;
@@ -16,9 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class NotificationCalculatorActionTest {
