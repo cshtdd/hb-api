@@ -1,8 +1,8 @@
 package com.tddapps.ioc;
 
 import com.tddapps.actions.*;
-import com.tddapps.dal.*;
-import com.tddapps.dal.aws.*;
+import com.tddapps.model.*;
+import com.tddapps.model.aws.*;
 import com.tddapps.infrastructure.*;
 import com.tddapps.utils.*;
 import org.picocontainer.DefaultPicoContainer;

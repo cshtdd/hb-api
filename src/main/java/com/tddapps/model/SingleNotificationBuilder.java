@@ -1,4 +1,4 @@
-package com.tddapps.dal;
+package com.tddapps.model;
 
 import com.tddapps.utils.UtcNowReader;
 

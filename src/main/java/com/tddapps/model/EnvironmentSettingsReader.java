@@ -1,4 +1,4 @@
-package com.tddapps.dal;
+package com.tddapps.model;
 
 public class EnvironmentSettingsReader implements SettingsReader {
     @Override

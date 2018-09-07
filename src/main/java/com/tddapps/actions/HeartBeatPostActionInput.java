@@ -1,6 +1,6 @@
 package com.tddapps.actions;
 
-import com.tddapps.dal.HeartBeat;
+import com.tddapps.model.HeartBeat;
 
 import java.util.Objects;
 

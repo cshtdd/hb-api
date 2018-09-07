@@ -1,4 +1,4 @@
-package com.tddapps.dal;
+package com.tddapps.model;
 
 public interface NotificationSender {
     void Send(Notification notification) throws DalException;

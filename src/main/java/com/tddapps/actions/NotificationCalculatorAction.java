@@ -4,7 +4,7 @@ import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.controllers.HttpSupplierAction;
-import com.tddapps.dal.*;
+import com.tddapps.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

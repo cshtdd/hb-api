@@ -1,6 +1,6 @@
 package com.tddapps.actions;
 
-import com.tddapps.dal.HeartBeat;
+import com.tddapps.model.HeartBeat;
 import org.junit.jupiter.api.Test;
 
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
