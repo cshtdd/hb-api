@@ -110,3 +110,11 @@ Contains some middleware to reduce boilerplate code around request parsing and r
 ## `actions` package  
 
 The actual implementation of the functions will live under the `com.tddapps.actions` package. This will receive and return boundary objects. These classes will be framework agnostic.  
+
+## `model` package  
+
+Where most of the code and business logic will live. This package should be independent of implementation details.
+
+## `model.aws` package  
+
+The concrete implementation of many of the interfaces. These classes can only be tested with integration tests. When the day comes the cloud provider needs to be replaced, only the equivalent for these classes should need to be implemented.  
