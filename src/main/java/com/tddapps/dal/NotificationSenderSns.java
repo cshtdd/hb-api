@@ -15,13 +15,13 @@ public class NotificationSenderSns implements NotificationSender {
     }
 
     @Override
-    public void Send(String message, String subject) throws DalException {
+    public void Send(Notification notification) throws DalException {
         String topicName = settingsReader.ReadString(Settings.TOPIC_NAME);
 
         try{
             AmazonSNSClientBuilder
                     .defaultClient()
-                    .publish(topicName, message, subject);
+                    .publish(topicName, notification.getMessage(), notification.getSubject());
         }
         catch (AmazonClientException e){
             LOG.error("Notification Send Error", e);

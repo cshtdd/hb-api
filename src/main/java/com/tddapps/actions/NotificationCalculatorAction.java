@@ -4,10 +4,7 @@ import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.controllers.HttpSupplierAction;
-import com.tddapps.dal.DalException;
-import com.tddapps.dal.HeartBeat;
-import com.tddapps.dal.HeartBeatRepository;
-import com.tddapps.dal.NotificationSender;
+import com.tddapps.dal.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +57,7 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
         String heartBeatsDescriptions = String.join("\n", heartBeatsDescriptionArray);
         String notificationBody = String.format("%s\n\n%s\n--", notificationSubject, heartBeatsDescriptions);
 
-        notificationSender.Send(notificationBody , notificationSubject);
+        notificationSender.Send(new Notification(notificationSubject, notificationBody));
     }
 
     private void updateExpiredHeartBeats(HeartBeat[] expiredHeartBeats) throws DalException {

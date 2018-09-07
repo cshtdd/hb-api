@@ -3,10 +3,7 @@ package com.tddapps.actions;
 import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
-import com.tddapps.dal.DalException;
-import com.tddapps.dal.HeartBeat;
-import com.tddapps.dal.HeartBeatRepository;
-import com.tddapps.dal.NotificationSender;
+import com.tddapps.dal.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 
@@ -76,7 +73,8 @@ public class NotificationCalculatorActionTest {
                 hbExpired2.toString() +
                 "\n" +
                 "--";
-        verify(notificationSender).Send(expectedBody, expectedSubject);
+        Notification expectedNotification = new Notification(expectedSubject, expectedBody);
+        verify(notificationSender).Send(expectedNotification);
     }
 
     @Test
@@ -89,7 +87,7 @@ public class NotificationCalculatorActionTest {
                 .All();
         doThrow(new DalException("Send failed"))
                 .when(notificationSender)
-                .Send(anyString(), anyString());
+                .Send(any(Notification.class));
 
         String actualMessage = "";
 
@@ -162,7 +160,7 @@ public class NotificationCalculatorActionTest {
         action.process();
 
         verify(notificationSender, times(0))
-                .Send(anyString(), anyString());
+                .Send(any(Notification.class));
     }
 
     @Test
