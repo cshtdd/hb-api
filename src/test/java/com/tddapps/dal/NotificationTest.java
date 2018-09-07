@@ -3,7 +3,7 @@ package com.tddapps.dal;
 import org.junit.jupiter.api.Test;
 
 import static com.tddapps.utils.EqualityAssertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class NotificationTest {
@@ -35,5 +35,27 @@ public class NotificationTest {
         String actual = new Notification("you got bills", "your total balance is 1000").toString();
 
         assertEquals("Notification, subject: you got bills, message: your total balance is 1000", actual);
+    }
+
+    @Test
+    public void CanBeCloned(){
+        Notification n1 = new Notification("aaaa", "bbb");
+        Notification n1Clone = (Notification)n1.clone();
+
+        assertFalse(n1 == n1Clone);
+        shouldBeEqual(n1, n1Clone);
+
+        assertEquals(n1.getSubject(), n1Clone.getSubject());
+        assertEquals(n1.getMessage(), n1Clone.getMessage());
+
+
+        n1Clone.setSubject("ccccc");
+        n1Clone.setMessage("ddddd");
+
+        assertFalse(n1 == n1Clone);
+        shouldNotBeEqual(n1, n1Clone);
+
+        assertNotEquals(n1.getSubject(), n1Clone.getSubject());
+        assertNotEquals(n1.getMessage(), n1Clone.getMessage());
     }
 }

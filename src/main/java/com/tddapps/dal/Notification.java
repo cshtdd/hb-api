@@ -4,21 +4,33 @@ import java.util.Objects;
 
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
-public class Notification {
-    private final String subject;
-    private final String message;
+public class Notification implements Cloneable {
+    private String subject;
+    private String message;
+
+    protected Notification(Notification that) {
+        this(that.subject, that.message);
+    }
 
     public Notification(String subject, String message) {
+        setSubject(subject);
+        setMessage(message);
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
         this.subject = EmptyWhenNull(subject);
-        this.message = EmptyWhenNull(message);
     }
 
     public String getMessage() {
         return message;
     }
 
-    public String getSubject() {
-        return subject;
+    public void setMessage(String message) {
+        this.message = EmptyWhenNull(message);
     }
 
     @Override
@@ -46,5 +58,9 @@ public class Notification {
                 subject,
                 message
         );
+    }
+
+    public Object clone(){
+        return new Notification(this);
     }
 }
