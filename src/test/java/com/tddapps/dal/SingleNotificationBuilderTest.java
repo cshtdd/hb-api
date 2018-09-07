@@ -26,5 +26,11 @@ public class SingleNotificationBuilderTest {
         Notification notification = notifications[0];
 
         assertEquals("Hosts missing [host1]", notification.getSubject());
+        String expectedBody = "Hosts missing [host1]\n" +
+                "\n" +
+                hb1.toString() +
+                "\n" +
+                "--";
+        assertEquals(expectedBody, notification.getMessage());
     }
 }

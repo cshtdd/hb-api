@@ -9,8 +9,10 @@ public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
 
         String subject = String.format("Hosts missing [%s]", heartBeats[0].getHostId());
 
+        String message = String.format("%s\n\n%s\n--", subject, heartBeats[0]);
+
         return new Notification[]{
-                new Notification(subject, null)
+                new Notification(subject, message)
         };
     }
 
