@@ -18,7 +18,12 @@ import static org.mockito.Mockito.*;
 public class NotificationCalculatorActionTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final NotificationSender notificationSender = mock(NotificationSender.class);
-    private final NotificationCalculatorAction action = new NotificationCalculatorAction(heartBeatRepository, notificationSender);
+    private final HeartBeatNotificationBuilder notificationBuilder = new HeartBeatNotificationBuilderOneToOneStub();
+    private final NotificationCalculatorAction action = new NotificationCalculatorAction(
+            heartBeatRepository,
+            notificationBuilder,
+            notificationSender
+    );
 
     @Test
     public void ReadsAllTheHeartBeats() throws ActionProcessException, DalException {
@@ -65,16 +70,8 @@ public class NotificationCalculatorActionTest {
         action.process();
 
 
-        String expectedSubject = "Hosts missing [hbExpired1, hbExpired2]";
-        String expectedBody = "Hosts missing [hbExpired1, hbExpired2]\n" +
-                "\n" +
-                hbExpired1.toString() +
-                "\n" +
-                hbExpired2.toString() +
-                "\n" +
-                "--";
-        Notification expectedNotification = new Notification(expectedSubject, expectedBody);
-        verify(notificationSender).Send(expectedNotification);
+        verify(notificationSender).Send(new Notification("S-hbExpired1", "M-hbExpired1"));
+        verify(notificationSender).Send(new Notification("S-hbExpired2", "M-hbExpired2"));
     }
 
     @Test

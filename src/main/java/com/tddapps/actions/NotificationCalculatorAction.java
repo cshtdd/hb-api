@@ -16,10 +16,15 @@ import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 public class NotificationCalculatorAction implements HttpSupplierAction<TextMessage> {
     private static final Logger LOG = LogManager.getLogger(NotificationCalculatorAction.class);
     private final HeartBeatRepository heartBeatRepository;
+    private final HeartBeatNotificationBuilder notificationBuilder;
     private final NotificationSender notificationSender;
 
-    public NotificationCalculatorAction(HeartBeatRepository heartBeatRepository, NotificationSender notificationSender) {
+    public NotificationCalculatorAction(
+            HeartBeatRepository heartBeatRepository,
+            HeartBeatNotificationBuilder notificationBuilder,
+            NotificationSender notificationSender) {
         this.heartBeatRepository = heartBeatRepository;
+        this.notificationBuilder = notificationBuilder;
         this.notificationSender = notificationSender;
     }
 
@@ -40,24 +45,10 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
     }
 
     private void sendNotifications(HeartBeat[] expiredHeartBeats) throws DalException {
-        if (expiredHeartBeats.length == 0){
-            return;
+        Notification[] notifications = notificationBuilder.build(expiredHeartBeats);
+        for (Notification notification : notifications) {
+            notificationSender.Send(notification);
         }
-
-        String[] expiredHostIds = Arrays.stream(expiredHeartBeats)
-                .map(HeartBeat::getHostId)
-                .toArray(String[]::new);
-
-        String concatenatedHostsIds = String.join(", ", expiredHostIds);
-        String notificationSubject = String.format("Hosts missing [%s]", concatenatedHostsIds);
-
-        String[] heartBeatsDescriptionArray = Arrays.stream(expiredHeartBeats)
-                .map(HeartBeat::toString)
-                .toArray(String[]::new);
-        String heartBeatsDescriptions = String.join("\n", heartBeatsDescriptionArray);
-        String notificationBody = String.format("%s\n\n%s\n--", notificationSubject, heartBeatsDescriptions);
-
-        notificationSender.Send(new Notification(notificationSubject, notificationBody));
     }
 
     private void updateExpiredHeartBeats(HeartBeat[] expiredHeartBeats) throws DalException {
