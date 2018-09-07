@@ -1,12 +1,30 @@
 package com.tddapps.dal;
 
+import com.tddapps.utils.UtcNowReader;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
+
 import static com.tddapps.utils.DateExtensions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SingleNotificationBuilderTest {
-    private final SingleNotificationBuilder builder = new SingleNotificationBuilder();
+    private final UtcNowReader utcNowReaderMock = mock(UtcNowReader.class);
+    private final SingleNotificationBuilder builder = new SingleNotificationBuilder(utcNowReaderMock);
+
+    private String utcNowFormatted;
+
+    @BeforeEach
+    public void Setup(){
+        Date seededDate = UtcNowPlusMs(1000);
+        utcNowFormatted = ToUtcString(seededDate);
+
+        when(utcNowReaderMock.Read())
+                .thenReturn(seededDate);
+    }
 
     @Test
     public void DoesNotSendNotificationWhenNoHeartBeatsAreProvided(){
@@ -29,6 +47,10 @@ public class SingleNotificationBuilderTest {
         String expectedBody = "Hosts missing [host1]\n" +
                 "\n" +
                 hb1.toString() +
+                "\n" +
+                "--" +
+                "\n" +
+                "Notification Built: " + utcNowFormatted +
                 "\n" +
                 "--";
         assertEquals(expectedBody, notification.getMessage());
@@ -53,6 +75,10 @@ public class SingleNotificationBuilderTest {
                 hb1.toString() +
                 "\n" +
                 hb2.toString() +
+                "\n" +
+                "--" +
+                "\n" +
+                "Notification Built: " + utcNowFormatted +
                 "\n" +
                 "--";
         assertEquals(expectedBody, notification.getMessage());

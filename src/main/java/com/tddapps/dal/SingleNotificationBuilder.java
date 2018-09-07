@@ -1,8 +1,18 @@
 package com.tddapps.dal;
 
+import com.tddapps.utils.UtcNowReader;
+
 import java.util.Arrays;
 
+import static com.tddapps.utils.DateExtensions.*;
+
 public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
+    private final UtcNowReader utcNowReader;
+
+    public SingleNotificationBuilder(UtcNowReader utcNowReader) {
+        this.utcNowReader = utcNowReader;
+    }
+
     @Override
     public Notification[] build(HeartBeat[] heartBeats) {
         if (isEmpty(heartBeats)){
@@ -10,7 +20,11 @@ public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
         }
 
         String subject = String.format("Hosts missing [%s]", getHostNames(heartBeats));
-        String message = String.format("%s\n\n%s\n--", subject, getHeartBeatDetails(heartBeats));
+        String message = String.format("%s\n\n%s\n--\nNotification Built: %s\n--",
+                subject,
+                getHeartBeatDetails(heartBeats),
+                ToUtcString(utcNowReader.Read())
+        );
 
         return new Notification[]{
                 new Notification(subject,message)
