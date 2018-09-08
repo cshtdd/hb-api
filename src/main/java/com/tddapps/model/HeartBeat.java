@@ -1,23 +1,33 @@
 package com.tddapps.model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
-import java.util.Objects;
 
-import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
-import static com.tddapps.utils.DateExtensions.ToUtcString;
-import static com.tddapps.utils.DateExtensions.UtcNow;
+import static com.tddapps.utils.DateExtensions.*;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
 @DynamoDBTable(tableName = "heartbeats")
+@EqualsAndHashCode
 public class HeartBeat implements Cloneable{
+    @Getter
+    @Setter
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
 
+    @Getter
+    @Setter
     @DynamoDBAttribute(attributeName = "is_test")
     private boolean isTest;
 
+    @Getter
+    @Setter
     @DynamoDBAttribute(attributeName = "expiration_utc_datetime")
     private Date expirationUtc;
 
@@ -34,33 +44,9 @@ public class HeartBeat implements Cloneable{
         this(that.hostId, that.expirationUtc, that.isTest);
     }
 
-    public String getHostId() {
-        return hostId;
-    }
-
-    public void setHostId(String hostId) {
-        this.hostId = hostId;
-    }
-
-    public Date getExpirationUtc() {
-        return expirationUtc;
-    }
-
-    public void setExpirationUtc(Date expirationUtc) {
-        this.expirationUtc = expirationUtc;
-    }
-
-    public boolean isTest() {
-        return isTest;
-    }
-
     @DynamoDBIgnore
     public boolean isNotTest(){
         return !isTest();
-    }
-
-    public void setTest(boolean test) {
-        isTest = test;
     }
 
     @Override
@@ -72,26 +58,6 @@ public class HeartBeat implements Cloneable{
                 EmptyWhenNull(hostId),
                 isTest
         );
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(isTest, hostId, expirationUtc);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof HeartBeat)){
-            return false;
-        }
-
-        HeartBeat that = (HeartBeat)obj;
-
-        if (!this.almostEquals(that)){
-            return false;
-        }
-
-        return this.expirationUtc.equals(that.expirationUtc);
     }
 
     public boolean almostEquals(HeartBeat that) {

@@ -1,25 +1,12 @@
 package com.tddapps.controllers;
 
 import com.tddapps.actions.response.TextMessage;
+import lombok.Data;
 
-import java.util.Objects;
-
+@Data
 public class HttpJsonResponse<T> {
     private final int statusCode;
     private final T body;
-
-    public HttpJsonResponse(int statusCode, T body) {
-        this.statusCode = statusCode;
-        this.body = body;
-    }
-
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public T getBody() {
-        return body;
-    }
 
     public static <T> HttpJsonResponse Success(T body){
         return new HttpJsonResponse<>(200, body);
@@ -39,30 +26,6 @@ public class HttpJsonResponse<T> {
 
     public static HttpJsonResponse ServerErrorWithMessage(String message){
         return ServerError(TextMessage.create(message));
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof HttpJsonResponse)){
-            return false;
-        }
-
-        HttpJsonResponse that = (HttpJsonResponse)obj;
-
-        if (this.statusCode != that.statusCode){
-            return false;
-        }
-
-        if (this.body == null){
-            return that.body == null;
-        }
-
-        return this.body.equals(that.body);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(statusCode, body);
     }
 
     @Override

@@ -68,8 +68,8 @@ public class HeartBeatTest {
         HeartBeat hb2 = new HeartBeat("host2", date1);
 
         shouldBeEqual(hb1, hb1Copy);
-        shouldBeEqual(hbEmptyHost, hbNoHost);
 
+        shouldNotBeEqual(hbEmptyHost, hbNoHost);
         shouldNotBeEqual(hb1, null);
         shouldNotBeEqual(hb1, 45);
         shouldNotBeEqual(hb1, hbNoHost);
