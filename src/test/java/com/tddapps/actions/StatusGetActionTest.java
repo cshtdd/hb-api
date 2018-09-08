@@ -8,6 +8,7 @@ import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatRepository;
 import com.tddapps.infrastructure.KeysCacheStub;
 import com.tddapps.model.NotificationSenderStatus;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 
@@ -28,14 +29,14 @@ public class StatusGetActionTest {
 
     @Test
     public void VerifiesHeartBeatsCanBeSaved() throws ActionProcessException, DalException {
-        HeartBeat expectedHeartBeat = new HeartBeat(
+        val expectedHeartBeat = new HeartBeat(
                 "StatusGetAction",
                 UtcNowPlusMs(4*60*60*1000),
                 true
         );
 
 
-        HttpJsonResponse<TextMessage> result = action.process();
+        val result = action.process();
 
 
         assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);

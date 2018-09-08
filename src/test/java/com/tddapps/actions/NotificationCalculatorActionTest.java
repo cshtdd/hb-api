@@ -4,6 +4,7 @@ import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.model.*;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 
@@ -27,7 +28,7 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void ReadsAllTheHeartBeats() throws ActionProcessException, DalException {
-        HttpJsonResponse<TextMessage> result = action.process();
+        val result = action.process();
 
         verify(heartBeatRepository).All();
         assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
@@ -53,9 +54,9 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void SendsNotificationsForEachExpiredHeartBeat() throws DalException, ActionProcessException {
-        HeartBeat hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false);
-        HeartBeat hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000), false);
-        HeartBeat[] seededHeartBeats = new HeartBeat[]{
+        val hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false);
+        val hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000), false);
+        val seededHeartBeats = new HeartBeat[]{
                 hbExpired1,
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000), false),
@@ -76,7 +77,7 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void ProcessThrowsAnActionProcessExceptionWhenNotificationsCouldNotBeSent() throws DalException {
-        HeartBeat[] seededHeartBeats = new HeartBeat[]{
+        val seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false)
         };
         doReturn(seededHeartBeats)
@@ -102,12 +103,12 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void UpdatesTheExpirationOfExpiredHeartBeats() throws DalException, ActionProcessException {
-        HeartBeat hbExpected1 = new HeartBeat("hbExpired1", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
-        HeartBeat hbExpected2 = new HeartBeat("hbExpired2", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
+        val hbExpected1 = new HeartBeat("hbExpired1", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
+        val hbExpected2 = new HeartBeat("hbExpired2", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
 
-        HeartBeat hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false);
-        HeartBeat hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000), false);
-        HeartBeat[] seededHeartBeats = new HeartBeat[]{
+        val hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false);
+        val hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000), false);
+        val seededHeartBeats = new HeartBeat[]{
                 hbExpired1,
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000), false),
@@ -145,7 +146,7 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void DoesNotSendNotificationWhenNoHeartBeatsExpired() throws ActionProcessException, DalException {
-        HeartBeat[] seededHeartBeats = new HeartBeat[]{
+        val seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000), false),
                 new HeartBeat("hb2", UtcNowPlusMs(25000), false)
@@ -162,7 +163,7 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void DoesNotUpdatedHeartBeatsWhenNoHeartBeatsExpired() throws DalException, ActionProcessException {
-        HeartBeat[] seededHeartBeats = new HeartBeat[]{
+        val seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000), false),
                 new HeartBeat("hb2", UtcNowPlusMs(25000), false)
@@ -176,5 +177,4 @@ public class NotificationCalculatorActionTest {
         verify(heartBeatRepository, times(0))
                 .Save(any(HeartBeat.class));
     }
-
 }

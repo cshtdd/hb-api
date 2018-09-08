@@ -4,6 +4,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.tddapps.actions.response.TextMessage;
 import com.tddapps.controllers.HttpJsonController;
 import com.tddapps.controllers.HttpJsonResponse;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class BaseHttpJsonHandlerTest {
 
     @Test
     public void ReturnsTheControllerResponse(){
-        Map<String, Object> input = new HashMap<String, Object>(){{
+        val input = new HashMap<String, Object>(){{
             put("AAA", "AAA");
         }};
 
@@ -28,7 +29,7 @@ public class BaseHttpJsonHandlerTest {
                 200, TextMessage.create("pepe")
         ));
 
-        ApiGatewayResponse response = handler.handleRequest(input, seededContext);
+        val response = handler.handleRequest(input, seededContext);
 
         assertEquals(200, response.getStatusCode());
         assertEquals("{\"message\":\"pepe\"}", response.getBody());

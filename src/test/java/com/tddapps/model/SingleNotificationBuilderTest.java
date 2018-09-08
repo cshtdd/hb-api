@@ -1,6 +1,7 @@
 package com.tddapps.model;
 
 import com.tddapps.utils.UtcNowReader;
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ public class SingleNotificationBuilderTest {
 
     @BeforeEach
     public void Setup(){
-        Date seededDate = UtcNowPlusMs(1000);
+        val seededDate = UtcNowPlusMs(1000);
         utcNowFormatted = ToUtcString(seededDate);
 
         when(utcNowReaderMock.Read())
@@ -34,17 +35,17 @@ public class SingleNotificationBuilderTest {
 
     @Test
     public void SendsNotificationForASingleHeartBeat(){
-        HeartBeat hb1 = new HeartBeat("host1", UtcNow(), false);
-        HeartBeat[] input = new HeartBeat[]{
+        val hb1 = new HeartBeat("host1", UtcNow(), false);
+        val input = new HeartBeat[]{
                 hb1
         };
 
-        Notification[] notifications = builder.build(input);
+        val notifications = builder.build(input);
         assertEquals(1, notifications.length);
-        Notification notification = notifications[0];
+        val notification = notifications[0];
 
         assertEquals("Hosts missing [host1]", notification.getSubject());
-        String expectedBody = "Hosts missing [host1]\n" +
+        val expectedBody = "Hosts missing [host1]\n" +
                 "\n" +
                 hb1.toString() +
                 "\n" +
@@ -58,19 +59,19 @@ public class SingleNotificationBuilderTest {
 
     @Test
     public void SendsSingleNotificationForMultipleHeartBeats(){
-        HeartBeat hb1 = new HeartBeat("host1", UtcNow(), false);
-        HeartBeat hb2 = new HeartBeat("host2", UtcNow(), false);
-        HeartBeat[] input = new HeartBeat[]{
+        val hb1 = new HeartBeat("host1", UtcNow(), false);
+        val hb2 = new HeartBeat("host2", UtcNow(), false);
+        val input = new HeartBeat[]{
                 hb1,
                 hb2
         };
 
-        Notification[] notifications = builder.build(input);
+        val notifications = builder.build(input);
         assertEquals(1, notifications.length);
-        Notification notification = notifications[0];
+        val notification = notifications[0];
 
         assertEquals("Hosts missing [host1, host2]", notification.getSubject());
-        String expectedBody = "Hosts missing [host1, host2]\n" +
+        val expectedBody = "Hosts missing [host1, host2]\n" +
                 "\n" +
                 hb1.toString() +
                 "\n" +

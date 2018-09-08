@@ -1,6 +1,7 @@
 package com.tddapps.controllers;
 
 import com.tddapps.actions.response.TextMessage;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
@@ -40,10 +41,10 @@ public class HttpJsonResponseTest {
 
     @Test
     public void CanBeCompared(){
-        HttpJsonResponse<TextMessage> response1 = new HttpJsonResponse<>(200, TextMessage.OK);
+        val response1 = new HttpJsonResponse<TextMessage>(200, TextMessage.OK);
         shouldBeEqual(response1, response1);
 
-        HttpJsonResponse<TextMessage> response1Clone = new HttpJsonResponse<>(200, TextMessage.OK);
+        val response1Clone = new HttpJsonResponse<TextMessage>(200, TextMessage.OK);
         shouldBeEqual(response1, response1Clone);
 
         shouldNotBeEqual(null, response1);

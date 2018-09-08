@@ -1,5 +1,7 @@
 package com.tddapps.utils;
 
+import lombok.val;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -19,19 +21,19 @@ public abstract class DateExtensions {
             return defaultValue;
         }
 
-        Instant instant = value.toInstant();
-        ZonedDateTime utcDatetime = ZonedDateTime.ofInstant(instant, ZoneId.of("UTC"));
+        val instant = value.toInstant();
+        val utcDatetime = ZonedDateTime.ofInstant(instant, ZoneId.of("UTC"));
         return utcDatetime.format(DateTimeFormatter.ISO_DATE_TIME);
     }
 
     public static Date UtcNow(){
-        Instant now = ZonedDateTime.now(ZoneId.of("UTC"))
+        val now = ZonedDateTime.now(ZoneId.of("UTC"))
                 .toInstant();
         return Date.from(now);
     }
 
     public static Date UtcNowPlusMs(int milliseconds){
-        Instant result = ZonedDateTime.now(ZoneId.of("UTC"))
+        val result = ZonedDateTime.now(ZoneId.of("UTC"))
                 .plus(Duration.ofMillis(milliseconds))
                 .toInstant();
         return Date.from(result);
@@ -46,7 +48,7 @@ public abstract class DateExtensions {
             return date1 == null && date2 == null;
         }
 
-        Duration delta = Duration.between(date1.toInstant(), date2.toInstant());
+        val delta = Duration.between(date1.toInstant(), date2.toInstant());
         return abs(delta.toMillis()) < abs(deltaMs);
     }
 }

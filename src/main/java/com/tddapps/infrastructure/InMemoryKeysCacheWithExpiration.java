@@ -1,5 +1,6 @@
 package com.tddapps.infrastructure;
 
+import lombok.val;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -20,9 +21,9 @@ public class InMemoryKeysCacheWithExpiration implements KeysCache, Closeable {
     private final Cache<String, String> cache;
 
     public InMemoryKeysCacheWithExpiration(){
-        ExpiryPolicy<Object, Object> expiryPolicy = ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofSeconds(TTL_SECONDS));
+        val expiryPolicy = ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofSeconds(TTL_SECONDS));
 
-        CacheConfigurationBuilder<String, String> configurationBuilder = CacheConfigurationBuilder
+        val configurationBuilder = CacheConfigurationBuilder
                 .newCacheConfigurationBuilder(String.class, String.class, ResourcePoolsBuilder.heap(    MAX_CAPACITY))
                 .withExpiry(expiryPolicy);
 

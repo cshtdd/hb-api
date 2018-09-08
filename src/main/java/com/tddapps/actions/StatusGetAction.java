@@ -9,6 +9,7 @@ import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatRepository;
 import com.tddapps.infrastructure.KeysCache;
 import com.tddapps.model.NotificationSenderStatus;
+import lombok.val;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +55,7 @@ public class StatusGetAction implements HttpSupplierAction<TextMessage> {
     }
 
     private void VerifyDatabase() throws ActionProcessException {
-        HeartBeat hb = new HeartBeat(
+        val hb = new HeartBeat(
                 getClass().getSimpleName(),
                 UtcNowPlusMs(4*60*60*1000),
                 true

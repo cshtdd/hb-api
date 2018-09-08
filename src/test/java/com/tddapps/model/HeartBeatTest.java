@@ -1,5 +1,6 @@
 package com.tddapps.model;
 
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
@@ -16,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HeartBeatTest {
     @Test
     public void HasSensibleStringRepresentation(){
-        ZonedDateTime dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
-        Date expirationUtc = Date.from(dateTime.toInstant());
+        val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
+        val expirationUtc = Date.from(dateTime.toInstant());
 
-        HeartBeat heartBeat = new HeartBeat("myHost", expirationUtc, false);
+        val heartBeat = new HeartBeat("myHost", expirationUtc, false);
 
         assertEquals("HeartBeat, expirationUtc: 2017-07-17T20:05:31Z[UTC], hostId: myHost, isTest: false", heartBeat.toString());
         assertTrue(heartBeat.isNotTest());
@@ -32,20 +33,21 @@ public class HeartBeatTest {
 
     @Test
     public void NoNeedToSpecifyIsTestByDefault(){
-        HeartBeat hb = new HeartBeat("host1", UtcNowPlusMs(6000), false);
+        val hb = new HeartBeat("host1", UtcNowPlusMs(6000), false);
+
         assertFalse(hb.isTest());
         assertTrue(hb.isNotTest());
     }
 
     @Test
     public void IsTestIsConsideredForEquality(){
-        Date date1 = UtcNow();
+        val date1 = UtcNow();
 
-        HeartBeat hb1 = new HeartBeat("host1", date1, false);
-        HeartBeat hb1Clone = new HeartBeat("host1", date1, false);
-        HeartBeat hb1CloneReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
-        HeartBeat hb1Test = new HeartBeat("host1", date1, true);
-        HeartBeat hb1TestReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), true);
+        val hb1 = new HeartBeat("host1", date1, false);
+        val hb1Clone = new HeartBeat("host1", date1, false);
+        val hb1CloneReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
+        val hb1Test = new HeartBeat("host1", date1, true);
+        val hb1TestReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), true);
 
         shouldBeEqual(hb1, hb1Clone);
         shouldNotBeEqual(hb1, hb1Test);
@@ -56,16 +58,16 @@ public class HeartBeatTest {
 
     @Test
     public void CanBeCompared(){
-        Date date1 = UtcNow();
+        val date1 = UtcNow();
 
-        HeartBeat hbNoHost = new HeartBeat(null, date1, false);
-        HeartBeat hbEmptyHost = new HeartBeat("", date1, false);
-        HeartBeat hbNoDate = new HeartBeat("host1", null, false);
-        HeartBeat hb1 = new HeartBeat("host1", date1, false);
-        HeartBeat hb1Copy = new HeartBeat("host1", date1, false);
-        HeartBeat hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
-        HeartBeat hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), false);
-        HeartBeat hb2 = new HeartBeat("host2", date1, false);
+        val hbNoHost = new HeartBeat(null, date1, false);
+        val hbEmptyHost = new HeartBeat("", date1, false);
+        val hbNoDate = new HeartBeat("host1", null, false);
+        val hb1 = new HeartBeat("host1", date1, false);
+        val hb1Copy = new HeartBeat("host1", date1, false);
+        val hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
+        val hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+        val hb2 = new HeartBeat("host2", date1, false);
 
         shouldBeEqual(hb1, hb1Copy);
 
@@ -81,8 +83,8 @@ public class HeartBeatTest {
 
     @Test
     public void CanBeCloned(){
-        HeartBeat hb = new HeartBeat("host1", UtcNowPlusMs(3000), false);
-        HeartBeat hbClone = (HeartBeat) hb.clone();
+        val hb = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+        val hbClone = (HeartBeat) hb.clone();
 
         assertFalse(hb == hbClone);
         assertTrue(hb.almostEquals(hbClone));
@@ -103,16 +105,16 @@ public class HeartBeatTest {
 
     @Test
     public void HasAnAlmostEqualMethod(){
-        Date date1 = UtcNow();
+        val date1 = UtcNow();
 
-        HeartBeat hbNoHost = new HeartBeat(null, date1, false);
-        HeartBeat hbEmptyHost = new HeartBeat("", date1, false);
-        HeartBeat hbNoDate = new HeartBeat("host1", null, false);
-        HeartBeat hb1 = new HeartBeat("host1", date1, false);
-        HeartBeat hb1Copy = new HeartBeat("host1", date1, false);
-        HeartBeat hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
-        HeartBeat hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), false);
-        HeartBeat hb2 = new HeartBeat("host2", date1, false);
+        val hbNoHost = new HeartBeat(null, date1, false);
+        val hbEmptyHost = new HeartBeat("", date1, false);
+        val hbNoDate = new HeartBeat("host1", null, false);
+        val hb1 = new HeartBeat("host1", date1, false);
+        val hb1Copy = new HeartBeat("host1", date1, false);
+        val hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
+        val hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+        val hb2 = new HeartBeat("host2", date1, false);
 
         assertTrue(hb1.almostEquals(hb1Copy));
         assertTrue(hbEmptyHost.almostEquals(hbNoHost));
@@ -153,9 +155,9 @@ public class HeartBeatTest {
 
     @Test
     public void CloneWithUpdatedExpirationUtcReturnsACopyOfTheOriginalHeartBeatWithADifferentExpiration(){
-        HeartBeat expectedHeartBeat = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+        val expectedHeartBeat = new HeartBeat("host1", UtcNowPlusMs(3000), false);
 
-        HeartBeat actualHeartBeat = new HeartBeat("host1", UtcNow(), false)
+        val actualHeartBeat = new HeartBeat("host1", UtcNow(), false)
                 .clone(UtcNowPlusMs(3000));
 
         assertTrue(expectedHeartBeat.almostEquals(actualHeartBeat));

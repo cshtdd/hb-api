@@ -57,7 +57,6 @@ public class JsonNodeHelperTest {
     }
 
     private JsonNode parse(String body){
-        JsonNode seededBody = null;
         try {
             return JsonNodeHelper.parse(body);
         } catch (IOException e) {

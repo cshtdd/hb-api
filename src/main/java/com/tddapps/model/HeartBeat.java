@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.val;
 
 import java.util.Date;
 
@@ -64,7 +65,7 @@ public class HeartBeat implements Cloneable{
     }
 
     public HeartBeat clone(Date updateExpirationUtc){
-        HeartBeat result = (HeartBeat)this.clone();
+        val result = (HeartBeat)this.clone();
 
         result.setExpirationUtc(updateExpirationUtc);
 

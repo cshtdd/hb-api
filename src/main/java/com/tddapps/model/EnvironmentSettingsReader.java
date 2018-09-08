@@ -1,5 +1,7 @@
 package com.tddapps.model;
 
+import lombok.val;
+
 public class EnvironmentSettingsReader implements SettingsReader {
     @Override
     public String ReadString(String name) {
@@ -8,7 +10,7 @@ public class EnvironmentSettingsReader implements SettingsReader {
 
     @Override
     public String ReadString(String name, String defaultValue) {
-        String result = System.getenv(name);
+        val result = System.getenv(name);
 
         if (result == null){
             return defaultValue;

@@ -2,6 +2,7 @@ package com.tddapps.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.val;
 
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ public class JsonNodeHelper {
     }
 
     public static String readString(JsonNode body, String parameterName, String defaultValue){
-        JsonNode value = body.get(parameterName);
+        val value = body.get(parameterName);
 
         if (value == null){
             return defaultValue;
@@ -26,7 +27,7 @@ public class JsonNodeHelper {
     }
 
     public static int readInt(JsonNode body, String parameterName, int defaultValue){
-        JsonNode value = body.get(parameterName);
+        val value = body.get(parameterName);
 
         if (value == null){
             return defaultValue;

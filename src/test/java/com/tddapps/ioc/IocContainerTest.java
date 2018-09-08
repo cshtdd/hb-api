@@ -9,6 +9,7 @@ import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
 import com.tddapps.infrastructure.KeysCache;
 import com.tddapps.utils.UtcNowReader;
 import com.tddapps.utils.UtcNowReaderImpl;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class IocContainerTest {
     @Test
     public void DependenciesAreNotSingletonByDefault(){
-        HeartBeatRepository repository1 = IocContainer.getInstance().Resolve(HeartBeatRepository.class);
-        HeartBeatRepository repository2 = IocContainer.getInstance().Resolve(HeartBeatRepository.class);
+        val repository1 = IocContainer.getInstance().Resolve(HeartBeatRepository.class);
+        val repository2 = IocContainer.getInstance().Resolve(HeartBeatRepository.class);
 
         assertFalse(repository1 == repository2);
     }
@@ -36,8 +37,8 @@ public class IocContainerTest {
     public void RegistersDynamoDBMapperFactoryAsASingleton(){
         assertTrue(IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class) instanceof DynamoDBMapperFactoryWithTablePrefix);
 
-        DynamoDBMapperFactory factory1 = IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class);
-        DynamoDBMapperFactory factory2 = IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class);
+        val factory1 = IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class);
+        val factory2 = IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class);
 
         assertTrue(factory1 == factory2);
     }
@@ -46,8 +47,8 @@ public class IocContainerTest {
     public void RegistersInMemoryKeysCacheWithExpirationAsASingleton(){
         assertTrue(IocContainer.getInstance().Resolve(KeysCache.class) instanceof InMemoryKeysCacheWithExpiration);
 
-        KeysCache cache1 = IocContainer.getInstance().Resolve(KeysCache.class);
-        KeysCache cache2 = IocContainer.getInstance().Resolve(KeysCache.class);
+        val cache1 = IocContainer.getInstance().Resolve(KeysCache.class);
+        val cache2 = IocContainer.getInstance().Resolve(KeysCache.class);
 
         assertTrue(cache1 == cache2);
     }

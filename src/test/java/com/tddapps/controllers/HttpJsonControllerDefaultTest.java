@@ -1,5 +1,6 @@
 package com.tddapps.controllers;
 
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class HttpJsonControllerDefaultTest {
 
     @Test
     public void ReturnsBadRequestWhenBodyMissing(){
-        Map<String, Object> input = new HashMap<String, Object>(){{
+        val input = new HashMap<String, Object>(){{
             put("key1", "value1");
         }};
 
@@ -80,7 +81,7 @@ public class HttpJsonControllerDefaultTest {
     }
 
     private HttpJsonResponse processBody(String body){
-        Map<String, Object> input = new HashMap<String, Object>(){{
+        val input = new HashMap<String, Object>(){{
             put("body", body);
         }};
 

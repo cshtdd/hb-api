@@ -1,6 +1,7 @@
 package com.tddapps.actions;
 
 import com.tddapps.model.HeartBeat;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
@@ -28,10 +29,10 @@ public class HeartBeatPostActionInputTest {
 
     @Test
     public void CanBeCompared(){
-        HeartBeatPostActionInput input1 = new HeartBeatPostActionInput("foo", 5000);
+        val input1 = new HeartBeatPostActionInput("foo", 5000);
         shouldBeEqual(input1, input1);
 
-        HeartBeatPostActionInput input1Clone = new HeartBeatPostActionInput("foo", 5000);
+        val input1Clone = new HeartBeatPostActionInput("foo", 5000);
         shouldBeEqual(input1, input1Clone);
 
         shouldBeEqual(new HeartBeatPostActionInput("", 1000), new HeartBeatPostActionInput("", 1000));
@@ -44,9 +45,9 @@ public class HeartBeatPostActionInputTest {
 
     @Test
     public void CanBeConvertedToAHeartBeat(){
-        HeartBeat expected = new HeartBeat("foo", UtcNowPlusMs(5000), false);
+        val expected = new HeartBeat("foo", UtcNowPlusMs(5000), false);
 
-        HeartBeat actual = new HeartBeatPostActionInput("foo", 5000).toHeartBeat();
+        val actual = new HeartBeatPostActionInput("foo", 5000).toHeartBeat();
 
         assertTrue(expected.almostEquals(actual));
     }

@@ -1,7 +1,7 @@
 package com.tddapps.controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.tddapps.utils.JsonNodeHelper;
+import lombok.val;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,15 +24,15 @@ public class HttpJsonControllerDefault implements HttpJsonController {
     @Override
     public HttpJsonResponse process(Map<String, Object> input){
         try {
-            String requestBody = readBodyFrom(input);
+            val requestBody = readBodyFrom(input);
             LOG.debug(String.format("Body: %s", requestBody));
 
             if (requestBody.trim().isEmpty()){
                 return HttpJsonResponse.BadRequestWithMessage("Empty Request Body");
             }
 
-            JsonNode jsonBody = JsonNodeHelper.parse(requestBody);
-            Object parsedBody = action.parse(jsonBody);
+            val jsonBody = JsonNodeHelper.parse(requestBody);
+            val parsedBody = action.parse(jsonBody);
             return action.process(parsedBody);
 
         } catch (IOException e) {
@@ -48,7 +48,7 @@ public class HttpJsonControllerDefault implements HttpJsonController {
     }
 
     private String readBodyFrom(Map<String, Object> input){
-        Object bodyObject = input.getOrDefault("body", "");
+        val bodyObject = input.getOrDefault("body", "");
 
         if (bodyObject == null){
             return "";

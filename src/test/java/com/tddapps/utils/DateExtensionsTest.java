@@ -1,5 +1,6 @@
 package com.tddapps.utils;
 
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.time.*;
@@ -21,68 +22,68 @@ public class DateExtensionsTest {
 
     @Test
     public void ToUtcStringReturnsTheIsoStringRepresentationOfAZonedDateTime(){
-        ZonedDateTime dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
-        Date date = Date.from(dateTime.toInstant());
+        val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
+        val date = Date.from(dateTime.toInstant());
 
         assertEquals("2017-07-17T20:05:31Z[UTC]", ToUtcString(date));
     }
 
     @Test
     public void ToUtcStringReturnsTheIsoStringRepresentationOfALocalDateTime(){
-        LocalDateTime dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31);
-        Date date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
+        val dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31);
+        val date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
 
         assertEquals("2017-07-17T20:05:31Z[UTC]", ToUtcString(date));
     }
 
     @Test
     public void ToUtcStringReturnsTheIsoStringRepresentationWithTheTimezoneOffset(){
-        LocalDateTime dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31);
-        Date date = Date.from(dateTime.toInstant(ZoneOffset.ofHours(3)));
+        val dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31);
+        val date = Date.from(dateTime.toInstant(ZoneOffset.ofHours(3)));
 
         assertEquals("2017-07-17T17:05:31Z[UTC]", ToUtcString(date));
     }
 
     @Test
     public void UtcNowReturnsTheCorrectValue(){
-        Instant expected = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
-        Instant actual = UtcNow().toInstant();
+        val expected = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
+        val actual = UtcNow().toInstant();
 
-        long delta = Duration.between(expected, actual).toMillis();
+        val delta = Duration.between(expected, actual).toMillis();
 
         assertTrue(delta < 100);
     }
 
     @Test
     public void UtcNowPlusAddsTheCorrectNumberOfMilliseconds(){
-        Instant expected = ZonedDateTime.now(ZoneId.of("UTC"))
+        val expected = ZonedDateTime.now(ZoneId.of("UTC"))
                 .plusNanos(40000)
                 .toInstant();
-        Instant actual = UtcNowPlusMs(40).toInstant();
+        val actual = UtcNowPlusMs(40).toInstant();
 
-        long delta = Duration.between(expected, actual).toMillis();
+        val delta = Duration.between(expected, actual).toMillis();
 
         assertTrue(delta < 100);
     }
 
     @Test
     public void UtcNowPlusDoesNotReturnNow(){
-        Instant now = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
-        Instant actual = UtcNowPlusMs(400).toInstant();
+        val now = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
+        val actual = UtcNowPlusMs(400).toInstant();
 
-        long delta = Duration.between(now, actual).toMillis();
+        val delta = Duration.between(now, actual).toMillis();
 
         assertTrue(delta > 100);
     }
 
     @Test
     public void UtcNowPlusSupportsNegativeParameters(){
-        Instant expected = ZonedDateTime.now(ZoneId.of("UTC"))
+        val expected = ZonedDateTime.now(ZoneId.of("UTC"))
                 .plusNanos(-45000)
                 .toInstant();
-        Instant actual = UtcNowPlusMs(-45).toInstant();
+        val actual = UtcNowPlusMs(-45).toInstant();
 
-        long delta = Duration.between(expected, actual).toMillis();
+        val delta = Duration.between(expected, actual).toMillis();
 
         assertTrue(delta < 100);
     }
@@ -101,7 +102,7 @@ public class DateExtensionsTest {
         assertFalse(AreAlmostEquals(UtcNow(), UtcNowPlusMs(-400)));
         assertFalse(AreAlmostEquals(UtcNowPlusMs(-400), UtcNow()));
 
-        Date date1 = Date.from(ZonedDateTime.now(ZoneId.of("UTC"))
+        val date1 = Date.from(ZonedDateTime.now(ZoneId.of("UTC"))
                 .plusNanos(80000)
                 .toInstant());
 

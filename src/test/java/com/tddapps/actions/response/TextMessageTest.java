@@ -1,5 +1,6 @@
 package com.tddapps.actions.response;
 
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import static com.tddapps.utils.EqualityAssertions.*;
@@ -31,12 +32,12 @@ public class TextMessageTest {
 
     @Test
     public void CanBeCompared(){
-        TextMessage message1 = TextMessage.create("sample1");
+        val message1 = TextMessage.create("sample1");
         shouldBeEqual(message1, message1);
 
         shouldNotBeEqual(null, message1);
 
-        TextMessage message1Equivalent = TextMessage.create("sample1");
+        val message1Equivalent = TextMessage.create("sample1");
         shouldBeEqual(message1, message1Equivalent);
 
         shouldBeEqual(TextMessage.create(""), TextMessage.create(""));

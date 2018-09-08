@@ -1,5 +1,6 @@
 package com.tddapps.model;
 
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import static com.tddapps.utils.EqualityAssertions.*;
@@ -31,11 +32,11 @@ public class NotificationTest {
 
     @Test
     public void CanBeCompared(){
-        Notification n1 = new Notification("subject 1", "msg1");
-        Notification n2 = new Notification("subject 2", "msg2");
-        Notification n1Clone = new Notification("subject 1", "msg1");
-        Notification n1DifferentSubject = new Notification("subject 2", "msg1");
-        Notification n1DifferentMessage = new Notification("subject 1", "msg2");
+        val n1 = new Notification("subject 1", "msg1");
+        val n2 = new Notification("subject 2", "msg2");
+        val n1Clone = new Notification("subject 1", "msg1");
+        val n1DifferentSubject = new Notification("subject 2", "msg1");
+        val n1DifferentMessage = new Notification("subject 1", "msg2");
 
         shouldBeEqual(n1, n1);
         shouldBeEqual(n1, n1Clone);
@@ -49,7 +50,7 @@ public class NotificationTest {
 
     @Test
     public void HasASensibleStringRepresentation(){
-        String actual = new Notification("you got bills", "your total balance is 1000").toString();
+        val actual = new Notification("you got bills", "your total balance is 1000").toString();
 
         assertEquals("Notification, subject: you got bills, message: your total balance is 1000", actual);
     }

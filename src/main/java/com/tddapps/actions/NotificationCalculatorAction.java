@@ -5,6 +5,7 @@ import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.controllers.HttpSupplierAction;
 import com.tddapps.model.*;
+import lombok.val;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,20 +46,20 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
     }
 
     private void sendNotifications(HeartBeat[] expiredHeartBeats) throws DalException {
-        Notification[] notifications = notificationBuilder.build(expiredHeartBeats);
-        for (Notification notification : notifications) {
+        val notifications = notificationBuilder.build(expiredHeartBeats);
+        for (val notification : notifications) {
             notificationSender.Send(notification);
         }
     }
 
     private void updateExpiredHeartBeats(HeartBeat[] expiredHeartBeats) throws DalException {
-        Date updatedDate = UtcNowPlusMs(24*60*60*1000);
+        val updatedDate = UtcNowPlusMs(24*60*60*1000);
 
-        HeartBeat[] updatedHeartbeats = Arrays.stream(expiredHeartBeats)
+        val updatedHeartbeats = Arrays.stream(expiredHeartBeats)
                 .map(hb -> hb.clone(updatedDate))
                 .toArray(HeartBeat[]::new);
 
-        for (HeartBeat hb : updatedHeartbeats) {
+        for (val hb : updatedHeartbeats) {
             heartBeatRepository.Save(hb);
         }
     }
@@ -71,13 +72,13 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
     }
 
     private void logExpiredHeartBeats(HeartBeat[] expiredHeartBeats) {
-        for (HeartBeat hb : expiredHeartBeats){
+        for (val hb : expiredHeartBeats){
             LOG.info(String.format("Host missing; %s", hb.toString()));
         }
     }
 
     private HeartBeat[] readHeartBeats() throws DalException {
-        HeartBeat[] result = heartBeatRepository.All();
+        val result = heartBeatRepository.All();
 
         if (result == null){
             return new HeartBeat[]{};

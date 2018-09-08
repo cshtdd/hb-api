@@ -8,6 +8,7 @@ import com.tddapps.controllers.HttpJsonAction;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeatRepository;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +33,7 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     }
 
     private String readHostId(JsonNode body) throws ActionBodyParseException {
-        String result = readString(body, "hostId");
+        val result = readString(body, "hostId");
 
         if (!StringUtils.isAlphanumeric(result)){
             throw new ActionBodyParseException("Invalid hostId");
@@ -46,7 +47,7 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
     }
 
     private int readIntervalMs(JsonNode body) throws ActionBodyParseException {
-        int result = readInt(body, "intervalMs", HeartBeatPostActionInput.DEFAULT_INTERVAL_MS);
+        val result = readInt(body, "intervalMs", HeartBeatPostActionInput.DEFAULT_INTERVAL_MS);
 
         if (result < HeartBeatPostActionInput.MIN_INTERVAL_MS ||
                 result > HeartBeatPostActionInput.MAX_INTERVAL_MS){

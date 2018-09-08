@@ -4,10 +4,9 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sns.model.Topic;
 import com.tddapps.model.*;
+import lombok.val;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.stream.Collectors;
 
 public class NotificationSenderSns implements NotificationSender, NotificationSenderStatus {
     private static final Logger LOG = LogManager.getLogger(NotificationSenderSns.class);
@@ -21,7 +20,7 @@ public class NotificationSenderSns implements NotificationSender, NotificationSe
     @Override
     public void Verify() throws DalException {
         try {
-            String anyTopicArn = AmazonSNSClientBuilder
+            val anyTopicArn = AmazonSNSClientBuilder
                     .defaultClient()
                     .listTopics()
                     .getTopics()

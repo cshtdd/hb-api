@@ -1,6 +1,7 @@
 package com.tddapps.model;
 
 import com.tddapps.utils.UtcNowReader;
+import lombok.val;
 
 import java.util.Arrays;
 
@@ -19,8 +20,8 @@ public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
             return NoNotifications();
         }
 
-        String subject = String.format("Hosts missing [%s]", getHostNames(heartBeats));
-        String message = String.format("%s\n\n%s\n--\nNotification Built: %s\n--",
+        val subject = String.format("Hosts missing [%s]", getHostNames(heartBeats));
+        val message = String.format("%s\n\n%s\n--\nNotification Built: %s\n--",
                 subject,
                 getHeartBeatDetails(heartBeats),
                 ToUtcString(utcNowReader.Read())
