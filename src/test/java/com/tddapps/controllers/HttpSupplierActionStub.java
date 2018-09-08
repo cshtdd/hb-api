@@ -1,5 +1,8 @@
 package com.tddapps.controllers;
 
+import lombok.Data;
+
+@Data
 public class HttpSupplierActionStub implements HttpSupplierAction<String> {
     private ActionProcessException seededProcessException = null;
     private int seededStatusCode = -1;
@@ -12,29 +15,5 @@ public class HttpSupplierActionStub implements HttpSupplierAction<String> {
         }
 
         return new HttpJsonResponse<>(seededStatusCode, seededResultBody);
-    }
-
-    public ActionProcessException getSeededProcessException() {
-        return seededProcessException;
-    }
-
-    public void setSeededProcessException(ActionProcessException seededProcessException) {
-        this.seededProcessException = seededProcessException;
-    }
-
-    public String getSeededResultBody() {
-        return seededResultBody;
-    }
-
-    public void setSeededResultBody(String seededResultBody) {
-        this.seededResultBody = seededResultBody;
-    }
-
-    public int getSeededStatusCode() {
-        return seededStatusCode;
-    }
-
-    public void setSeededStatusCode(int seededStatusCode) {
-        this.seededStatusCode = seededStatusCode;
     }
 }
