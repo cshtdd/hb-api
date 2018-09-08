@@ -1,9 +1,11 @@
 package com.tddapps.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Data;
 
 import static com.tddapps.utils.StringExtensions.*;
 
+@Data
 public class HttpJsonActionStub implements HttpJsonAction<String, String>{
     private ActionBodyParseException seededParseException = null;
     private String seededParsedBody = null;
@@ -35,45 +37,5 @@ public class HttpJsonActionStub implements HttpJsonAction<String, String>{
         }
 
         return new HttpJsonResponse<>(seededStatusCode, seededResultBody);
-    }
-
-    public ActionBodyParseException getSeededParseException() {
-        return seededParseException;
-    }
-
-    public void setSeededParseException(ActionBodyParseException seededParseException) {
-        this.seededParseException = seededParseException;
-    }
-
-    public String getSeededParsedBody() {
-        return seededParsedBody;
-    }
-
-    public void setSeededParsedBody(String seededParsedBody) {
-        this.seededParsedBody = seededParsedBody;
-    }
-
-    public String getSeededResultBody() {
-        return seededResultBody;
-    }
-
-    public void setSeededResultBody(String seededResultBody) {
-        this.seededResultBody = seededResultBody;
-    }
-
-    public int getSeededStatusCode() {
-        return seededStatusCode;
-    }
-
-    public void setSeededStatusCode(int seededStatusCode) {
-        this.seededStatusCode = seededStatusCode;
-    }
-
-    public ActionProcessException getSeededProcessException() {
-        return seededProcessException;
-    }
-
-    public void setSeededProcessException(ActionProcessException seededProcessException) {
-        this.seededProcessException = seededProcessException;
     }
 }
