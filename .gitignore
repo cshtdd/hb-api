@@ -29,3 +29,6 @@ target
 # Maven
 log/
 target/
+
+# Sam
+.sam_template.yml

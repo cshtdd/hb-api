@@ -62,6 +62,17 @@ sls create_domain
 4.1- Make sure there is a basepath in the custom domain. If not, follow the steps in this [Github Issue](https://github.com/amplify-education/serverless-domain-manager/issues/57) to correct it. There is some buggy behavior between CloudFormation and the domain manager plugin
 5- Create a `CNAME` record in the DNS provider for the cloudfront domain
 
+## Run it locally  
+
+**NOTE** although this will run Api Gateway locally. Dynamo and SNS will still be the real AWS resources. I still need to figure out how to run all the things locally.  
+
+1- Install the [Serverless Sam Plugin](https://github.com/SAPessi/serverless-sam)
+2- Install the [aws sam cli](https://github.com/awslabs/aws-sam-cli/blob/develop/docs/installation.rst)  
+
+```bash
+sh ./dev/run.sh
+```
+
 # Usage  
 
 Launch the crontab editor

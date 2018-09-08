@@ -59,6 +59,7 @@ functions:
 
 plugins:
   - serverless-domain-manager
+  - serverless-sam
 
 custom:
   tablePrefix: ${self:service}-${self:provider.stage}-
