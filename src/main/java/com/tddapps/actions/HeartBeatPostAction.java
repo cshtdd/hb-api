@@ -8,16 +8,15 @@ import com.tddapps.controllers.HttpJsonAction;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeatRepository;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import static com.tddapps.utils.JsonNodeHelper.readInt;
 import static com.tddapps.utils.JsonNodeHelper.readString;
 
+@Log4j2
 public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionInput, TextMessage> {
-    private static final Logger LOG = LogManager.getLogger(HeartBeatPostAction.class);
     private final HeartBeatRepository heartBeatRepository;
 
     public HeartBeatPostAction(HeartBeatRepository heartBeatRepository){
@@ -59,7 +58,7 @@ public class HeartBeatPostAction implements HttpJsonAction<HeartBeatPostActionIn
 
     @Override
     public HttpJsonResponse<TextMessage> process(HeartBeatPostActionInput body) throws ActionProcessException {
-        LOG.info(String.format("hostId: %s", body.getHostId()));
+        log.info(String.format("hostId: %s", body.getHostId()));
 
         try {
             heartBeatRepository.Save(body.toHeartBeat());

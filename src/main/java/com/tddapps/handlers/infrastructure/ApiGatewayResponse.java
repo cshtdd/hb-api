@@ -1,15 +1,13 @@
 package com.tddapps.handlers.infrastructure;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ApiGatewayResponse {
 
@@ -46,10 +44,8 @@ public class ApiGatewayResponse {
         return new Builder();
     }
 
+    @Log4j2
     public static class Builder {
-
-        private static final Logger LOG = LogManager.getLogger(ApiGatewayResponse.Builder.class);
-
         private static final ObjectMapper objectMapper = new ObjectMapper();
 
         private int statusCode = 200;
@@ -118,7 +114,7 @@ public class ApiGatewayResponse {
                 try {
                     body = objectMapper.writeValueAsString(objectBody);
                 } catch (JsonProcessingException e) {
-                    LOG.error("failed to serialize object", e);
+                    log.error("failed to serialize object", e);
                     throw new RuntimeException(e);
                 }
             } else if (binaryBody != null) {

@@ -1,17 +1,15 @@
 package com.tddapps.controllers;
 
 import com.tddapps.utils.JsonNodeHelper;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Map;
 
+@Log4j2
 public class HttpJsonControllerDefault implements HttpJsonController {
     private final HttpJsonAction action;
-
-    private static final Logger LOG = LogManager.getLogger(HttpJsonControllerDefault.class);
 
     public HttpJsonAction getAction() {
         return action;
@@ -25,7 +23,7 @@ public class HttpJsonControllerDefault implements HttpJsonController {
     public HttpJsonResponse process(Map<String, Object> input){
         try {
             val requestBody = readBodyFrom(input);
-            LOG.debug(String.format("Body: %s", requestBody));
+            log.debug(String.format("Body: %s", requestBody));
 
             if (requestBody.trim().isEmpty()){
                 return HttpJsonResponse.BadRequestWithMessage("Empty Request Body");
@@ -36,13 +34,13 @@ public class HttpJsonControllerDefault implements HttpJsonController {
             return action.process(parsedBody);
 
         } catch (IOException e) {
-            LOG.warn("Invalid json in request body", e);
+            log.warn("Invalid json in request body", e);
             return HttpJsonResponse.BadRequestWithMessage("Invalid json in request body");
         } catch (ActionBodyParseException e) {
-            LOG.warn("Action parsing failed", e);
+            log.warn("Action parsing failed", e);
             return HttpJsonResponse.BadRequestWithMessage(e.getMessage());
         } catch (ActionProcessException e) {
-            LOG.error("Action processing failed", e);
+            log.error("Action processing failed", e);
             return HttpJsonResponse.ServerErrorWithMessage(e.getMessage());
         }
     }

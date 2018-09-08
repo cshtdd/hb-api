@@ -4,13 +4,11 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sns.model.Topic;
 import com.tddapps.model.*;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+@Log4j2
 public class NotificationSenderSns implements NotificationSender, NotificationSenderStatus {
-    private static final Logger LOG = LogManager.getLogger(NotificationSenderSns.class);
-
     private final SettingsReader settingsReader;
 
     public NotificationSenderSns(SettingsReader settingsReader){
@@ -34,7 +32,7 @@ public class NotificationSenderSns implements NotificationSender, NotificationSe
             }
         }
         catch (AmazonClientException e){
-            LOG.error("Notification VerifySendCapability Error", e);
+            log.error("Notification VerifySendCapability Error", e);
             throw new DalException(e.getMessage());
         }
     }
@@ -51,7 +49,7 @@ public class NotificationSenderSns implements NotificationSender, NotificationSe
                     );
         }
         catch (AmazonClientException e){
-            LOG.error("Notification Send Error", e);
+            log.error("Notification Send Error", e);
             throw new DalException(e.getMessage());
         }
     }

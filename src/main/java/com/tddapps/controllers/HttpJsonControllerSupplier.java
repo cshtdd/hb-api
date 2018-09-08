@@ -1,14 +1,12 @@
 package com.tddapps.controllers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Map;
 
+@Log4j2
 public class HttpJsonControllerSupplier implements HttpJsonController {
     private final HttpSupplierAction action;
-
-    private static final Logger LOG = LogManager.getLogger(HttpJsonControllerSupplier.class);
 
     public HttpSupplierAction getAction() {
         return action;
@@ -23,7 +21,7 @@ public class HttpJsonControllerSupplier implements HttpJsonController {
         try {
             return getAction().process();
         } catch (ActionProcessException e) {
-            LOG.error("Action processing failed", e);
+            log.error("Action processing failed", e);
             return HttpJsonResponse.ServerErrorWithMessage(e.getMessage());
         }
     }

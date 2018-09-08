@@ -5,17 +5,15 @@ import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.controllers.HttpSupplierAction;
 import com.tddapps.model.*;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.Date;
 
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 
+@Log4j2
 public class NotificationCalculatorAction implements HttpSupplierAction<TextMessage> {
-    private static final Logger LOG = LogManager.getLogger(NotificationCalculatorAction.class);
     private final HeartBeatRepository heartBeatRepository;
     private final HeartBeatNotificationBuilder notificationBuilder;
     private final NotificationSender notificationSender;
@@ -31,7 +29,7 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
 
     @Override
     public HttpJsonResponse<TextMessage> process() throws ActionProcessException {
-        LOG.info("calculating notifications");
+        log.info("calculating notifications");
 
         try {
             HeartBeat[] expiredHeartBeats = readExpiredHeartBeats();
@@ -73,7 +71,7 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
 
     private void logExpiredHeartBeats(HeartBeat[] expiredHeartBeats) {
         for (val hb : expiredHeartBeats){
-            LOG.info(String.format("Host missing; %s", hb.toString()));
+            log.info(String.format("Host missing; %s", hb.toString()));
         }
     }
 
