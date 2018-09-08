@@ -103,7 +103,8 @@ public class HeartBeatPostActionTest {
     public void ProcessWritesTheHeartBeat() throws ActionProcessException, DalException {
         HeartBeat expectedHeartBeat = new HeartBeat(
                 "testHostA",
-                UtcNowPlusMs(34000)
+                UtcNowPlusMs(34000),
+                false
         );
 
         HttpJsonResponse<TextMessage> result = action.process(new HeartBeatPostActionInput("testHostA", 34000));

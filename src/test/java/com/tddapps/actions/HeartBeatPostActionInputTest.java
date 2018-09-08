@@ -44,7 +44,7 @@ public class HeartBeatPostActionInputTest {
 
     @Test
     public void CanBeConvertedToAHeartBeat(){
-        HeartBeat expected = new HeartBeat("foo", UtcNowPlusMs(5000));
+        HeartBeat expected = new HeartBeat("foo", UtcNowPlusMs(5000), false);
 
         HeartBeat actual = new HeartBeatPostActionInput("foo", 5000).toHeartBeat();
 

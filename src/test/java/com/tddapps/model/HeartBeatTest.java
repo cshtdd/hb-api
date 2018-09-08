@@ -19,7 +19,7 @@ public class HeartBeatTest {
         ZonedDateTime dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
         Date expirationUtc = Date.from(dateTime.toInstant());
 
-        HeartBeat heartBeat = new HeartBeat("myHost", expirationUtc);
+        HeartBeat heartBeat = new HeartBeat("myHost", expirationUtc, false);
 
         assertEquals("HeartBeat, expirationUtc: 2017-07-17T20:05:31Z[UTC], hostId: myHost, isTest: false", heartBeat.toString());
         assertTrue(heartBeat.isNotTest());
@@ -32,7 +32,7 @@ public class HeartBeatTest {
 
     @Test
     public void NoNeedToSpecifyIsTestByDefault(){
-        HeartBeat hb = new HeartBeat("host1", UtcNowPlusMs(6000));
+        HeartBeat hb = new HeartBeat("host1", UtcNowPlusMs(6000), false);
         assertFalse(hb.isTest());
         assertTrue(hb.isNotTest());
     }
@@ -41,7 +41,7 @@ public class HeartBeatTest {
     public void IsTestIsConsideredForEquality(){
         Date date1 = UtcNow();
 
-        HeartBeat hb1 = new HeartBeat("host1", date1);
+        HeartBeat hb1 = new HeartBeat("host1", date1, false);
         HeartBeat hb1Clone = new HeartBeat("host1", date1, false);
         HeartBeat hb1CloneReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
         HeartBeat hb1Test = new HeartBeat("host1", date1, true);
@@ -58,14 +58,14 @@ public class HeartBeatTest {
     public void CanBeCompared(){
         Date date1 = UtcNow();
 
-        HeartBeat hbNoHost = new HeartBeat(null, date1);
-        HeartBeat hbEmptyHost = new HeartBeat("", date1);
-        HeartBeat hbNoDate = new HeartBeat("host1", null);
-        HeartBeat hb1 = new HeartBeat("host1", date1);
-        HeartBeat hb1Copy = new HeartBeat("host1", date1);
-        HeartBeat hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1));
-        HeartBeat hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000));
-        HeartBeat hb2 = new HeartBeat("host2", date1);
+        HeartBeat hbNoHost = new HeartBeat(null, date1, false);
+        HeartBeat hbEmptyHost = new HeartBeat("", date1, false);
+        HeartBeat hbNoDate = new HeartBeat("host1", null, false);
+        HeartBeat hb1 = new HeartBeat("host1", date1, false);
+        HeartBeat hb1Copy = new HeartBeat("host1", date1, false);
+        HeartBeat hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
+        HeartBeat hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+        HeartBeat hb2 = new HeartBeat("host2", date1, false);
 
         shouldBeEqual(hb1, hb1Copy);
 
@@ -105,14 +105,14 @@ public class HeartBeatTest {
     public void HasAnAlmostEqualMethod(){
         Date date1 = UtcNow();
 
-        HeartBeat hbNoHost = new HeartBeat(null, date1);
-        HeartBeat hbEmptyHost = new HeartBeat("", date1);
-        HeartBeat hbNoDate = new HeartBeat("host1", null);
-        HeartBeat hb1 = new HeartBeat("host1", date1);
-        HeartBeat hb1Copy = new HeartBeat("host1", date1);
-        HeartBeat hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1));
-        HeartBeat hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000));
-        HeartBeat hb2 = new HeartBeat("host2", date1);
+        HeartBeat hbNoHost = new HeartBeat(null, date1, false);
+        HeartBeat hbEmptyHost = new HeartBeat("", date1, false);
+        HeartBeat hbNoDate = new HeartBeat("host1", null, false);
+        HeartBeat hb1 = new HeartBeat("host1", date1, false);
+        HeartBeat hb1Copy = new HeartBeat("host1", date1, false);
+        HeartBeat hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
+        HeartBeat hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+        HeartBeat hb2 = new HeartBeat("host2", date1, false);
 
         assertTrue(hb1.almostEquals(hb1Copy));
         assertTrue(hbEmptyHost.almostEquals(hbNoHost));
@@ -127,28 +127,28 @@ public class HeartBeatTest {
 
     @Test
     public void HeartBeatsWithCloseExpirationAreNotExpired(){
-        assertFalse(new HeartBeat("", UtcNowPlusMs(50)).isExpired());
-        assertTrue(new HeartBeat("", UtcNowPlusMs(50)).isNotExpired());
-        assertFalse(new HeartBeat("", UtcNowPlusMs(-50)).isExpired());
-        assertTrue(new HeartBeat("", UtcNowPlusMs(-50)).isNotExpired());
+        assertFalse(new HeartBeat("", UtcNowPlusMs(50), false).isExpired());
+        assertTrue(new HeartBeat("", UtcNowPlusMs(50), false).isNotExpired());
+        assertFalse(new HeartBeat("", UtcNowPlusMs(-50), false).isExpired());
+        assertTrue(new HeartBeat("", UtcNowPlusMs(-50), false).isNotExpired());
     }
 
     @Test
     public void FutureHeartBeatsAreNotExpired(){
-        assertFalse(new HeartBeat("", UtcNowPlusMs(5000)).isExpired());
-        assertTrue(new HeartBeat("", UtcNowPlusMs(5000)).isNotExpired());
+        assertFalse(new HeartBeat("", UtcNowPlusMs(5000), false).isExpired());
+        assertTrue(new HeartBeat("", UtcNowPlusMs(5000), false).isNotExpired());
     }
 
     @Test
     public void PastHeartBeatsAreExpired(){
-        assertTrue(new HeartBeat("", UtcNowPlusMs(-5000)).isExpired());
-        assertFalse(new HeartBeat("", UtcNowPlusMs(-5000)).isNotExpired());
+        assertTrue(new HeartBeat("", UtcNowPlusMs(-5000), false).isExpired());
+        assertFalse(new HeartBeat("", UtcNowPlusMs(-5000), false).isNotExpired());
     }
 
     @Test
     public void HeartBeatsWithNoExpirationAreExpired(){
-        assertTrue(new HeartBeat("", null).isExpired());
-        assertFalse(new HeartBeat("", null).isNotExpired());
+        assertTrue(new HeartBeat("", null, false).isExpired());
+        assertFalse(new HeartBeat("", null, false).isNotExpired());
     }
 
     @Test

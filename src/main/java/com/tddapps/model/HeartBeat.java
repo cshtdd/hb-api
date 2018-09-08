@@ -4,7 +4,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -12,29 +14,18 @@ import static com.tddapps.utils.DateExtensions.*;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @DynamoDBTable(tableName = "heartbeats")
 public class HeartBeat implements Cloneable{
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
 
-    @DynamoDBAttribute(attributeName = "is_test")
-    private boolean isTest;
-
     @DynamoDBAttribute(attributeName = "expiration_utc_datetime")
     private Date expirationUtc;
 
-    public HeartBeat(){ }
-    public HeartBeat(String hostId, Date expirationUtc){
-        this(hostId, expirationUtc, false);
-    }
-    public HeartBeat(String hostId, Date expirationUtc, boolean isTest){
-        this.hostId = hostId;
-        this.expirationUtc = expirationUtc;
-        this.isTest = isTest;
-    }
-    protected HeartBeat(HeartBeat that){
-        this(that.hostId, that.expirationUtc, that.isTest);
-    }
+    @DynamoDBAttribute(attributeName = "is_test")
+    private boolean isTest;
 
     @DynamoDBIgnore
     public boolean isNotTest(){
@@ -69,7 +60,7 @@ public class HeartBeat implements Cloneable{
     }
 
     public Object clone(){
-        return new HeartBeat(this);
+        return new HeartBeat(hostId, expirationUtc, isTest);
     }
 
     public HeartBeat clone(Date updateExpirationUtc){

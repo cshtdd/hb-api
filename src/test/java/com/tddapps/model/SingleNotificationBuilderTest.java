@@ -34,7 +34,7 @@ public class SingleNotificationBuilderTest {
 
     @Test
     public void SendsNotificationForASingleHeartBeat(){
-        HeartBeat hb1 = new HeartBeat("host1", UtcNow());
+        HeartBeat hb1 = new HeartBeat("host1", UtcNow(), false);
         HeartBeat[] input = new HeartBeat[]{
                 hb1
         };
@@ -58,8 +58,8 @@ public class SingleNotificationBuilderTest {
 
     @Test
     public void SendsSingleNotificationForMultipleHeartBeats(){
-        HeartBeat hb1 = new HeartBeat("host1", UtcNow());
-        HeartBeat hb2 = new HeartBeat("host2", UtcNow());
+        HeartBeat hb1 = new HeartBeat("host1", UtcNow(), false);
+        HeartBeat hb2 = new HeartBeat("host2", UtcNow(), false);
         HeartBeat[] input = new HeartBeat[]{
                 hb1,
                 hb2

@@ -31,6 +31,6 @@ public class HeartBeatPostActionInput {
     }
 
     public HeartBeat toHeartBeat() {
-        return new HeartBeat(hostId, UtcNowPlusMs(intervalMs));
+        return new HeartBeat(hostId, UtcNowPlusMs(intervalMs), false);
     }
 }

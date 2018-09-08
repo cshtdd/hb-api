@@ -53,14 +53,14 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void SendsNotificationsForEachExpiredHeartBeat() throws DalException, ActionProcessException {
-        HeartBeat hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000));
-        HeartBeat hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000));
+        HeartBeat hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false);
+        HeartBeat hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000), false);
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
                 hbExpired1,
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
-                new HeartBeat("hb1", UtcNowPlusMs(5000)),
+                new HeartBeat("hb1", UtcNowPlusMs(5000), false),
                 hbExpired2,
-                new HeartBeat("hb2", UtcNowPlusMs(25000))
+                new HeartBeat("hb2", UtcNowPlusMs(25000), false)
         };
         doReturn(seededHeartBeats)
                 .when(heartBeatRepository)
@@ -77,7 +77,7 @@ public class NotificationCalculatorActionTest {
     @Test
     public void ProcessThrowsAnActionProcessExceptionWhenNotificationsCouldNotBeSent() throws DalException {
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
-                new HeartBeat("hbExpired1", UtcNowPlusMs(-5000))
+                new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false)
         };
         doReturn(seededHeartBeats)
                 .when(heartBeatRepository)
@@ -102,17 +102,17 @@ public class NotificationCalculatorActionTest {
 
     @Test
     public void UpdatesTheExpirationOfExpiredHeartBeats() throws DalException, ActionProcessException {
-        HeartBeat hbExpected1 = new HeartBeat("hbExpired1", UtcNowPlusMs(24 * 60 * 60 * 1000));
-        HeartBeat hbExpected2 = new HeartBeat("hbExpired2", UtcNowPlusMs(24 * 60 * 60 * 1000));
+        HeartBeat hbExpected1 = new HeartBeat("hbExpired1", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
+        HeartBeat hbExpected2 = new HeartBeat("hbExpired2", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
 
-        HeartBeat hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000));
-        HeartBeat hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000));
+        HeartBeat hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false);
+        HeartBeat hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000), false);
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
                 hbExpired1,
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
-                new HeartBeat("hb1", UtcNowPlusMs(5000)),
+                new HeartBeat("hb1", UtcNowPlusMs(5000), false),
                 hbExpired2,
-                new HeartBeat("hb2", UtcNowPlusMs(25000))
+                new HeartBeat("hb2", UtcNowPlusMs(25000), false)
         };
         doReturn(seededHeartBeats)
                 .when(heartBeatRepository)
@@ -147,8 +147,8 @@ public class NotificationCalculatorActionTest {
     public void DoesNotSendNotificationWhenNoHeartBeatsExpired() throws ActionProcessException, DalException {
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
-                new HeartBeat("hb1", UtcNowPlusMs(5000)),
-                new HeartBeat("hb2", UtcNowPlusMs(25000))
+                new HeartBeat("hb1", UtcNowPlusMs(5000), false),
+                new HeartBeat("hb2", UtcNowPlusMs(25000), false)
         };
         doReturn(seededHeartBeats)
                 .when(heartBeatRepository)
@@ -164,8 +164,8 @@ public class NotificationCalculatorActionTest {
     public void DoesNotUpdatedHeartBeatsWhenNoHeartBeatsExpired() throws DalException, ActionProcessException {
         HeartBeat[] seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
-                new HeartBeat("hb1", UtcNowPlusMs(5000)),
-                new HeartBeat("hb2", UtcNowPlusMs(25000))
+                new HeartBeat("hb1", UtcNowPlusMs(5000), false),
+                new HeartBeat("hb2", UtcNowPlusMs(25000), false)
         };
         doReturn(seededHeartBeats)
                 .when(heartBeatRepository)
