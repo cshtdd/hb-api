@@ -4,30 +4,22 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
 import static com.tddapps.utils.DateExtensions.*;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 
+@Data
 @DynamoDBTable(tableName = "heartbeats")
-@EqualsAndHashCode
 public class HeartBeat implements Cloneable{
-    @Getter
-    @Setter
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
 
-    @Getter
-    @Setter
     @DynamoDBAttribute(attributeName = "is_test")
     private boolean isTest;
 
-    @Getter
-    @Setter
     @DynamoDBAttribute(attributeName = "expiration_utc_datetime")
     private Date expirationUtc;
 
