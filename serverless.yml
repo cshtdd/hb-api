@@ -10,6 +10,7 @@ provider:
 
   environment:
     TABLE_PREFIX: ${self:custom.tablePrefix}
+    DYNAMO_DB_ENDPOINT_OVERRIDE: ${opt:dynamoDbEndpointOverride, ''}
 
   usagePlan:
     quota:
