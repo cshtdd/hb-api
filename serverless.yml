@@ -60,6 +60,7 @@ functions:
 plugins:
   - serverless-domain-manager
   - serverless-sam
+  - serverless-dynamodb-local
 
 custom:
   tablePrefix: ${self:service}-${self:provider.stage}-
@@ -69,6 +70,13 @@ custom:
     stage: ${self:provider.stage}
     basePath: ''
     createRoute53Record: false
+
+  dynamodb:
+    stages:
+    - dev
+    start:
+      inMemory: true
+      migrate: true
 
 resources:
   Resources:

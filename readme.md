@@ -66,8 +66,10 @@ sls create_domain
 
 **NOTE** although this will run Api Gateway locally. Dynamo and SNS will still be the real AWS resources. I still need to figure out how to run all the things locally.  
 
-1- Install the [Serverless Sam Plugin](https://github.com/SAPessi/serverless-sam)
-2- Install the [aws sam cli](https://github.com/awslabs/aws-sam-cli/blob/develop/docs/installation.rst)  
+1- Install the [Serverless DynamoDb Plugin](https://github.com/99xt/serverless-dynamodb-local)
+1.1- Install DynamoDB local `sls dynamodb install`  
+2- Install the [Serverless Sam Plugin](https://github.com/SAPessi/serverless-sam)
+3- Install the [aws sam cli](https://github.com/awslabs/aws-sam-cli/blob/develop/docs/installation.rst)  
 
 ```bash
 sh ./dev/run.sh

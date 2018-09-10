@@ -32,3 +32,6 @@ target/
 
 # Sam
 .sam_template.yml
+
+# Local Dynamo
+.dynamodb
