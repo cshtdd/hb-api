@@ -1,6 +1,7 @@
 package com.tddapps.ioc;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.tddapps.actions.HeartBeatPostAction;
 import com.tddapps.actions.NotificationCalculatorAction;
 import com.tddapps.actions.StatusGetAction;
@@ -34,6 +35,16 @@ public class IocContainerTest {
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatNotificationBuilder.class) instanceof SingleNotificationBuilder);
 
         assertNotNull(IocContainer.getInstance().Resolve(AmazonDynamoDB.class));
+    }
+
+    @Test
+    void RegistersDynamoDBMapperAsASingleton(){
+        assertNotNull(IocContainer.getInstance().Resolve(DynamoDBMapper.class));
+
+        val mapper1 = IocContainer.getInstance().Resolve(DynamoDBMapper.class);
+        val mapper2 = IocContainer.getInstance().Resolve(DynamoDBMapper.class);
+
+        assertTrue(mapper1 == mapper2);
     }
 
     @Test

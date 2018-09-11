@@ -6,21 +6,26 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import com.tddapps.model.Settings;
 import com.tddapps.model.SettingsReader;
 import lombok.val;
+import org.picocontainer.PicoContainer;
+import org.picocontainer.injectors.FactoryInjector;
 
-public class DynamoDBMapperFactoryWithTablePrefix implements DynamoDBMapperFactory {
+import java.lang.reflect.Type;
+
+public class DynamoDBMapperFactoryWithTablePrefix extends FactoryInjector<DynamoDBMapper> implements DynamoDBMapperFactory {
     private final DynamoDBMapper mapper;
-    private final SettingsReader settingsReader;
+
+    public DynamoDBMapperFactoryWithTablePrefix(){
+        mapper = null;
+    }
 
     public DynamoDBMapperFactoryWithTablePrefix(SettingsReader settingsReader, AmazonDynamoDB dynamoDBClient){
-        this.settingsReader = settingsReader;
-
         mapper = new DynamoDBMapper(
                 dynamoDBClient,
-                getConfigBuilder().build()
+                getConfigBuilder(settingsReader).build()
         );
     }
 
-    private DynamoDBMapperConfig.Builder getConfigBuilder() {
+    private DynamoDBMapperConfig.Builder getConfigBuilder(SettingsReader settingsReader) {
         val tablePrefix = settingsReader.ReadString(Settings.TABLE_PREFIX);
         val tableNameOverride = DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(tablePrefix);
 
@@ -32,5 +37,20 @@ public class DynamoDBMapperFactoryWithTablePrefix implements DynamoDBMapperFacto
     @Override
     public DynamoDBMapper getMapper() {
         return mapper;
+    }
+
+    @Override
+    public DynamoDBMapper getComponentInstance(PicoContainer container, Type into) {
+        val settingsReader = container.getComponent(SettingsReader.class);
+        val dynamoDBClient = container.getComponent(AmazonDynamoDB.class);
+
+        return createMapper(settingsReader, dynamoDBClient);
+    }
+
+    public DynamoDBMapper createMapper(SettingsReader settingsReader, AmazonDynamoDB dynamoDBClient){
+        return new DynamoDBMapper(
+                dynamoDBClient,
+                getConfigBuilder(settingsReader).build()
+        );
     }
 }

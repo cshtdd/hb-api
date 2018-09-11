@@ -38,6 +38,7 @@ public class IocContainer {
                 .addComponent(UtcNowReader.class, UtcNowReaderImpl.class)
                 .addComponent(HeartBeatNotificationBuilder.class, SingleNotificationBuilder.class)
                 .addAdapter(new AmazonDynamoDBFactory())
+                .as(CACHE).addAdapter(new DynamoDBMapperFactoryWithTablePrefix())
                 .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class)
                 .as(CACHE).addComponent(KeysCache.class, InMemoryKeysCacheWithExpiration.class);
     }
