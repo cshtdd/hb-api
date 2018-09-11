@@ -35,3 +35,5 @@ target/
 
 # Local Dynamo
 .dynamodb
+
+node_modules/

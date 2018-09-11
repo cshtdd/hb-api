@@ -1,0 +1,15 @@
+{
+  "name": "hb-api",
+  "scripts": {
+    "create-domain": "sls create_domain",
+    "deploy": "mvn clean install && sls deploy",
+    "start": "sh ./dev/run.sh",
+    "debug": "sh ./dev/run.sh --debug"
+  },
+  "dependencies": {
+    "serverless": "^1.31.0",
+    "serverless-domain-manager": "^2.6.0",
+    "serverless-dynamodb-local": "^0.2.33",
+    "serverless-sam": "^0.1.0"
+  }
+}

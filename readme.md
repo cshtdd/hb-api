@@ -4,6 +4,14 @@ Heartbeat api backed by AWS lambdas
 
 # Development  
 
+## Prerequisites  
+
+- [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/installing.html)  
+- [aws sam cli](https://github.com/awslabs/aws-sam-cli/blob/develop/docs/installation.rst)  
+- Maven
+- Node
+- `npm install`
+
 ## Building the Code  
 
 ```bash
@@ -31,7 +39,7 @@ sh ./dev/create_api_key.sh
 ## Deployment  
 
 ```bash
-sh ./dev/deploy.sh
+npm run deploy
 ```
 
 ## API Validation  
@@ -57,11 +65,10 @@ curl -w "\n%{http_code}\n" -H "x-api-key: $HB_API_KEY" -d '{"hostId": "testHost1
 ## Create the Custom Domain
   
 1- Manually create a certificate using AWS ACM. They are free
-2- Follow the steps from the [Serverless Domain Manager plugin](https://github.com/amplify-education/serverless-domain-manager)
-3- Run the following command
+2- Run the following command
 
 ```bash
-sls create_domain
+npm run create-domain
 ```
 
 4- Deploy the application
@@ -70,20 +77,21 @@ sls create_domain
 
 ## Run it locally  
 
-1- Install the [Serverless DynamoDb Plugin](https://github.com/99xt/serverless-dynamodb-local)
-1.1- Install DynamoDB local `sls dynamodb install`  
-2- Install the [Serverless Sam Plugin](https://github.com/SAPessi/serverless-sam)
-3- Install the [aws sam cli](https://github.com/awslabs/aws-sam-cli/blob/develop/docs/installation.rst)  
+```bash
+npm start
+```
+
+### Verify everything is running locally  
 
 ```bash
-sh ./dev/run.sh
+lsof -Pn -i4 | grep -E ':8000|:3000'
 ```
 
 ## Local Debugging with IntelliJ  
 
 1- Create a [Remote JVM Configuration](https://www.jetbrains.com/help/idea/run-debug-configuration-remote-debug.html) for port `localhost:5858`. Make sure to load the `hb-api` module classpath.  
 2- Place a breakpoint in the desired location  
-3- Run `sh ./dev/run.sh --debug`  
+3- Run `npm run debug`  
 4- Invoke the lambda  
 5- Click the Debug button next to the newly created configuration  
 
