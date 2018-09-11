@@ -11,7 +11,7 @@ import lombok.val;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DynamoHelperIntegrationTests {
+public abstract class DynamoHelperIntegrationTests {
     public static final String HEARTBEATS_TABLE_NAME = "dev-int-heartbeats";
 
     public static DynamoDBMapper createMapper(){
