@@ -8,7 +8,6 @@ import com.tddapps.model.Settings;
 import com.tddapps.model.SettingsReader;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import lombok.var;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.injectors.FactoryInjector;
 
@@ -18,7 +17,7 @@ import java.lang.reflect.Type;
 public class AmazonDynamoDBFactory extends FactoryInjector<AmazonDynamoDB> {
     @Override
     public AmazonDynamoDB getComponentInstance(PicoContainer container, Type into) {
-        var settingsReader = container.getComponent(SettingsReader.class);
+        val settingsReader = container.getComponent(SettingsReader.class);
 
         return createClient(settingsReader);
     }
