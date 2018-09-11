@@ -64,8 +64,6 @@ sls create_domain
 
 ## Run it locally  
 
-**NOTE** although this will run Api Gateway locally. Dynamo and SNS will still be the real AWS resources. I still need to figure out how to run all the things locally.  
-
 1- Install the [Serverless DynamoDb Plugin](https://github.com/99xt/serverless-dynamodb-local)
 1.1- Install DynamoDB local `sls dynamodb install`  
 2- Install the [Serverless Sam Plugin](https://github.com/SAPessi/serverless-sam)
@@ -74,6 +72,14 @@ sls create_domain
 ```bash
 sh ./dev/run.sh
 ```
+
+## Local Debugging with IntelliJ  
+
+1- Create a [Remote JVM Configuration](https://www.jetbrains.com/help/idea/run-debug-configuration-remote-debug.html) for port `localhost:5858`. Make sure to load the `hb-api` module classpath.  
+2- Place a breakpoint in the desired location  
+3- Run `sh ./dev/run.sh --debug`  
+4- Invoke the lambda  
+5- Click the Debug button next to the newly created configuration  
 
 # Usage  
 
