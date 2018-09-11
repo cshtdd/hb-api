@@ -1,3 +1,5 @@
 #!/usr/bin/bash
 
-mvn clean install && sls deploy
+mvn clean integration-test && \
+    mvn clean install && \
+    sls deploy
