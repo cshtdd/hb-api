@@ -39,7 +39,7 @@ public class IocContainer {
                 .addComponent(SettingsReader.class, EnvironmentSettingsReader.class)
                 .addComponent(UtcNowReader.class, UtcNowReaderImpl.class)
                 .addComponent(HeartBeatNotificationBuilder.class, SingleNotificationBuilder.class)
-                .addComponent(DynamoDBClientFactory.class, DynamoDBClientFactoryWithLocalSupport.class)
+                .addAdapter(new DynamoDBClientFactoryResolver())
                 .as(CACHE).addComponent(DynamoDBMapperFactory.class, DynamoDBMapperFactoryWithTablePrefix.class)
                 .as(CACHE).addComponent(KeysCache.class, InMemoryKeysCacheWithExpiration.class);
     }
