@@ -16,6 +16,12 @@ mvn clean install
 mvn clean test
 ```
 
+## Running the Integration Tests  
+
+```bash
+mvn clean integration-test
+```
+
 ## Create API Keys  
 
 ```bash
