@@ -2,6 +2,8 @@ package com.tddapps.model.aws;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.tddapps.model.HeartBeat;
 import com.tddapps.model.Settings;
 import com.tddapps.model.SettingsReader;
 import lombok.val;
@@ -28,5 +30,30 @@ public class DynamoHelperIntegrationTests {
 
         return new AmazonDynamoDBFactory()
                 .createClient(settingsReader);
+    }
+
+    public static void ResetDatabase(){
+        val mapper = createMapper();
+        val client = createClient();
+
+        CreateEmptyTable(HEARTBEATS_TABLE_NAME, HeartBeat.class, mapper, client);
+    }
+
+    public static void CreateEmptyTable(String tableName, Class<?> clazz){
+        CreateEmptyTable(tableName, clazz, createMapper(), createClient());
+    }
+
+    public static void CreateEmptyTable(String tableName, Class<?> clazz, DynamoDBMapper dbMapper, AmazonDynamoDB client) {
+        val heartBeatsTableExists = client.listTables()
+                .getTableNames()
+                .contains(tableName);
+        if (heartBeatsTableExists) {
+            client.deleteTable(tableName);
+        }
+
+        val throughput = new ProvisionedThroughput(1L, 1L);
+        val createTableRequest = dbMapper.generateCreateTableRequest(clazz)
+                .withProvisionedThroughput(throughput);
+        client.createTable(createTableRequest);
     }
 }
