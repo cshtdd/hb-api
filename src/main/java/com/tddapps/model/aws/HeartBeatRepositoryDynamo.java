@@ -1,6 +1,7 @@
 package com.tddapps.model.aws;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeat;
@@ -9,16 +10,16 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
-    private final DynamoDBMapperFactory mapperFactory;
+    private final DynamoDBMapper mapper;
 
-    public HeartBeatRepositoryDynamo(DynamoDBMapperFactory mapperFactory){
-        this.mapperFactory = mapperFactory;
+    public HeartBeatRepositoryDynamo(DynamoDBMapper mapper){
+        this.mapper = mapper;
     }
 
     @Override
     public void Save(HeartBeat heartBeat) throws DalException {
         try {
-            mapperFactory.getMapper().save(heartBeat);
+            mapper.save(heartBeat);
         } catch (AmazonClientException e){
             log.error("HeartBeat Save Error", e);
             throw new DalException(e.getMessage());
@@ -28,7 +29,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
     @Override
     public HeartBeat[] All() throws DalException {
         try {
-            return mapperFactory.getMapper()
+            return mapper
                     .scan(HeartBeat.class, new DynamoDBScanExpression())
                     .toArray(new HeartBeat[0]);
         } catch (AmazonClientException e){

@@ -48,16 +48,6 @@ public class IocContainerTest {
     }
 
     @Test
-    public void RegistersDynamoDBMapperFactoryAsASingleton(){
-        assertTrue(IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class) instanceof DynamoDBMapperFactoryWithTablePrefix);
-
-        val factory1 = IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class);
-        val factory2 = IocContainer.getInstance().Resolve(DynamoDBMapperFactory.class);
-
-        assertTrue(factory1 == factory2);
-    }
-
-    @Test
     public void RegistersInMemoryKeysCacheWithExpirationAsASingleton(){
         assertTrue(IocContainer.getInstance().Resolve(KeysCache.class) instanceof InMemoryKeysCacheWithExpiration);
 
