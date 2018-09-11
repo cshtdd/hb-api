@@ -30,6 +30,7 @@ public class IocContainer {
     private PicoContainer RegisterBindings() {
         return new DefaultPicoContainer()
                 .addComponent(DynamoDBClientFactoryDefault.class)
+                .addComponent(DynamoDBClientFactoryLocal.class)
                 .addComponent(HeartBeatPostAction.class)
                 .addComponent(StatusGetAction.class)
                 .addComponent(NotificationCalculatorAction.class)
