@@ -1,5 +1,6 @@
 package com.tddapps.model.aws;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import com.tddapps.model.Settings;
@@ -10,11 +11,11 @@ public class DynamoDBMapperFactoryWithTablePrefix implements DynamoDBMapperFacto
     private final DynamoDBMapper mapper;
     private final SettingsReader settingsReader;
 
-    public DynamoDBMapperFactoryWithTablePrefix(SettingsReader settingsReader, DynamoDBClientFactory dynamoDBClientFactory){
+    public DynamoDBMapperFactoryWithTablePrefix(SettingsReader settingsReader, AmazonDynamoDB dynamoDBClient){
         this.settingsReader = settingsReader;
 
         mapper = new DynamoDBMapper(
-                dynamoDBClientFactory.getClient(),
+                dynamoDBClient,
                 getConfigBuilder().build()
         );
     }

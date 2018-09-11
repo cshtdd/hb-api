@@ -1,5 +1,6 @@
 package com.tddapps.ioc;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.tddapps.actions.HeartBeatPostAction;
 import com.tddapps.actions.NotificationCalculatorAction;
 import com.tddapps.actions.StatusGetAction;
@@ -32,9 +33,7 @@ public class IocContainerTest {
         assertTrue(IocContainer.getInstance().Resolve(SettingsReader.class) instanceof EnvironmentSettingsReader);
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatNotificationBuilder.class) instanceof SingleNotificationBuilder);
 
-        assertTrue(IocContainer.getInstance().Resolve(DynamoDBClientFactory.class) instanceof DynamoDBClientFactoryDefault);
-        assertTrue(IocContainer.getInstance().Resolve(DynamoDBClientFactoryDefault.class) instanceof DynamoDBClientFactoryDefault);
-        assertTrue(IocContainer.getInstance().Resolve(DynamoDBClientFactoryLocal.class) instanceof DynamoDBClientFactoryLocal);
+        assertNotNull(IocContainer.getInstance().Resolve(AmazonDynamoDB.class));
     }
 
     @Test
