@@ -21,16 +21,16 @@ public abstract class ArrayBatchExtensions {
         val batchesCount = (int)Math.ceil((double)input.length / (double) batchSize);
 
         return IntStream.range(0, batchesCount)
-                .mapToObj(idx -> Arrays.copyOfRange(
-                        input, rangeStart(batchSize, idx), Math.min(rangeEnd(batchSize, idx), input.length)))
+                .map(idx -> rangeStart(idx, batchSize))
+                .mapToObj(startIdx -> Arrays.copyOfRange(input, startIdx, rangeEnd(startIdx, batchSize, input.length)))
                 .toArray(Object[][]::new);
     }
 
-    private static int rangeStart(int batchSize, int idx) {
+    private static int rangeStart(int idx, int batchSize) {
         return idx * batchSize;
     }
 
-    private static int rangeEnd(int batchSize, int idx) {
-        return rangeStart(batchSize, idx + 1);
+    private static int rangeEnd(int startIdx, int batchSize, int maxLength) {
+        return Math.min(startIdx + batchSize, maxLength);
     }
 }
