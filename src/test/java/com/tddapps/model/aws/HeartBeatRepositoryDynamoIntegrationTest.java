@@ -3,9 +3,12 @@ package com.tddapps.model.aws;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeatFactory;
+import lombok.val;
 import lombok.var;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,12 +32,19 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
     @Test
     public void HeartBeatsCanBeSaved() throws DalException {
-        var hb1 = HeartBeatFactory.create();
-        repository.Save(hb1);
+        var seededHeartBeats = HeartBeatFactory.create(1000);
+        for (val seededHeartBeat : seededHeartBeats) {
+            repository.Save(seededHeartBeat);
+        }
 
-        var heartBeats = repository.All();
+        val heartBeats = repository.All();
 
-        assertEquals(1, heartBeats.length);
-        assertTrue(hb1.almostEquals(heartBeats[0]));
+        assertEquals(1000, heartBeats.length);
+
+        val allSeededHeartBeatsHaveBeenRetrieved = Arrays.stream(heartBeats)
+                .allMatch(hb -> Arrays.stream(seededHeartBeats)
+                        .anyMatch(hb2 -> hb.almostEquals(hb2))
+                );
+        assertTrue(allSeededHeartBeatsHaveBeenRetrieved);
     }
 }
