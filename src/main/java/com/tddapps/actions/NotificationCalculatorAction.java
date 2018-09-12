@@ -57,9 +57,7 @@ public class NotificationCalculatorAction implements HttpSupplierAction<TextMess
                 .map(hb -> hb.clone(updatedDate))
                 .toArray(HeartBeat[]::new);
 
-        for (val hb : updatedHeartbeats) {
-            heartBeatRepository.Save(hb);
-        }
+        heartBeatRepository.Save(updatedHeartbeats);
     }
 
     private HeartBeat[] readExpiredHeartBeats() throws DalException {

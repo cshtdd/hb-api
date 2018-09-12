@@ -99,12 +99,15 @@ public class NotificationCalculatorActionTest {
         assertEquals("Send failed", actualMessage);
         verify(heartBeatRepository, times(0))
                 .Save(any(HeartBeat.class));
+        verify(heartBeatRepository, times(0))
+                .Save(any(HeartBeat[].class));
     }
 
     @Test
     public void UpdatesTheExpirationOfExpiredHeartBeats() throws DalException, ActionProcessException {
         val hbExpected1 = new HeartBeat("hbExpired1", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
         val hbExpected2 = new HeartBeat("hbExpired2", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
+        HeartBeat[] expectedUpdates = { hbExpected1, hbExpected2 };
 
         val hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false);
         val hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000), false);
@@ -122,26 +125,16 @@ public class NotificationCalculatorActionTest {
         final List<InvocationOnMock> invocations = new ArrayList<>();
         doAnswer(invocations::add)
                 .when(heartBeatRepository)
-                .Save(any(HeartBeat.class));
+                .Save(any(HeartBeat[].class));
 
 
         action.process();
 
 
-        assertEquals(2, invocations.size());
-        long[] heartBeatTimeUpdates = new long[]{
-                invocations
-                        .stream()
-                        .map(i -> (HeartBeat) i.getArgument(0))
-                        .filter(hbExpected1::almostEquals)
-                        .count(),
-                invocations
-                        .stream()
-                        .map(i -> (HeartBeat) i.getArgument(0))
-                        .filter(hbExpected2::almostEquals)
-                        .count()
-        };
-        assertTrue(Arrays.stream(heartBeatTimeUpdates).allMatch(i -> i == 1));
+        assertEquals(1, invocations.size());
+        HeartBeatListHelper.ShouldMatch(expectedUpdates, invocations.get(0).getArgument(0));
+        verify(heartBeatRepository, times(0))
+                .Save(any(HeartBeat.class));
     }
 
     @Test
