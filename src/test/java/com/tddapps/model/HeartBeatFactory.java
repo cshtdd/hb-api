@@ -1,6 +1,7 @@
 package com.tddapps.model;
 
 import java.util.Random;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
@@ -13,8 +14,12 @@ public abstract class HeartBeatFactory {
     }
 
     public static HeartBeat[] create(int count){
+        return create(count, HeartBeatFactory::createSingleHeartBeat);
+    }
+
+    public static HeartBeat[] create(int count, Function<Integer, HeartBeat> heartBeatGenerator){
         return IntStream.range(0, count)
-                .mapToObj(HeartBeatFactory::createSingleHeartBeat)
+                .mapToObj(heartBeatGenerator::apply)
                 .toArray(HeartBeat[]::new);
     }
 
