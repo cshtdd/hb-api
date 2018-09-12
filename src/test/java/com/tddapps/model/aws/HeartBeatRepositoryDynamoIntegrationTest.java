@@ -44,7 +44,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
     @Test
     public void MultipleHeartBeatsCanBeSavedInASingleOperation() throws DalException {
-        var seededHeartBeats = HeartBeatFactory.create(10000);
+        var seededHeartBeats = HeartBeatFactory.create(10001);
 
         repository.Save(seededHeartBeats);
 
