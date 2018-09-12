@@ -8,6 +8,9 @@ import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatRepository;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Log4j2
 public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
     private final DynamoDBMapper mapper;
@@ -20,6 +23,16 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
     public void Save(HeartBeat heartBeat) throws DalException {
         try {
             mapper.save(heartBeat);
+        } catch (AmazonClientException e){
+            log.error("HeartBeat Save Error", e);
+            throw new DalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void Save(HeartBeat[] heartBeat) throws DalException {
+        try {
+            mapper.batchWrite(Arrays.asList(heartBeat), new ArrayList<HeartBeat>());
         } catch (AmazonClientException e){
             log.error("HeartBeat Save Error", e);
             throw new DalException(e.getMessage());

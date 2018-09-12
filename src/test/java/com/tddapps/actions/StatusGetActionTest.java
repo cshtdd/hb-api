@@ -40,7 +40,7 @@ public class StatusGetActionTest {
 
 
         assertEquals(HttpJsonResponse.Success(TextMessage.OK), result);
-        verify(heartBeatRepository).Save(argThat(t -> t.almostEquals(expectedHeartBeat)));
+        verify(heartBeatRepository).Save(argThat(expectedHeartBeat::almostEquals));
     }
 
     @Test
