@@ -66,7 +66,7 @@ public class StatusGetAction implements HttpSupplierAction<TextMessage> {
         }
     }
 
-    private HttpJsonResponse getCachedResponse() {
+    private HttpJsonResponse<TextMessage> getCachedResponse() {
         return HttpJsonResponse.Success(TextMessage.OK);
     }
 
