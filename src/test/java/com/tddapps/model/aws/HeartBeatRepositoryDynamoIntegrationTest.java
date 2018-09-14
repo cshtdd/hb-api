@@ -2,18 +2,12 @@ package com.tddapps.model.aws;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.tddapps.model.DalException;
-import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatFactory;
 import com.tddapps.model.HeartBeatListHelper;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-
-import static com.tddapps.utils.DateExtensions.UtcNow;
-import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HeartBeatRepositoryDynamoIntegrationTest {
@@ -45,27 +39,10 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
     @Test
     public void MultipleHeartBeatsCanBeSavedInASingleOperation() throws DalException {
-        val seededHeartBeats = HeartBeatFactory.Create(10001);
+        val seededHeartBeats = HeartBeatFactory.Create(100001);
 
         repository.Save(seededHeartBeats);
 
         HeartBeatListHelper.ShouldMatch(seededHeartBeats, repository.All());
-    }
-
-    @Test
-    @Disabled
-    public void CanRetrieveExpiredHeartBeatsOnly() throws DalException {
-        val seededHeartBeats = HeartBeatFactory.CreateWithExpirations(
-                UtcNowPlusMs(5000),
-                UtcNowPlusMs(-15000),
-                UtcNowPlusMs(6000),
-                UtcNowPlusMs(-10000),
-                UtcNowPlusMs(-20000)
-        );
-        repository.Save(seededHeartBeats);
-
-        val expiredHeartBeats = repository.OlderThan(UtcNow());
-
-        assertEquals(3, expiredHeartBeats.length);
     }
 }

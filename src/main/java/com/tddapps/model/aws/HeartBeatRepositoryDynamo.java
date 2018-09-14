@@ -68,20 +68,4 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
                 .scan(HeartBeat.class, new DynamoDBScanExpression())
                 .toArray(new HeartBeat[0]);
     }
-
-    public HeartBeat[] OlderThan(Date expirationDate) throws DalException{
-        try {
-            val query = new DynamoDBQueryExpression<HeartBeat>()
-                    .withFilterExpression("expiration_utc_datetime < :val1")
-                    .withExpressionAttributeValues(new HashMap<String, AttributeValue>(){{
-                        put(":val1", new AttributeValue().withS(ToDynamoUtcString(expirationDate)));
-                    }});
-
-            return mapper.query(HeartBeat.class, query)
-                    .toArray(new HeartBeat[0]);
-        } catch (AmazonClientException e){
-            log.error("HeartBeat OlderThan Error", e);
-            throw new DalException(e.getMessage());
-        }
-    }
 }
