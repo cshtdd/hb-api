@@ -30,7 +30,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
     @Test
     public void HeartBeatsCanBeSaved() throws DalException {
-        var seededHeartBeats = HeartBeatFactory.create(1000);
+        val seededHeartBeats = HeartBeatFactory.Create(1000);
         for (val seededHeartBeat : seededHeartBeats) {
             repository.Save(seededHeartBeat);
         }
@@ -40,10 +40,26 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
     @Test
     public void MultipleHeartBeatsCanBeSavedInASingleOperation() throws DalException {
-        var seededHeartBeats = HeartBeatFactory.create(10001);
+        val seededHeartBeats = HeartBeatFactory.Create(10001);
 
         repository.Save(seededHeartBeats);
 
         HeartBeatListHelper.ShouldMatch(seededHeartBeats, repository.All());
+    }
+
+    @Test
+    public void CanRetrieveExpiredHeartBeatsOnly() throws DalException {
+        val seededHeartBeats = HeartBeatFactory.CreateWithExpirations(new Date[]{
+                UtcNowPlusMs(5000),
+                UtcNowPlusMs(-15000),
+                UtcNowPlusMs(6000),
+                UtcNowPlusMs(-10000),
+                UtcNowPlusMs(-20000)
+        });
+        repository.Save(seededHeartBeats);
+
+        val expiredHeartBeats = repository.OlderThan(UtcNow());
+
+        assertEquals(3, expiredHeartBeats.length);
     }
 }
