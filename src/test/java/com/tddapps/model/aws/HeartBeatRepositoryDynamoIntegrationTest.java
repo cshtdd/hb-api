@@ -7,6 +7,7 @@ import com.tddapps.model.HeartBeatFactory;
 import com.tddapps.model.HeartBeatListHelper;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -52,6 +53,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
     }
 
     @Test
+    @Disabled
     public void CanRetrieveExpiredHeartBeatsOnly() throws DalException {
         val seededHeartBeats = HeartBeatFactory.CreateWithExpirations(
                 UtcNowPlusMs(5000),
