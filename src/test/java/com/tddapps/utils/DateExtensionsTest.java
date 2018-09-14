@@ -45,6 +45,41 @@ public class DateExtensionsTest {
     }
 
     @Test
+    public void ToDynamoUtcStringThrowsWhenThereIsNoDate(){
+        try{
+            ToDynamoUtcString(null);
+            fail("should have thrown");
+        }
+        catch (NullPointerException e){
+            assertNotNull(e);
+        }
+    }
+
+    @Test
+    public void ToDynamoUtcStringReturnsTheCorrectRepresentationOfAZonedDateTime(){
+        val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 434000000, ZoneId.of("UTC"));
+        val date = Date.from(dateTime.toInstant());
+
+        assertEquals("2017-07-17T20:05:31.434Z", ToDynamoUtcString(date));
+    }
+
+    @Test
+    public void ToDynamoUtcStringReturnsTheIsoStringRepresentationOfALocalDateTime(){
+        val dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31, 214000000);
+        val date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
+
+        assertEquals("2017-07-17T20:05:31.214Z", ToDynamoUtcString(date));
+    }
+
+    @Test
+    public void ToDynamoUtcStringReturnsTheIsoStringRepresentationWithTheTimezoneOffset(){
+        val dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31, 998000000);
+        val date = Date.from(dateTime.toInstant(ZoneOffset.ofHours(3)));
+
+        assertEquals("2017-07-17T17:05:31.998Z", ToDynamoUtcString(date));
+    }
+
+    @Test
     public void UtcNowReturnsTheCorrectValue(){
         val expected = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
         val actual = UtcNow().toInstant();

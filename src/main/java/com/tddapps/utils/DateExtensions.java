@@ -3,7 +3,6 @@ package com.tddapps.utils;
 import lombok.val;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +23,16 @@ public abstract class DateExtensions {
         val instant = value.toInstant();
         val utcDatetime = ZonedDateTime.ofInstant(instant, ZoneId.of("UTC"));
         return utcDatetime.format(DateTimeFormatter.ISO_DATE_TIME);
+    }
+
+    public static String ToDynamoUtcString(Date value){
+        if (value == null){
+            throw new NullPointerException("value");
+        }
+
+        val instant = value.toInstant();
+        val utcDatetime = ZonedDateTime.ofInstant(instant, ZoneId.of("UTC"));
+        return utcDatetime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     public static Date UtcNow(){
