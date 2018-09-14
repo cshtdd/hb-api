@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.util.Map;
 
 @Log4j2
-public class HttpJsonControllerDefault implements HttpJsonController {
-    private final HttpJsonAction action;
+public class HttpJsonControllerDefault<Request, Response> implements HttpJsonController {
+    private final HttpJsonAction<Request, Response> action;
 
-    public HttpJsonAction getAction() {
+    public HttpJsonAction<Request, Response> getAction() {
         return action;
     }
 
-    public HttpJsonControllerDefault(HttpJsonAction action) {
+    public HttpJsonControllerDefault(HttpJsonAction<Request, Response> action) {
         this.action = action;
     }
 

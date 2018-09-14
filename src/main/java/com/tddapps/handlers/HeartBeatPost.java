@@ -12,6 +12,6 @@ public class HeartBeatPost extends BaseHttpJsonHandler {
     @Override
     protected HttpJsonController getController() {
         val action = IocContainer.getInstance().Resolve(HeartBeatPostAction.class);
-        return new HttpJsonControllerDefault(action);
+        return new HttpJsonControllerDefault<>(action);
     }
 }
