@@ -4,14 +4,13 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 
 public class HttpJsonControllerDefaultTest {
     private final HttpJsonActionStub actionStub = new HttpJsonActionStub();
-    private final HttpJsonControllerDefault controller = new HttpJsonControllerDefault(actionStub);
+    private final HttpJsonControllerDefault<String, String> controller = new HttpJsonControllerDefault<>(actionStub);
 
     @Test
     public void ReturnsBadRequestWhenBodyMissing(){
