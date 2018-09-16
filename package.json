@@ -5,6 +5,7 @@
     "int-tests-db": "sh ./dev/start_local_dynamo.sh 8001",
     "predeploy": "npm run int-tests-db",
     "deploy": "mvn clean install && sls deploy",
+    "osa": "mvn clean verify -DskipTests",
     "start": "sh ./dev/run.sh",
     "debug": "sh ./dev/run.sh --debug"
   },
