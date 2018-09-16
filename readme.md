@@ -30,16 +30,43 @@ mvn clean test
 mvn clean integration-test
 ```
 
-## Create API Keys  
+## Dependency vulnerability scan  
 
 ```bash
-sh ./dev/create_api_key.sh
-```
+npm run osa
+``` 
 
 ## Deployment  
 
 ```bash
 npm run deploy
+```
+
+## Run it locally  
+
+```bash
+npm start
+```
+
+### Verify everything is running locally  
+
+```bash
+lsof -Pn -i4 | grep -E ':8000|:3000'
+```
+
+## Local Debugging with IntelliJ  
+
+1- Create a [Remote JVM Configuration](https://www.jetbrains.com/help/idea/run-debug-configuration-remote-debug.html) for port `localhost:5858`. Make sure to load the `hb-api` module classpath.  
+2- Place a breakpoint in the desired location  
+3- Run `npm run debug`  
+4- Invoke the lambda  
+5- Click the Debug button next to the newly created configuration  
+
+
+## Create API Keys  
+
+```bash
+sh ./dev/create_api_key.sh
 ```
 
 ## API Validation  
@@ -74,26 +101,6 @@ npm run create-domain
 4- Deploy the application
 4.1- Make sure there is a basepath in the custom domain. If not, follow the steps in this [Github Issue](https://github.com/amplify-education/serverless-domain-manager/issues/57) to correct it. There is some buggy behavior between CloudFormation and the domain manager plugin
 5- Create a `CNAME` record in the DNS provider for the cloudfront domain
-
-## Run it locally  
-
-```bash
-npm start
-```
-
-### Verify everything is running locally  
-
-```bash
-lsof -Pn -i4 | grep -E ':8000|:3000'
-```
-
-## Local Debugging with IntelliJ  
-
-1- Create a [Remote JVM Configuration](https://www.jetbrains.com/help/idea/run-debug-configuration-remote-debug.html) for port `localhost:5858`. Make sure to load the `hb-api` module classpath.  
-2- Place a breakpoint in the desired location  
-3- Run `npm run debug`  
-4- Invoke the lambda  
-5- Click the Debug button next to the newly created configuration  
 
 # Usage  
 
