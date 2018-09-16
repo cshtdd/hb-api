@@ -6,7 +6,7 @@ else
     DEBUG_INFO=""
 fi
 
-mvn clean install && \
+mvn clean install -DskipTests && \
     sls sam export --output .sam_template.yml --dynamoDbEndpointOverride="http://docker.for.mac.localhost:8000" && \
     (trap 'kill 0' SIGINT; \
         sls dynamodb start --stage dev & \
