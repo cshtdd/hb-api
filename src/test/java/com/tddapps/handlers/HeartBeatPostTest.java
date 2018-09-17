@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 public class HeartBeatPostTest {
     private final List<InvocationOnMock> saveInvocations = new ArrayList<>();
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
-    private final HeartBeatPost handler = new HeartBeatPost(new HeartBeatPostAction(heartBeatRepository));
+    private final HeartBeatPost handler = new HeartBeatPost(heartBeatRepository);
 
     private final String MAXIMUM_LENGTH_ALLOWED_STRING = StringUtils.leftPad("", 100, "0");
     private final String INVALID_HOST_ID = "Invalid hostId";
