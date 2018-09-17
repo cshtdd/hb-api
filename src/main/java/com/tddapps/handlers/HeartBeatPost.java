@@ -11,6 +11,7 @@ import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.DalException;
+import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatRepository;
 import com.tddapps.utils.JsonNodeHelper;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static com.tddapps.utils.JsonNodeHelper.readInt;
 import static com.tddapps.utils.JsonNodeHelper.readString;
 
@@ -51,9 +53,11 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
             }
 
             val jsonBody = JsonNodeHelper.parse(requestBody);
-            val parsedBody = parse(jsonBody);
+            val hostId = readHostId(jsonBody);
+            val intervalMs = readIntervalMs(jsonBody);
+            val heartBeat = new HeartBeat(hostId, UtcNowPlusMs(intervalMs), false);
 
-            val response = process(parsedBody);
+            val response = process(heartBeat);
 
             return ApiGatewayResponse.builder()
                     .setStatusCode(200)
@@ -80,11 +84,11 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
         }
     }
 
-    private HttpJsonResponse<TextMessage> process(HeartBeatPostActionInput body) throws ActionProcessException {
-        log.info(String.format("hostId: %s", body.getHostId()));
+    private HttpJsonResponse<TextMessage> process(HeartBeat heartBeat) throws ActionProcessException {
+        log.info(String.format("hostId: %s", heartBeat.getHostId()));
 
         try {
-            heartBeatRepository.Save(body.toHeartBeat());
+            heartBeatRepository.Save(heartBeat);
         } catch (DalException e) {
             throw new ActionProcessException(e.getMessage());
         }
@@ -102,13 +106,6 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
         return bodyObject.toString();
     }
 
-    private HeartBeatPostActionInput parse(JsonNode body) throws ActionBodyParseException {
-        return new HeartBeatPostActionInput(
-                readHostId(body),
-                readIntervalMs(body)
-        );
-    }
-
     private String readHostId(JsonNode body) throws ActionBodyParseException {
         val result = readString(body, "hostId");
 
@@ -124,10 +121,10 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
     }
 
     private int readIntervalMs(JsonNode body) throws ActionBodyParseException {
-        val result = readInt(body, "intervalMs", HeartBeatPostActionInput.DEFAULT_INTERVAL_MS);
+        val result = readInt(body, "intervalMs", HeartBeat.DEFAULT_INTERVAL_MS);
 
-        if (result < HeartBeatPostActionInput.MIN_INTERVAL_MS ||
-                result > HeartBeatPostActionInput.MAX_INTERVAL_MS){
+        if (result < HeartBeat.MIN_INTERVAL_MS ||
+                result > HeartBeat.MAX_INTERVAL_MS){
             throw new ActionBodyParseException("Invalid intervalMs");
         }
 

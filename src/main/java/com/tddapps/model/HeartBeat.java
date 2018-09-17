@@ -19,6 +19,10 @@ import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 @AllArgsConstructor
 @DynamoDBTable(tableName = "heartbeats")
 public class HeartBeat implements Cloneable{
+    public static final int MIN_INTERVAL_MS = 1000;
+    public static final int MAX_INTERVAL_MS = 12*60*60*1000;
+    public static final int DEFAULT_INTERVAL_MS = 10*60*1000;
+
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
 

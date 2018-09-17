@@ -1,6 +1,5 @@
 package com.tddapps.handlers;
 
-import com.tddapps.actions.HeartBeatPostActionInput;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeat;
@@ -90,7 +89,7 @@ public class HeartBeatPostTest {
     public void ParsingAssumesDefaultWhenIntervalMsIsNotNumeric() {
         val expectedHeartBeat = new HeartBeat(
                 "superHost1",
-                UtcNowPlusMs(HeartBeatPostActionInput.DEFAULT_INTERVAL_MS),
+                UtcNowPlusMs(HeartBeat.DEFAULT_INTERVAL_MS),
                 false
         );
 
