@@ -26,7 +26,7 @@ public class StatusGetTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final NotificationSenderStatus notificationSenderStatus = mock(NotificationSenderStatus.class);
     private final KeysCacheStub keysCache = new KeysCacheStub();
-    private final StatusGet handler = new StatusGet(new StatusGetAction(heartBeatRepository, notificationSenderStatus, keysCache));
+    private final StatusGet handler = new StatusGet(heartBeatRepository, notificationSenderStatus, keysCache);
 
     private ApiGatewayResponse handleRequest() {
         return handler.handleRequest(new HashMap<>(), null);
@@ -35,7 +35,7 @@ public class StatusGetTest {
     @Test
     public void VerifiesHeartBeatsCanBeSaved() throws DalException {
         val expectedHeartBeat = new HeartBeat(
-                "StatusGetAction",
+                "StatusGet",
                 UtcNowPlusMs(4*60*60*1000),
                 true
         );
@@ -89,13 +89,13 @@ public class StatusGetTest {
         handleRequest();
         handleRequest();
 
-        assertTrue(keysCache.Contains(StatusGetAction.class.getName()));
+        assertTrue(keysCache.Contains(StatusGet.class.getName()));
         assertEquals(1, invocations.size());
 
         keysCache.getKeys().clear();
         handleRequest();
 
-        assertTrue(keysCache.Contains(StatusGetAction.class.getName()));
+        assertTrue(keysCache.Contains(StatusGet.class.getName()));
         assertEquals(2, invocations.size());
     }
 
@@ -107,7 +107,7 @@ public class StatusGetTest {
 
         handleRequest();
 
-        assertFalse(keysCache.Contains(StatusGetAction.class.getName()));
+        assertFalse(keysCache.Contains(StatusGet.class.getName()));
     }
 
 }
