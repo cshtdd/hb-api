@@ -39,7 +39,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
     @Test
     public void MultipleHeartBeatsCanBeSavedInASingleOperation() throws DalException {
-        val seededHeartBeats = HeartBeatFactory.Create(100001);
+        val seededHeartBeats = HeartBeatFactory.Create(20001);
 
         repository.Save(seededHeartBeats);
 
