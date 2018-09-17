@@ -43,6 +43,7 @@ public class StatusGetTest {
 
 
         assertEquals(200, result.getStatusCode());
+        assertEquals("{\"message\":\"OK\"}", result.getBody());
         verify(heartBeatRepository).Save(argThat(expectedHeartBeat::almostEquals));
     }
 
