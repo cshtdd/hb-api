@@ -1,6 +1,5 @@
 package com.tddapps.handlers;
 
-import com.tddapps.actions.HeartBeatPostAction;
 import com.tddapps.actions.HeartBeatPostActionInput;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.model.DalException;
