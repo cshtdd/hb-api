@@ -49,7 +49,7 @@ public abstract class DateExtensions {
     }
 
     public static boolean AreAlmostEquals(Date date1, Date date2){
-        return AreAlmostEquals(date1, date2, 100);
+        return AreAlmostEquals(date1, date2, 200);
     }
 
     public static boolean AreAlmostEquals(Date date1, Date date2, int deltaMs){
