@@ -3,8 +3,6 @@ package com.tddapps.handlers;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.tddapps.actions.response.TextMessage;
-import com.tddapps.controllers.ActionProcessException;
-import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.infrastructure.KeysCache;
 import com.tddapps.ioc.IocContainer;
@@ -45,30 +43,30 @@ public class StatusGet implements RequestHandler<Map<String, Object>, ApiGateway
         log.debug(String.format("Input: %s", input));
 
         try {
-            val successResponse = process();
+            VerifyApiStatus();
 
-            log.debug(String.format("StatusCode: %s, ResponseBody: %s", successResponse.getStatusCode(), successResponse.getBody()));
-
+            log.debug(String.format("StatusCode: %s, ResponseBody: %s", 200, TextMessage.OK.asJson()));
             return ApiGatewayResponse.builder()
-                    .setStatusCode(successResponse.getStatusCode())
-                    .setObjectBody(successResponse.getBody())
+                    .setStatusCode(200)
+                    .setObjectBody(TextMessage.OK)
                     .build();
 
-        } catch (ActionProcessException e) {
+        } catch (DalException e) {
             log.error("Action processing failed", e);
 
-            val errorResponse = HttpJsonResponse.ServerErrorWithMessage(e.getMessage());
+            val errorResponse = TextMessage.create(e.getMessage());
 
+            log.debug(String.format("StatusCode: %s, ResponseBody: %s", 500, errorResponse));
             return ApiGatewayResponse.builder()
-                    .setStatusCode(errorResponse.getStatusCode())
-                    .setObjectBody(errorResponse.getBody())
+                    .setStatusCode(500)
+                    .setObjectBody(errorResponse)
                     .build();
         }
     }
 
-    private HttpJsonResponse<TextMessage> process() throws ActionProcessException {
+    private void VerifyApiStatus() throws DalException {
         if (ShouldReturnCachedResponse()){
-            return getCachedResponse();
+            return;
         }
 
         log.info("Cache miss");
@@ -77,33 +75,20 @@ public class StatusGet implements RequestHandler<Map<String, Object>, ApiGateway
         VerifyNotificationsCanBeSent();
 
         CacheResponse();
-        return getCachedResponse();
     }
 
-    private void VerifyNotificationsCanBeSent() throws ActionProcessException{
-        try {
-            notificationSenderStatus.Verify();
-        } catch (DalException e) {
-            throw new ActionProcessException(e.getMessage());
-        }
+    private void VerifyNotificationsCanBeSent() throws DalException{
+        notificationSenderStatus.Verify();
     }
 
-    private void VerifyDatabase() throws ActionProcessException {
+    private void VerifyDatabase() throws DalException {
         val hb = new HeartBeat(
                 getClass().getSimpleName(),
                 UtcNowPlusMs(4*60*60*1000),
                 true
         );
 
-        try {
-            heartBeatRepository.Save(hb);
-        } catch (DalException e) {
-            throw new ActionProcessException(e.getMessage());
-        }
-    }
-
-    private HttpJsonResponse<TextMessage> getCachedResponse() {
-        return HttpJsonResponse.Success(TextMessage.OK);
+        heartBeatRepository.Save(hb);
     }
 
     private void CacheResponse() {
