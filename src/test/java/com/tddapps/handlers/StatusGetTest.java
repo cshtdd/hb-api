@@ -1,6 +1,5 @@
 package com.tddapps.handlers;
 
-import com.tddapps.actions.StatusGetAction;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.infrastructure.KeysCacheStub;
 import com.tddapps.model.DalException;
@@ -20,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doThrow;
 
 public class StatusGetTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);

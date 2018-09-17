@@ -4,7 +4,6 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.tddapps.actions.HeartBeatPostAction;
 import com.tddapps.actions.NotificationCalculatorAction;
-import com.tddapps.actions.StatusGetAction;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.*;
 import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
@@ -60,7 +59,6 @@ public class IocContainerTest {
     @Test
     public void RegistersActions(){
         assertNotNull(IocContainer.getInstance().Resolve(HeartBeatPostAction.class));
-        assertNotNull(IocContainer.getInstance().Resolve(StatusGetAction.class));
         assertNotNull(IocContainer.getInstance().Resolve(NotificationCalculatorAction.class));
     }
 }

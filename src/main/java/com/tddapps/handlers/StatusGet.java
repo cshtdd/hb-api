@@ -27,8 +27,7 @@ public class StatusGet implements RequestHandler<Map<String, Object>, ApiGateway
     private final KeysCache cache;
 
     public StatusGet(){
-        this(
-                IocContainer.getInstance().Resolve(HeartBeatRepository.class),
+        this(IocContainer.getInstance().Resolve(HeartBeatRepository.class),
                 IocContainer.getInstance().Resolve(NotificationSenderStatus.class),
                 IocContainer.getInstance().Resolve(KeysCache.class));
     }

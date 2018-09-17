@@ -30,7 +30,6 @@ public class IocContainer {
     private PicoContainer RegisterBindings() {
         return new DefaultPicoContainer()
                 .addComponent(HeartBeatPostAction.class)
-                .addComponent(StatusGetAction.class)
                 .addComponent(NotificationCalculatorAction.class)
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
                 .addComponent(NotificationSender.class, NotificationSenderSns.class)
