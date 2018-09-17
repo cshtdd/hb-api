@@ -56,11 +56,13 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
             val intervalMs = readIntervalMs(jsonBody);
             val heartBeat = new HeartBeat(hostId, UtcNowPlusMs(intervalMs), false);
 
-            val response = process(heartBeat);
+            log.info(String.format("hostId: %s", heartBeat.getHostId()));
+
+            heartBeatRepository.Save(heartBeat);
 
             return ApiGatewayResponse.builder()
                     .setStatusCode(200)
-                    .setObjectBody(response.getBody())
+                    .setObjectBody(TextMessage.OK)
                     .build();
         } catch (IOException e) {
             log.warn("Invalid json in request body", e);
@@ -74,25 +76,13 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
                     .setStatusCode(400)
                     .setObjectBody(TextMessage.create(e.getMessage()))
                     .build();
-        } catch (ActionProcessException e) {
+        } catch (DalException e) {
             log.error("Action processing failed", e);
             return ApiGatewayResponse.builder()
                     .setStatusCode(500)
                     .setObjectBody(TextMessage.create(e.getMessage()))
                     .build();
         }
-    }
-
-    private HttpJsonResponse<TextMessage> process(HeartBeat heartBeat) throws ActionProcessException {
-        log.info(String.format("hostId: %s", heartBeat.getHostId()));
-
-        try {
-            heartBeatRepository.Save(heartBeat);
-        } catch (DalException e) {
-            throw new ActionProcessException(e.getMessage());
-        }
-
-        return new HttpJsonResponse<>(200, TextMessage.OK);
     }
 
     private String readBodyFrom(Map<String, Object> input){
