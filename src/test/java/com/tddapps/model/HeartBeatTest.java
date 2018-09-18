@@ -169,6 +169,13 @@ public class HeartBeatTest {
     }
 
     @Test
+    public void ParsingFailsWhenEmptyInput(){
+        parseShouldFailWithError(null, "Empty input");
+        parseShouldFailWithError("", "Empty input");
+        parseShouldFailWithError(" ", "Empty input");
+    }
+
+    @Test
     public void ReadsTheMaximumLengthHostId() throws HeartBeatParseException{
         val heartBeat = HeartBeat.parse(String.format(
                 "{\"hostId\": \"%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING

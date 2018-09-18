@@ -102,14 +102,14 @@ public class HeartBeat implements Cloneable{
         return !isExpired();
     }
 
-    public static HeartBeat parse(String requestBody) throws HeartBeatParseException {
-        if (requestBody.trim().isEmpty()){
-            throw new HeartBeatParseException("Empty Request Body");
+    public static HeartBeat parse(String jsonString) throws HeartBeatParseException {
+        if (jsonString == null || jsonString.trim().isEmpty()){
+            throw new HeartBeatParseException("Empty input");
         }
 
-        JsonNode jsonBody = parseJson(requestBody);
-        val hostId = parseHostId(jsonBody);
-        val intervalMs = parseIntervalMs(jsonBody);
+        JsonNode json = parseJson(jsonString);
+        val hostId = parseHostId(json);
+        val intervalMs = parseIntervalMs(json);
 
         return new HeartBeat(hostId, UtcNowPlusMs(intervalMs), false);
     }
