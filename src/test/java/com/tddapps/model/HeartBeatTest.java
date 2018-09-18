@@ -176,7 +176,7 @@ public class HeartBeatTest {
                 false
         );
 
-        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 40000}")));
+        ShouldAlmostEqual(expected, HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 40000}"));
     }
 
     @Test
@@ -229,9 +229,9 @@ public class HeartBeatTest {
                 false
         );
 
-        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 3000}")));
-        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 3000.45}")));
-        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"3000\"}")));
+        ShouldAlmostEqual(expected, HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 3000}"));
+        ShouldAlmostEqual(expected, HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 3000.45}"));
+        ShouldAlmostEqual(expected, HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"3000\"}"));
     }
 
     @Test
@@ -242,10 +242,10 @@ public class HeartBeatTest {
                 false
         );
 
-        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": null}")));
-        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"\"}")));
-        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \" \"}")));
-        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"pete\"}")));
+        ShouldAlmostEqual(expected, HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": null}"));
+        ShouldAlmostEqual(expected, HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"\"}"));
+        ShouldAlmostEqual(expected, HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \" \"}"));
+        ShouldAlmostEqual(expected, HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"pete\"}"));
     }
 
     @Test
@@ -256,7 +256,6 @@ public class HeartBeatTest {
         parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": \"43200001\"}", INVALID_INTERVAL_MS);
     }
 
-
     private void parseShouldFailWithError(String requestBody, String errorMessage){
         try {
             HeartBeat.parse(requestBody);
@@ -266,4 +265,7 @@ public class HeartBeatTest {
         }
     }
 
+    private void ShouldAlmostEqual(HeartBeat expected, HeartBeat actual){
+        assertTrue(expected.almostEquals(actual));
+    }
 }
