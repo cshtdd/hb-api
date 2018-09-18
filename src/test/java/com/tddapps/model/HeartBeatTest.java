@@ -167,7 +167,18 @@ public class HeartBeatTest {
 
         assertTrue(expectedHeartBeat.almostEquals(actualHeartBeat));
     }
-    
+
+    @Test
+    public void ParsingBuildsAHeartBeat() throws HeartBeatParseException{
+        val expected = new HeartBeat(
+                "superHost1",
+                UtcNowPlusMs(40000),
+                false
+        );
+
+        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 40000}")));
+    }
+
     @Test
     public void ParsingFailsWhenEmptyInput(){
         parseShouldFailWithError(null, "Empty input");
