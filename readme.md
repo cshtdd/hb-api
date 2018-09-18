@@ -139,22 +139,12 @@ tail -f /var/log/syslog
 # Code Architecture
 
 ## `handlers` package  
-Should be placed in `com.tddapps.handlers`. Aim for these to have almost no code. These classes have some knowledge of the serverless framework.  
-
-`BaseHttpJsonHandler` will help reduce the boilerplate code for handlers. Most of them should inherit from it. The unit tests for these classes will be limited to guarantee they return the correct kind.  
-
-## `controllers` package  
-
-Contains some middleware to reduce boilerplate code around request parsing and response construction. New functionality will rarely require any changes in this area. This layer might be removed altogether and merged into the `handlers.infrastructure` package at some point.  
-
-## `actions` package  
-
-The actual implementation of the functions will live under the `com.tddapps.actions` package. This will receive and return boundary objects. These classes will be framework agnostic.  
+The actual implementation of the functions should be placed in `com.tddapps.handlers`. These classes have some knowledge of the serverless framework. If testing becomes too cumbersome extract services.  
 
 ## `model` package  
 
-Where most of the code and business logic will live. This package should be independent of implementation details.
+Where most of the code and business logic will live. This package should be independent of implementation details.  
 
 ## `model.aws` package  
 
-The concrete implementation of many of the interfaces. These classes can only be tested with integration tests. When the day comes the cloud provider needs to be replaced, only the equivalent for these classes should need to be implemented.  
+The concrete implementation of many of the interfaces. These classes can only be tested with integration tests. When the day comes the cloud provider needs to be replaced, only the equivalent for these classes should need to be implemented.    
