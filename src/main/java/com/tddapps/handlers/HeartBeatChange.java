@@ -1,5 +1,6 @@
 package com.tddapps.handlers;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.Record;
 import com.amazonaws.services.dynamodbv2.model.StreamRecord;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 @Log4j2
 @SuppressWarnings("unused")
 public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
+    private static final String FALSE_NUMERIC_STRING = "0";
     private final NotificationSender notificationSender;
 
     public HeartBeatChange(){
@@ -71,9 +73,18 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .stream()
                 .filter(r -> r.getEventName().equals("REMOVE"))
                 .map(Record::getDynamodb)
+                .filter(HeartBeatChange::isTestEvent)
                 .map(StreamRecord::getKeys)
                 .map(k -> k.get("host_id").getS())
                 .toArray(String[]::new);
+    }
+
+    private static boolean isTestEvent(StreamRecord record){
+        return record
+                .getOldImage()
+                .getOrDefault("test", new AttributeValue(FALSE_NUMERIC_STRING))
+                .getN()
+                .equals(FALSE_NUMERIC_STRING);
     }
 
     private static Notification buildNotification(String hostId){

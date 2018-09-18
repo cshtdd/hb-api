@@ -27,6 +27,7 @@ public class HeartBeatChangeTest {
     private static class HeartBeatEvent{
         final String name;
         final String hostId;
+        final String test;
     }
 
     @Test
@@ -37,11 +38,11 @@ public class HeartBeatChangeTest {
     @Test
     public void SendsANotificationForEachDeletedRecord() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("MODIFY", "host1"),
-                new HeartBeatEvent("INSERT", "host2"),
-                new HeartBeatEvent("REMOVE", "host3"),
-                new HeartBeatEvent("REMOVE", "host4"),
-                new HeartBeatEvent("INSERT", "host5")
+                new HeartBeatEvent("MODIFY", "host1", "0"),
+                new HeartBeatEvent("INSERT", "host2", "0"),
+                new HeartBeatEvent("REMOVE", "host3", "0"),
+                new HeartBeatEvent("REMOVE", "host4", "0"),
+                new HeartBeatEvent("INSERT", "host5", "0")
         );
 
         assertTrue(result);
@@ -52,11 +53,25 @@ public class HeartBeatChangeTest {
     }
 
     @Test
+    public void DoesNotSendNotificationForDeletedTestRecords() throws DalException {
+        val result = handleRequest(
+                new HeartBeatEvent("REMOVE", "host1", "0"),
+                new HeartBeatEvent("REMOVE", "host2", "0"),
+                new HeartBeatEvent("REMOVE", "host3", "0"),
+                new HeartBeatEvent("REMOVE", "host4", "1")
+        );
+
+        assertTrue(result);
+        verify(notificationSender, times(3))
+                .Send(any(Notification.class));
+    }
+
+    @Test
     public void NoNotificationsAreSentOnNoDeletions() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("MODIFY", "host1"),
-                new HeartBeatEvent("INSERT", "host2"),
-                new HeartBeatEvent("INSERT", "host5")
+                new HeartBeatEvent("MODIFY", "host1", "0"),
+                new HeartBeatEvent("INSERT", "host2", "0"),
+                new HeartBeatEvent("INSERT", "host5", "0")
         );
 
         assertTrue(result);
@@ -71,7 +86,7 @@ public class HeartBeatChangeTest {
                 .Send(any(Notification.class));
 
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1")
+                new HeartBeatEvent("REMOVE", "host1", "0")
         );
 
         assertFalse(result);
@@ -83,6 +98,14 @@ public class HeartBeatChangeTest {
                     val d = new StreamRecord();
                     d.setKeys(new HashMap<String, AttributeValue>() {{
                         put("host_id", new AttributeValue(e.getHostId()));
+                    }});
+
+                    val testAttribute = new AttributeValue();
+                    testAttribute.setN(e.getTest());
+
+                    d.setOldImage(new HashMap<String, AttributeValue>(){{
+                        put("host_id", new AttributeValue(e.getHostId()));
+                        put("test", testAttribute);
                     }});
 
                     val result = new DynamodbEvent.DynamodbStreamRecord();
