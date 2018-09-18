@@ -14,6 +14,7 @@ import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 
 import static com.tddapps.utils.DateExtensions.*;
@@ -102,9 +103,9 @@ public class HeartBeat implements Cloneable{
         return !isExpired();
     }
 
-    public static HeartBeat parse(String jsonString) throws HeartBeatParseException {
+    public static HeartBeat parse(String jsonString) throws ParseException {
         if (jsonString == null || jsonString.trim().isEmpty()){
-            throw new HeartBeatParseException("Empty input");
+            throw new ParseException("Empty input", 0);
         }
 
         JsonNode json = parseJson(jsonString);
@@ -114,35 +115,35 @@ public class HeartBeat implements Cloneable{
         return new HeartBeat(hostId, UtcNowPlusMs(intervalMs), false);
     }
 
-    private static JsonNode parseJson(String requestBody) throws HeartBeatParseException {
+    private static JsonNode parseJson(String requestBody) throws ParseException{
         try {
             return JsonNodeHelper.parse(requestBody);
         } catch (IOException e) {
             log.debug("Invalid json", e);
-            throw new HeartBeatParseException("Invalid json");
+            throw new ParseException("Invalid json", 0);
         }
     }
 
-    private static String parseHostId(JsonNode body) throws HeartBeatParseException {
+    private static String parseHostId(JsonNode body) throws ParseException {
         val result = readString(body, "hostId");
 
         if (!StringUtils.isAlphanumeric(result)){
-            throw new HeartBeatParseException("Invalid hostId");
+            throw new ParseException("Invalid hostId", 0);
         }
 
         if (result.length() > 100){
-            throw new HeartBeatParseException("Invalid hostId");
+            throw new ParseException("Invalid hostId", 0);
         }
 
         return result;
     }
 
-    private static int parseIntervalMs(JsonNode body) throws HeartBeatParseException {
+    private static int parseIntervalMs(JsonNode body) throws ParseException {
         val result = readInt(body, "intervalMs", HeartBeat.DEFAULT_INTERVAL_MS);
 
         if (result < HeartBeat.MIN_INTERVAL_MS ||
                 result > HeartBeat.MAX_INTERVAL_MS){
-            throw new HeartBeatParseException("Invalid intervalMs");
+            throw new ParseException("Invalid intervalMs", 0);
         }
 
         return result;

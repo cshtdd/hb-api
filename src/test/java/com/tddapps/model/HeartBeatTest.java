@@ -4,6 +4,7 @@ import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -169,7 +170,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ParsingBuildsAHeartBeat() throws HeartBeatParseException{
+    public void ParsingBuildsAHeartBeat() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 UtcNowPlusMs(40000),
@@ -194,7 +195,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ReadsTheMaximumLengthHostId() throws HeartBeatParseException{
+    public void ReadsTheMaximumLengthHostId() throws ParseException{
         val heartBeat = HeartBeat.parse(String.format(
                 "{\"hostId\": \"%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
         ));
@@ -222,7 +223,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ParsingSupportsMultipleDataTypesForIntervalMs() throws HeartBeatParseException {
+    public void ParsingSupportsMultipleDataTypesForIntervalMs() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 UtcNowPlusMs(3000),
@@ -235,7 +236,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ParsingAssumesDefaultWhenIntervalMsIsNotNumeric() throws HeartBeatParseException {
+    public void ParsingAssumesDefaultWhenIntervalMsIsNotNumeric() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 UtcNowPlusMs(HeartBeat.DEFAULT_INTERVAL_MS),
@@ -260,7 +261,7 @@ public class HeartBeatTest {
         try {
             HeartBeat.parse(requestBody);
             fail("Should have thrown");
-        } catch (HeartBeatParseException e) {
+        } catch (ParseException e) {
             assertEquals(errorMessage, e.getMessage());
         }
     }

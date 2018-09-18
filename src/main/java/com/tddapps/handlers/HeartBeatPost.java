@@ -7,11 +7,11 @@ import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeat;
-import com.tddapps.model.HeartBeatParseException;
 import com.tddapps.model.HeartBeatRepository;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 
+import java.text.ParseException;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -44,7 +44,7 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
                     .setObjectBody(TextMessage.OK)
                     .build();
         }
-        catch (HeartBeatParseException e) {
+        catch (ParseException e) {
             log.warn("Action parsing failed", e);
             return ApiGatewayResponse.builder()
                     .setStatusCode(400)
