@@ -167,12 +167,19 @@ public class HeartBeatTest {
 
         assertTrue(expectedHeartBeat.almostEquals(actualHeartBeat));
     }
-
+    
     @Test
     public void ParsingFailsWhenEmptyInput(){
         parseShouldFailWithError(null, "Empty input");
         parseShouldFailWithError("", "Empty input");
         parseShouldFailWithError(" ", "Empty input");
+    }
+
+    @Test
+    public void ParsingFailsWhenInvalidJsonInput(){
+        parseShouldFailWithError("fred", "Invalid json");
+        parseShouldFailWithError("{", "Invalid json");
+        parseShouldFailWithError("{\"hostId", "Invalid json");
     }
 
     @Test

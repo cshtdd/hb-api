@@ -118,8 +118,8 @@ public class HeartBeat implements Cloneable{
         try {
             return JsonNodeHelper.parse(requestBody);
         } catch (IOException e) {
-            log.debug("Invalid json in request body", e);
-            throw new HeartBeatParseException("Invalid json in request body");
+            log.debug("Invalid json", e);
+            throw new HeartBeatParseException("Invalid json");
         }
     }
 
