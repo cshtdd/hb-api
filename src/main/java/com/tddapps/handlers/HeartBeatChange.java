@@ -15,6 +15,8 @@ import lombok.val;
 import lombok.var;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Stream;
 
 @Log4j2
 @SuppressWarnings("unused")
@@ -71,12 +73,20 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     private String[] readDeletedHostIds(DynamodbEvent input) {
         return input.getRecords()
                 .stream()
-                .filter(r -> r.getEventName().equals("REMOVE"))
+                .filter(HeartBeatChange::isRecordDeletion)
                 .map(Record::getDynamodb)
                 .filter(HeartBeatChange::isTestEvent)
                 .map(StreamRecord::getKeys)
-                .map(k -> k.get("host_id").getS())
+                .map(HeartBeatChange::getHostId)
                 .toArray(String[]::new);
+    }
+
+    private static String getHostId(Map<String, AttributeValue> m){
+        return m.get("host_id").getS();
+    }
+
+    private static boolean isRecordDeletion(DynamodbEvent.DynamodbStreamRecord record){
+        return record.getEventName().equals("REMOVE");
     }
 
     private static boolean isTestEvent(StreamRecord record){
