@@ -1,13 +1,12 @@
 package com.tddapps.handlers;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.tddapps.model.TextMessage;
+import com.tddapps.handlers.infrastructure.ApiGatewayHandler;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatRepository;
+import com.tddapps.model.TextMessage;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 
@@ -16,7 +15,7 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 @Log4j2
-public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+public class HeartBeatPost extends ApiGatewayHandler {
     private final HeartBeatRepository heartBeatRepository;
 
     public HeartBeatPost(){
@@ -28,10 +27,9 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
     }
 
     @Override
-    public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
+    protected ApiGatewayResponse processRequest(Map<String, Object> input){
         try {
             val requestBody = readBodyFrom(input);
-            log.debug(String.format("Body: %s", requestBody));
             val heartBeat = HeartBeat.parse(requestBody);
 
             log.info(String.format("hostId: %s", heartBeat.getHostId()));

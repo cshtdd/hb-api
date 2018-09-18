@@ -122,7 +122,6 @@ public class ApiGatewayResponse {
                 body = new String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8);
             }
 
-            log.info(String.format("StatusCode: %s, ResponseBody: %s", statusCode, body));
             return new ApiGatewayResponse(statusCode, body, headers, base64Encoded);
         }
     }
