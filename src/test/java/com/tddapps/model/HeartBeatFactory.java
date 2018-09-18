@@ -1,10 +1,13 @@
 package com.tddapps.model;
 
+import lombok.val;
+
 import java.util.Date;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 
 public abstract class HeartBeatFactory {
@@ -25,13 +28,16 @@ public abstract class HeartBeatFactory {
     }
 
     private static HeartBeat CreateSingleHeartBeat(int position){
+        val milliseconds = random.nextInt(1000000) + 10000;
         return new HeartBeat(
                 HeartBeatHost(position),
-                UtcNowPlusMs(random.nextInt(1000000) + 10000),
+                UtcNowPlusMs(milliseconds),
+                EpochSecondsPlusMs(milliseconds),
                 true
         );
     }
 
+    @Deprecated
     public static HeartBeat[] CreateWithExpirations(Date ... expirationDates) {
         return Create(expirationDates.length, (position) -> new HeartBeat(
                 HeartBeatHost(position),

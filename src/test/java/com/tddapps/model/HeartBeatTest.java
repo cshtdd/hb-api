@@ -162,6 +162,7 @@ public class HeartBeatTest {
     }
 
     @Test
+    @Deprecated
     public void CloneWithUpdatedExpirationUtcReturnsACopyOfTheOriginalHeartBeatWithADifferentExpiration(){
         val expectedHeartBeat = new HeartBeat("host1", UtcNowPlusMs(3000), false);
 
@@ -187,6 +188,7 @@ public class HeartBeatTest {
         val expected = new HeartBeat(
                 "superHost1",
                 UtcNowPlusMs(40000),
+                EpochSecondsPlusMs(40000),
                 false
         );
 
@@ -240,6 +242,7 @@ public class HeartBeatTest {
         val expected = new HeartBeat(
                 "superHost1",
                 UtcNowPlusMs(3000),
+                EpochSecondsPlusMs(3000),
                 false
         );
 
@@ -253,6 +256,7 @@ public class HeartBeatTest {
         val expected = new HeartBeat(
                 "superHost1",
                 UtcNowPlusMs(HeartBeat.DEFAULT_INTERVAL_MS),
+                EpochSecondsPlusMs(HeartBeat.DEFAULT_INTERVAL_MS),
                 false
         );
 
@@ -279,6 +283,7 @@ public class HeartBeatTest {
         }
     }
 
+    @Deprecated
     private void ShouldAlmostEqual(HeartBeat expected, HeartBeat actual){
         assertTrue(expected.almostEquals(actual));
     }
