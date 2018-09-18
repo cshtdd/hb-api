@@ -51,6 +51,19 @@ public class HeartBeatChangeTest {
         verify(notificationSender).Send(new Notification("Host missing [host4]", "Host missing [host4]"));
     }
 
+    @Test
+    public void ReturnsFalseWhenNotificationsCannotBeSent() throws DalException {
+        doThrow(new DalException("Send failed"))
+                .when(notificationSender)
+                .Send(any(Notification.class));
+
+        val result = handleRequest(
+                new HeartBeatEvent("REMOVE", "host1")
+        );
+
+        assertFalse(result);
+    }
+
     private boolean handleRequest(HeartBeatEvent ... seededEvents){
         List<DynamodbEvent.DynamodbStreamRecord> seededRecords = Arrays.stream(seededEvents)
                 .map(e -> {

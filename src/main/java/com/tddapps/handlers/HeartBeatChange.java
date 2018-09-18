@@ -11,6 +11,7 @@ import com.tddapps.model.Notification;
 import com.tddapps.model.NotificationSender;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
+import lombok.var;
 
 import java.util.Arrays;
 
@@ -29,6 +30,8 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
 
     @Override
     public Boolean handleRequest(DynamodbEvent input, Context context) {
+        var result = true;
+
         val deletedHostIds = input.getRecords()
                 .stream()
                 .filter(r -> r.getEventName().equals("REMOVE"))
@@ -45,11 +48,12 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
             try {
                 notificationSender.Send(n);
             } catch (DalException e) {
-                //TODO handle this better
+                log.error("Action processing failed", e);
+                result = false;
             }
         }
 
-        return true;
+        return result;
     }
 
     private static Notification buildNotification(String hostId){
