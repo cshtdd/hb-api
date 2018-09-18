@@ -12,6 +12,7 @@ import java.util.Map;
 
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 
+@Deprecated
 @SuppressWarnings("unused")
 @Log4j2
 public class NotificationCalculator implements RequestHandler<Map<String, Object>, Boolean> {

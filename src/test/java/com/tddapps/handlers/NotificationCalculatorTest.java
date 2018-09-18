@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@Deprecated
 public class NotificationCalculatorTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final NotificationSender notificationSender = mock(NotificationSender.class);
