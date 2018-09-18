@@ -69,6 +69,8 @@ functions:
           Fn::GetAtt:
             - HeartBeatsTable
             - StreamArn
+    environment:
+      TOPIC_NAME: ${self:resources.Outputs.HeartBeatNotificationsTopicArn.Value}
 
 plugins:
   - serverless-domain-manager
