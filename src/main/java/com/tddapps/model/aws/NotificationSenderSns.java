@@ -27,7 +27,7 @@ public class NotificationSenderSns implements NotificationSender, NotificationSe
                     .findFirst()
                     .orElse("");
 
-            if (anyTopicArn == ""){
+            if (anyTopicArn.isEmpty()){
                 throw new DalException("Topic Arn could not be read");
             }
         }
