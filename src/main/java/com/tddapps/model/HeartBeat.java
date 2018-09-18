@@ -88,10 +88,19 @@ public class HeartBeat implements Cloneable{
         return new HeartBeat(hostId, expirationUtc, ttl, isTest);
     }
 
+    @Deprecated
     public HeartBeat clone(Date updateExpirationUtc){
         val result = (HeartBeat)this.clone();
 
         result.setExpirationUtc(updateExpirationUtc);
+
+        return result;
+    }
+
+    public HeartBeat clone(long updatedTtl){
+        val result = (HeartBeat)this.clone();
+
+        result.setTtl(updatedTtl);
 
         return result;
     }

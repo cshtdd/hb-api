@@ -172,6 +172,17 @@ public class HeartBeatTest {
     }
 
     @Test
+    public void CloneWithUpdatedTtlReturnsACopyOfTheOriginalHeartBeatWithADifferentTtl(){
+        val utcNow = UtcNow();
+        val expectedHeartBeat = new HeartBeat("host1", utcNow, EpochSecondsPlusMs(3000), false);
+
+        val actualHeartBeat = new HeartBeat("host1", utcNow, EpochSecondsNow(), false)
+                .clone(EpochSecondsPlusMs(3000));
+
+        assertEquals(expectedHeartBeat, actualHeartBeat);
+    }
+
+    @Test
     public void ParsingBuildsAHeartBeat() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
