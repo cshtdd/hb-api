@@ -8,12 +8,13 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 
 @SuppressWarnings("unused")
 @Log4j2
-public class NotificationCalculator implements RequestHandler<Boolean, Boolean> {
+public class NotificationCalculator implements RequestHandler<Map<String, Object>, Boolean> {
     private final HeartBeatRepository heartBeatRepository;
     private final HeartBeatNotificationBuilder notificationBuilder;
     private final NotificationSender notificationSender;
@@ -34,7 +35,7 @@ public class NotificationCalculator implements RequestHandler<Boolean, Boolean> 
     }
 
     @Override
-    public Boolean handleRequest(Boolean input, Context context) {
+    public Boolean handleRequest(Map<String, Object> input, Context context) {
         try {
             log.info("Calculating notifications");
 

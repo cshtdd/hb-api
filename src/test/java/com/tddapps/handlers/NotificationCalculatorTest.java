@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
@@ -24,7 +25,7 @@ public class NotificationCalculatorTest {
     );
 
     private boolean handleRequest(){
-        return handler.handleRequest(true, null);
+        return handler.handleRequest(new HashMap<>(), null);
     }
 
     @Test
