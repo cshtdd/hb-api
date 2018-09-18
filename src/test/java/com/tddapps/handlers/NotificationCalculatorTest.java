@@ -1,6 +1,5 @@
 package com.tddapps.handlers;
 
-import com.tddapps.actions.NotificationCalculatorAction;
 import com.tddapps.controllers.ActionProcessException;
 import com.tddapps.model.*;
 import lombok.val;
@@ -19,11 +18,11 @@ public class NotificationCalculatorTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final NotificationSender notificationSender = mock(NotificationSender.class);
     private final HeartBeatNotificationBuilder notificationBuilder = new HeartBeatNotificationBuilderOneToOneStub();
-    private final NotificationCalculator handler = new NotificationCalculator(new NotificationCalculatorAction(
+    private final NotificationCalculator handler = new NotificationCalculator(
             heartBeatRepository,
             notificationBuilder,
             notificationSender
-    ));
+    );
 
     private boolean handleRequest(){
         return handler.handleRequest(true, null);
