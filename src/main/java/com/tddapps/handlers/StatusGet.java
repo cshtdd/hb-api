@@ -71,6 +71,7 @@ public class StatusGet extends ApiGatewayHandler {
     }
 
     private void VerifyDatabase() throws DalException {
+        //TODO: fix this, set the ttl
         val hb = new HeartBeat(
                 getClass().getSimpleName(),
                 UtcNowPlusMs(4*60*60*1000),

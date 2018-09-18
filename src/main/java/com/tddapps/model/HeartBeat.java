@@ -134,6 +134,7 @@ public class HeartBeat implements Cloneable{
         val hostId = parseHostId(json);
         val intervalMs = parseIntervalMs(json);
 
+        //TODO: fix this, set the ttl
         return new HeartBeat(hostId, UtcNowPlusMs(intervalMs), false);
     }
 

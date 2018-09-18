@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,6 +44,7 @@ public class HeartBeatPostTest {
         val expectedHeartBeat = new HeartBeat(
                 "testHostA",
                 UtcNowPlusMs(34000),
+                EpochSecondsPlusMs(34000),
                 false
         );
 
