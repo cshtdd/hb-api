@@ -9,9 +9,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import static com.tddapps.utils.DateExtensions.AreAlmostEquals;
-import static com.tddapps.utils.DateExtensions.UtcNow;
-import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
+import static com.tddapps.utils.DateExtensions.*;
 import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
 import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +27,7 @@ public class HeartBeatTest {
         val heartBeat = new HeartBeat("myHost", expirationUtc, 10000000, false);
 
         assertEquals("HeartBeat, expirationUtc: 2017-07-17T20:05:31Z[UTC], hostId: myHost, ttl: 10000000, isTest: false", heartBeat.toString());
+        assertFalse(heartBeat.isTest());
         assertTrue(heartBeat.isNotTest());
     }
 
@@ -38,22 +37,15 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void NoNeedToSpecifyIsTestByDefault(){
-        val hb = new HeartBeat("host1", UtcNowPlusMs(6000), false);
-
-        assertFalse(hb.isTest());
-        assertTrue(hb.isNotTest());
-    }
-
-    @Test
     public void IsTestIsConsideredForEquality(){
         val date1 = UtcNow();
+        val ttl1 = EpochSecondsNow();
 
-        val hb1 = new HeartBeat("host1", date1, false);
-        val hb1Clone = new HeartBeat("host1", date1, false);
-        val hb1CloneReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
-        val hb1Test = new HeartBeat("host1", date1, true);
-        val hb1TestReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), true);
+        val hb1 = new HeartBeat("host1", date1, ttl1, false);
+        val hb1Clone = new HeartBeat("host1", date1, ttl1, false);
+        val hb1CloneReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), EpochSecondsPlusMs(1000), false);
+        val hb1Test = new HeartBeat("host1", date1, ttl1, true);
+        val hb1TestReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), EpochSecondsPlusMs(1000), true);
 
         shouldBeEqual(hb1, hb1Clone);
         shouldNotBeEqual(hb1, hb1Test);
@@ -65,15 +57,16 @@ public class HeartBeatTest {
     @Test
     public void CanBeCompared(){
         val date1 = UtcNow();
+        val ttl1 = EpochSecondsNow();
 
-        val hbNoHost = new HeartBeat(null, date1, false);
-        val hbEmptyHost = new HeartBeat("", date1, false);
-        val hbNoDate = new HeartBeat("host1", null, false);
-        val hb1 = new HeartBeat("host1", date1, false);
-        val hb1Copy = new HeartBeat("host1", date1, false);
-        val hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
-        val hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), false);
-        val hb2 = new HeartBeat("host2", date1, false);
+        val hbNoHost = new HeartBeat(null, date1, ttl1, false);
+        val hbEmptyHost = new HeartBeat("", date1, ttl1, false);
+        val hbNoDate = new HeartBeat("host1", null, ttl1, false);
+        val hb1 = new HeartBeat("host1", date1, ttl1,false);
+        val hb1Copy = new HeartBeat("host1", date1, ttl1,false);
+        val hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), EpochSecondsPlusMs(1000), false);
+        val hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), EpochSecondsPlusMs(3000), false);
+        val hb2 = new HeartBeat("host2", date1, ttl1, false);
 
         shouldBeEqual(hb1, hb1Copy);
 
