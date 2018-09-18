@@ -84,7 +84,7 @@ public class HeartBeat implements Cloneable{
     }
 
     public Object clone(){
-        return new HeartBeat(hostId, expirationUtc, isTest);
+        return new HeartBeat(hostId, expirationUtc, ttl, isTest);
     }
 
     public HeartBeat clone(Date updateExpirationUtc){

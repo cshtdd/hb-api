@@ -89,7 +89,7 @@ public class HeartBeatTest {
 
     @Test
     public void CanBeCloned(){
-        val hb = new HeartBeat("host1", UtcNowPlusMs(3000), false);
+        val hb = new HeartBeat("host1", UtcNowPlusMs(3000), EpochSecondsPlusMs(3000), false);
         val hbClone = (HeartBeat) hb.clone();
 
         assertFalse(hb == hbClone);
@@ -98,14 +98,17 @@ public class HeartBeatTest {
 
         assertEquals(hb.getHostId(), hbClone.getHostId());
         assertTrue(AreAlmostEquals(hb.getExpirationUtc(), hbClone.getExpirationUtc()));
+        assertEquals(hb.getTtl(), hbClone.getTtl());
         assertEquals(hb.isTest(), hbClone.isTest());
 
         hb.setHostId("different");
         hb.setExpirationUtc(UtcNowPlusMs(100000));
+        hb.setTtl(EpochSecondsPlusMs(100000));
         hb.setTest(true);
 
         assertNotEquals(hb.getHostId(), hbClone.getHostId());
         assertFalse(AreAlmostEquals(hb.getExpirationUtc(), hbClone.getExpirationUtc()));
+        assertNotEquals(hb.getTtl(), hbClone.getTtl());
         assertNotEquals(hb.isTest(), hbClone.isTest());
     }
 
