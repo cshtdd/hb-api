@@ -2,9 +2,6 @@ package com.tddapps.handlers;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.tddapps.actions.response.TextMessage;
-import com.tddapps.controllers.ActionProcessException;
-import com.tddapps.controllers.HttpJsonResponse;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import lombok.extern.log4j.Log4j2;
@@ -39,26 +36,20 @@ public class NotificationCalculator implements RequestHandler<Boolean, Boolean> 
     @Override
     public Boolean handleRequest(Boolean input, Context context) {
         try {
-            val process = process();
-            return true;
-        } catch (ActionProcessException e) {
-            return false;
-        }
-    }
+            log.info("Calculating notifications");
 
-    private HttpJsonResponse<TextMessage> process() throws ActionProcessException {
-        log.info("calculating notifications");
-
-        try {
-            HeartBeat[] expiredHeartBeats = readExpiredHeartBeats();
+            val expiredHeartBeats = readExpiredHeartBeats();
             logExpiredHeartBeats(expiredHeartBeats);
             sendNotifications(expiredHeartBeats);
             updateExpiredHeartBeats(expiredHeartBeats);
-        } catch (DalException e) {
-            throw new ActionProcessException(e.getMessage());
-        }
 
-        return HttpJsonResponse.Success(TextMessage.OK);
+            log.info("Calculating notifications Completed");
+
+            return true;
+        } catch (DalException e) {
+            log.warn("Calculating notifications failed", e);
+            return false;
+        }
     }
 
     private HeartBeat[] readExpiredHeartBeats() throws DalException {

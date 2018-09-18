@@ -29,7 +29,7 @@ public class NotificationCalculatorTest {
     }
 
     @Test
-    public void ReadsAllTheHeartBeats() throws ActionProcessException, DalException {
+    public void ReadsAllTheHeartBeats() throws DalException {
         val result = handleRequest();
 
         verify(heartBeatRepository).All();
@@ -48,7 +48,7 @@ public class NotificationCalculatorTest {
     }
 
     @Test
-    public void SendsNotificationsForEachExpiredHeartBeat() throws DalException, ActionProcessException {
+    public void SendsNotificationsForEachExpiredHeartBeat() throws DalException {
         val hbExpired1 = new HeartBeat("hbExpired1", UtcNowPlusMs(-5000), false);
         val hbExpired2 = new HeartBeat("hbExpired2", UtcNowPlusMs(-15000), false);
         val seededHeartBeats = new HeartBeat[]{
@@ -91,7 +91,7 @@ public class NotificationCalculatorTest {
     }
 
     @Test
-    public void UpdatesTheExpirationOfExpiredHeartBeats() throws DalException, ActionProcessException {
+    public void UpdatesTheExpirationOfExpiredHeartBeats() throws DalException {
         val hbExpected1 = new HeartBeat("hbExpired1", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
         val hbExpected2 = new HeartBeat("hbExpired2", UtcNowPlusMs(24 * 60 * 60 * 1000), false);
         HeartBeat[] expectedUpdates = { hbExpected1, hbExpected2 };
@@ -126,7 +126,7 @@ public class NotificationCalculatorTest {
     }
 
     @Test
-    public void DoesNotSendNotificationWhenNoHeartBeatsExpired() throws ActionProcessException, DalException {
+    public void DoesNotSendNotificationWhenNoHeartBeatsExpired() throws DalException {
         val seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000), false),
@@ -144,7 +144,7 @@ public class NotificationCalculatorTest {
     }
 
     @Test
-    public void DoesNotUpdatedHeartBeatsWhenNoHeartBeatsExpired() throws DalException, ActionProcessException {
+    public void DoesNotUpdatedHeartBeatsWhenNoHeartBeatsExpired() throws DalException {
         val seededHeartBeats = new HeartBeat[]{
                 new HeartBeat("hbExpiredTest1", UtcNowPlusMs(-5000), true),
                 new HeartBeat("hb1", UtcNowPlusMs(5000), false),
