@@ -2,7 +2,7 @@ package com.tddapps.handlers;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.tddapps.actions.response.TextMessage;
+import com.tddapps.model.TextMessage;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.DalException;

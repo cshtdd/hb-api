@@ -1,14 +1,13 @@
 package com.tddapps.handlers.infrastructure;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.tddapps.actions.response.TextMessage;
+import com.tddapps.model.TextMessage;
 import com.tddapps.controllers.HttpJsonController;
 import com.tddapps.controllers.HttpJsonResponse;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;

@@ -1,6 +1,6 @@
 package com.tddapps.controllers;
 
-import com.tddapps.actions.response.TextMessage;
+import com.tddapps.model.TextMessage;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 

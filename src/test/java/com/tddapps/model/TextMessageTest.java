@@ -1,9 +1,10 @@
-package com.tddapps.actions.response;
+package com.tddapps.model;
 
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-import static com.tddapps.utils.EqualityAssertions.*;
+import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
+import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;
 import static org.junit.Assert.*;
 
 public class TextMessageTest {

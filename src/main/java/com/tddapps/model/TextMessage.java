@@ -1,4 +1,4 @@
-package com.tddapps.actions.response;
+package com.tddapps.model;
 
 import lombok.Data;
 import lombok.NonNull;
