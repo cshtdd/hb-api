@@ -35,8 +35,12 @@ public class HeartBeat implements Cloneable{
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
 
+    @Deprecated
     @DynamoDBAttribute(attributeName = "expiration_utc_datetime")
     private Date expirationUtc;
+
+    @DynamoDBAttribute(attributeName = "ttl")
+    private long ttl;
 
     @DynamoDBAttribute(attributeName = "is_test")
     private boolean isTest;
@@ -44,6 +48,11 @@ public class HeartBeat implements Cloneable{
     @DynamoDBIgnore
     public boolean isNotTest(){
         return !isTest();
+    }
+
+    @Deprecated
+    public HeartBeat(String hostId, Date expirationUtc, boolean isTest){
+        this(hostId, expirationUtc, 0, isTest);
     }
 
     @Override
