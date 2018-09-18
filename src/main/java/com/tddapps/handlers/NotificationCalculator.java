@@ -48,7 +48,7 @@ public class NotificationCalculator implements RequestHandler<Map<String, Object
 
             return true;
         } catch (DalException e) {
-            log.warn("Calculating notifications failed", e);
+            log.error("Action processing failed", e);
             return false;
         }
     }

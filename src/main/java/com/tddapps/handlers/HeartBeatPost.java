@@ -24,7 +24,6 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
     }
 
     public HeartBeatPost(HeartBeatRepository heartBeatRepository) {
-
         this.heartBeatRepository = heartBeatRepository;
     }
 
@@ -46,12 +45,14 @@ public class HeartBeatPost implements RequestHandler<Map<String, Object>, ApiGat
         }
         catch (ParseException e) {
             log.warn("Action parsing failed", e);
+
             return ApiGatewayResponse.builder()
                     .setStatusCode(400)
                     .setObjectBody(TextMessage.create(e.getMessage()))
                     .build();
         } catch (DalException e) {
             log.error("Action processing failed", e);
+
             return ApiGatewayResponse.builder()
                     .setStatusCode(500)
                     .setObjectBody(TextMessage.create(e.getMessage()))

@@ -2,6 +2,7 @@ package com.tddapps.handlers.infrastructure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tddapps.model.TextMessage;
 import lombok.extern.log4j.Log4j2;
 
 import java.nio.charset.StandardCharsets;
@@ -120,6 +121,8 @@ public class ApiGatewayResponse {
             } else if (binaryBody != null) {
                 body = new String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8);
             }
+
+            log.info(String.format("StatusCode: %s, ResponseBody: %s", statusCode, body));
             return new ApiGatewayResponse(statusCode, body, headers, base64Encoded);
         }
     }

@@ -34,7 +34,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
             log.debug("Save Single Heartbeat;");
             mapper.save(heartBeat);
         } catch (AmazonClientException e){
-            log.error("HeartBeat Save Error", e);
+            log.debug("HeartBeat Save Error", e);
             throw new DalException(e.getMessage());
         }
     }
@@ -48,7 +48,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
                 mapper.batchWrite(Arrays.asList(batches[i]), new ArrayList<HeartBeat>());
             }
         } catch (AmazonClientException e){
-            log.error("HeartBeat Save Error", e);
+            log.debug("HeartBeat Save Error", e);
             throw new DalException(e.getMessage());
         }
     }
@@ -58,7 +58,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
         try {
             return AllWithAScanInternal();
         } catch (AmazonClientException e){
-            log.error("HeartBeat All Error", e);
+            log.debug("HeartBeat All Error", e);
             throw new DalException(e.getMessage());
         }
     }

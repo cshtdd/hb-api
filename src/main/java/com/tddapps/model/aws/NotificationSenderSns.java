@@ -32,7 +32,7 @@ public class NotificationSenderSns implements NotificationSender, NotificationSe
             }
         }
         catch (AmazonClientException e){
-            log.error("Notification VerifySendCapability Error", e);
+            log.debug("Notification VerifySendCapability Error", e);
             throw new DalException(e.getMessage());
         }
     }
@@ -49,7 +49,7 @@ public class NotificationSenderSns implements NotificationSender, NotificationSe
                     );
         }
         catch (AmazonClientException e){
-            log.error("Notification Send Error", e);
+            log.debug("Notification Send Error", e);
             throw new DalException(e.getMessage());
         }
     }

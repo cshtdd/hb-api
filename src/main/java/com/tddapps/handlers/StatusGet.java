@@ -45,7 +45,6 @@ public class StatusGet implements RequestHandler<Map<String, Object>, ApiGateway
         try {
             VerifyApiStatus();
 
-            log.debug(String.format("StatusCode: %s, ResponseBody: %s", 200, TextMessage.OK.asJson()));
             return ApiGatewayResponse.builder()
                     .setStatusCode(200)
                     .setObjectBody(TextMessage.OK)
@@ -54,12 +53,9 @@ public class StatusGet implements RequestHandler<Map<String, Object>, ApiGateway
         } catch (DalException e) {
             log.error("Action processing failed", e);
 
-            val errorResponse = TextMessage.create(e.getMessage());
-
-            log.debug(String.format("StatusCode: %s, ResponseBody: %s", 500, errorResponse));
             return ApiGatewayResponse.builder()
                     .setStatusCode(500)
-                    .setObjectBody(errorResponse)
+                    .setObjectBody(TextMessage.create(e.getMessage()))
                     .build();
         }
     }
