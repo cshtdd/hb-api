@@ -30,19 +30,29 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
 
     @Override
     public Boolean handleRequest(DynamodbEvent input, Context context) {
-        var result = true;
+        log.debug("HeartBeat Change");
 
-        val deletedHostIds = input.getRecords()
-                .stream()
-                .filter(r -> r.getEventName().equals("REMOVE"))
-                .map(Record::getDynamodb)
-                .map(StreamRecord::getKeys)
-                .map(k -> k.get("host_id").getS())
-                .toArray(String[]::new);
+        val deletedHostIds = readDeletedHostIds(input);
+        logDeletedHostIds(deletedHostIds);
+        val result = sendNotifications(deletedHostIds);
 
+        log.info(String.format("HeartBeat Change Completed; Result: %s", result));
+
+        return result;
+    }
+
+    private void logDeletedHostIds(String[] hostIds) {
+        for (val hb : hostIds){
+            log.info(String.format("Host missing; %s", hb));
+        }
+    }
+
+    private Boolean sendNotifications(String[] deletedHostIds) {
         val notifications = Arrays.stream(deletedHostIds)
                 .map(HeartBeatChange::buildNotification)
                 .toArray(Notification[]::new);
+
+        var result = true;
 
         for (val n : notifications){
             try {
@@ -54,6 +64,16 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         }
 
         return result;
+    }
+
+    private String[] readDeletedHostIds(DynamodbEvent input) {
+        return input.getRecords()
+                .stream()
+                .filter(r -> r.getEventName().equals("REMOVE"))
+                .map(Record::getDynamodb)
+                .map(StreamRecord::getKeys)
+                .map(k -> k.get("host_id").getS())
+                .toArray(String[]::new);
     }
 
     private static Notification buildNotification(String hostId){
