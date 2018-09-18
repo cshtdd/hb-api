@@ -58,10 +58,11 @@ public class HeartBeat implements Cloneable{
     @Override
     public String toString() {
         return String.format(
-                "%s, expirationUtc: %s, hostId: %s, isTest: %s",
+                "%s, expirationUtc: %s, hostId: %s, ttl: %d, isTest: %s",
                 getClass().getSimpleName(),
                 ToUtcString(getExpirationUtc(), "null"),
                 EmptyWhenNull(hostId),
+                ttl,
                 isTest
         );
     }

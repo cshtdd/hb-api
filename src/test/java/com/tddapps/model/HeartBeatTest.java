@@ -26,15 +26,15 @@ public class HeartBeatTest {
         val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
         val expirationUtc = Date.from(dateTime.toInstant());
 
-        val heartBeat = new HeartBeat("myHost", expirationUtc, false);
+        val heartBeat = new HeartBeat("myHost", expirationUtc, 10000000, false);
 
-        assertEquals("HeartBeat, expirationUtc: 2017-07-17T20:05:31Z[UTC], hostId: myHost, isTest: false", heartBeat.toString());
+        assertEquals("HeartBeat, expirationUtc: 2017-07-17T20:05:31Z[UTC], hostId: myHost, ttl: 10000000, isTest: false", heartBeat.toString());
         assertTrue(heartBeat.isNotTest());
     }
 
     @Test
     public void HasSensibleStringRepresentationForEmptyObject(){
-        assertEquals("HeartBeat, expirationUtc: null, hostId: , isTest: false", new HeartBeat().toString());
+        assertEquals("HeartBeat, expirationUtc: null, hostId: , ttl: 0, isTest: false", new HeartBeat().toString());
     }
 
     @Test
