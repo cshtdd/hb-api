@@ -1,6 +1,7 @@
 package com.tddapps.model;
 
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
@@ -15,6 +16,10 @@ import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HeartBeatTest {
+    private final String MAXIMUM_LENGTH_ALLOWED_STRING = StringUtils.leftPad("", 100, "0");
+    private final String INVALID_HOST_ID = "Invalid hostId";
+    private final String INVALID_INTERVAL_MS = "Invalid intervalMs";
+
     @Test
     public void HasSensibleStringRepresentation(){
         val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
@@ -162,4 +167,78 @@ public class HeartBeatTest {
 
         assertTrue(expectedHeartBeat.almostEquals(actualHeartBeat));
     }
+
+    @Test
+    public void ReadsTheMaximumLengthHostId() throws HeartBeatParseException{
+        val heartBeat = HeartBeat.parse(String.format(
+                "{\"hostId\": \"%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
+        ));
+
+        assertEquals(MAXIMUM_LENGTH_ALLOWED_STRING, heartBeat.getHostId());
+    }
+
+    @Test
+    public void ParsingFailsWhenHostIdIsMissing(){
+        parseShouldFailWithError("{}", INVALID_HOST_ID);
+        parseShouldFailWithError("{\"hostId\": \"\"}", INVALID_HOST_ID);
+        parseShouldFailWithError("{\"hostId\": \"   \"}", INVALID_HOST_ID);
+    }
+
+    @Test
+    public void ParsingFailsWhenHostIdIsNotAlphanumeric(){
+        parseShouldFailWithError("{\"hostId\": \"-!@#$$%^%^ &^&\"}", INVALID_HOST_ID);
+    }
+
+    @Test
+    public void ParsingFailsWhenHostIdIsTooLong(){
+        parseShouldFailWithError(String.format(
+                "{\"hostId\": \"X%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
+        ), INVALID_HOST_ID);
+    }
+
+    @Test
+    public void ParsingSupportsMultipleDataTypesForIntervalMs() throws HeartBeatParseException {
+        val expected = new HeartBeat(
+                "superHost1",
+                UtcNowPlusMs(3000),
+                false
+        );
+
+        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 3000}")));
+        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": 3000.45}")));
+        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"3000\"}")));
+    }
+
+    @Test
+    public void ParsingAssumesDefaultWhenIntervalMsIsNotNumeric() throws HeartBeatParseException {
+        val expected = new HeartBeat(
+                "superHost1",
+                UtcNowPlusMs(HeartBeat.DEFAULT_INTERVAL_MS),
+                false
+        );
+
+        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": null}")));
+        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"\"}")));
+        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \" \"}")));
+        assertTrue(expected.almostEquals(HeartBeat.parse("{\"hostId\": \"superHost1\", \"intervalMs\": \"pete\"}")));
+    }
+
+    @Test
+    public void ParsingFailsWhenIntervalMsIsOutOfBoundaries(){
+        parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": 999}", INVALID_INTERVAL_MS);
+        parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": \"999\"}", INVALID_INTERVAL_MS);
+        parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": 43200001}", INVALID_INTERVAL_MS);
+        parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": \"43200001\"}", INVALID_INTERVAL_MS);
+    }
+
+
+    private void parseShouldFailWithError(String requestBody, String errorMessage){
+        try {
+            HeartBeat.parse(requestBody);
+            fail("Should have thrown");
+        } catch (HeartBeatParseException e) {
+            assertEquals(errorMessage, e.getMessage());
+        }
+    }
+
 }
