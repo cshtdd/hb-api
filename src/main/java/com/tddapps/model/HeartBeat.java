@@ -67,6 +67,7 @@ public class HeartBeat implements Cloneable{
         );
     }
 
+    @Deprecated
     public boolean almostEquals(HeartBeat that) {
         if (that == null){
             return false;
@@ -95,6 +96,7 @@ public class HeartBeat implements Cloneable{
         return result;
     }
 
+    @Deprecated
     @DynamoDBIgnore
     public boolean isExpired() {
         if (expirationUtc == null){
@@ -108,6 +110,7 @@ public class HeartBeat implements Cloneable{
         return UtcNow().compareTo(expirationUtc) >= 0;
     }
 
+    @Deprecated
     @DynamoDBIgnore
     public boolean isNotExpired(){
         return !isExpired();

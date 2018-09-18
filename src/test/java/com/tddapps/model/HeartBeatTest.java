@@ -106,17 +106,19 @@ public class HeartBeatTest {
     }
 
     @Test
+    @Deprecated
     public void HasAnAlmostEqualMethod(){
         val date1 = UtcNow();
+        val ttl1 = EpochSecondsNow();
 
-        val hbNoHost = new HeartBeat(null, date1, false);
-        val hbEmptyHost = new HeartBeat("", date1, false);
-        val hbNoDate = new HeartBeat("host1", null, false);
-        val hb1 = new HeartBeat("host1", date1, false);
-        val hb1Copy = new HeartBeat("host1", date1, false);
-        val hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), false);
-        val hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), false);
-        val hb2 = new HeartBeat("host2", date1, false);
+        val hbNoHost = new HeartBeat(null, date1, ttl1, false);
+        val hbEmptyHost = new HeartBeat("", date1, ttl1, false);
+        val hbNoDate = new HeartBeat("host1", null, ttl1, false);
+        val hb1 = new HeartBeat("host1", date1, ttl1, false);
+        val hb1Copy = new HeartBeat("host1", date1, ttl1, false);
+        val hb1ReallyCloseDate = new HeartBeat("host1", UtcNowPlusMs(1), EpochSecondsPlusMs(1), false);
+        val hb1DifferentDate = new HeartBeat("host1", UtcNowPlusMs(3000), EpochSecondsPlusMs(3000), false);
+        val hb2 = new HeartBeat("host2", date1, ttl1, false);
 
         assertTrue(hb1.almostEquals(hb1Copy));
         assertTrue(hbEmptyHost.almostEquals(hbNoHost));
@@ -130,6 +132,7 @@ public class HeartBeatTest {
     }
 
     @Test
+    @Deprecated
     public void HeartBeatsWithCloseExpirationAreNotExpired(){
         assertFalse(new HeartBeat("", UtcNowPlusMs(50), false).isExpired());
         assertTrue(new HeartBeat("", UtcNowPlusMs(50), false).isNotExpired());
@@ -138,18 +141,21 @@ public class HeartBeatTest {
     }
 
     @Test
+    @Deprecated
     public void FutureHeartBeatsAreNotExpired(){
         assertFalse(new HeartBeat("", UtcNowPlusMs(5000), false).isExpired());
         assertTrue(new HeartBeat("", UtcNowPlusMs(5000), false).isNotExpired());
     }
 
     @Test
+    @Deprecated
     public void PastHeartBeatsAreExpired(){
         assertTrue(new HeartBeat("", UtcNowPlusMs(-5000), false).isExpired());
         assertFalse(new HeartBeat("", UtcNowPlusMs(-5000), false).isNotExpired());
     }
 
     @Test
+    @Deprecated
     public void HeartBeatsWithNoExpirationAreExpired(){
         assertTrue(new HeartBeat("", null, false).isExpired());
         assertFalse(new HeartBeat("", null, false).isNotExpired());
