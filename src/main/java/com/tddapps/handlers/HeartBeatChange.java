@@ -11,7 +11,6 @@ import com.tddapps.model.Notification;
 import com.tddapps.model.NotificationSender;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
-import lombok.var;
 
 import java.util.Arrays;
 
@@ -35,11 +34,11 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .filter(r -> r.getEventName().equals("REMOVE"))
                 .map(Record::getDynamodb)
                 .map(StreamRecord::getKeys)
-                .map(k -> k.get("host_id").toString())
+                .map(k -> k.get("host_id").getS())
                 .toArray(String[]::new);
 
         val notifications = Arrays.stream(deletedHostIds)
-                .map(hostId -> new Notification("", ""))
+                .map(HeartBeatChange::buildNotification)
                 .toArray(Notification[]::new);
 
         for (val n : notifications){
@@ -51,5 +50,10 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         }
 
         return true;
+    }
+
+    private static Notification buildNotification(String hostId){
+        val subject = String.format("Host missing [%s]", hostId);
+        return new Notification(subject, subject);
     }
 }

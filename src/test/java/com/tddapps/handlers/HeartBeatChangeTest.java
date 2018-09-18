@@ -47,6 +47,8 @@ public class HeartBeatChangeTest {
         assertTrue(result);
         verify(notificationSender, times(2))
                 .Send(any(Notification.class));
+        verify(notificationSender).Send(new Notification("Host missing [host3]", "Host missing [host3]"));
+        verify(notificationSender).Send(new Notification("Host missing [host4]", "Host missing [host4]"));
     }
 
     private boolean handleRequest(HeartBeatEvent ... seededEvents){
