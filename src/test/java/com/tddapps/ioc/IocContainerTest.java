@@ -2,7 +2,6 @@ package com.tddapps.ioc;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.tddapps.actions.NotificationCalculatorAction;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.*;
 import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
@@ -53,10 +52,5 @@ public class IocContainerTest {
         val cache2 = IocContainer.getInstance().Resolve(KeysCache.class);
 
         assertTrue(cache1 == cache2);
-    }
-
-    @Test
-    public void RegistersActions(){
-        assertNotNull(IocContainer.getInstance().Resolve(NotificationCalculatorAction.class));
     }
 }

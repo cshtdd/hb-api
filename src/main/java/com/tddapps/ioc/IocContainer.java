@@ -1,6 +1,5 @@
 package com.tddapps.ioc;
 
-import com.tddapps.actions.*;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.*;
 import com.tddapps.infrastructure.*;
@@ -29,7 +28,6 @@ public class IocContainer {
 
     private PicoContainer RegisterBindings() {
         return new DefaultPicoContainer()
-                .addComponent(NotificationCalculatorAction.class)
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
                 .addComponent(NotificationSender.class, NotificationSenderSns.class)
                 .addComponent(SettingsReader.class, EnvironmentSettingsReader.class)
