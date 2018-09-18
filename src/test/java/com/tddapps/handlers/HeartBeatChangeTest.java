@@ -52,6 +52,19 @@ public class HeartBeatChangeTest {
     }
 
     @Test
+    public void NoNotificationsAreSentOnNoDeletions() throws DalException {
+        val result = handleRequest(
+                new HeartBeatEvent("MODIFY", "host1"),
+                new HeartBeatEvent("INSERT", "host2"),
+                new HeartBeatEvent("INSERT", "host5")
+        );
+
+        assertTrue(result);
+        verify(notificationSender, times(0))
+                .Send(any(Notification.class));
+    }
+
+    @Test
     public void ReturnsFalseWhenNotificationsCannotBeSent() throws DalException {
         doThrow(new DalException("Send failed"))
                 .when(notificationSender)
