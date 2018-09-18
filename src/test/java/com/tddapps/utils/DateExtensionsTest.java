@@ -4,6 +4,7 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.time.*;
+import java.time.temporal.Temporal;
 import java.util.Date;
 
 import static com.tddapps.utils.DateExtensions.*;
@@ -149,5 +150,40 @@ public class DateExtensionsTest {
 
         assertFalse(AreAlmostEquals(date1, UtcNowPlusMs(385)));
         assertFalse(AreAlmostEquals(UtcNowPlusMs(385), date1));
+    }
+
+    @Test
+    public void EpochSecondsNowReturnsNow(){
+        val expected = Instant.now().getEpochSecond();
+        val actual = EpochSecondsNow();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void EpochSecondsPlusMsReturnsNowWhenNoTimeAdded(){
+        val expected = Instant.now().getEpochSecond();
+        val actual = EpochSecondsPlusMs(0);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void EpochSecondsPlusMsReturnsNowWhenLessThanASecondAdded(){
+        val expected = Instant.now().getEpochSecond();
+        val actual = EpochSecondsPlusMs(800);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void EpochSecondsPlusMsReturnsTimeInTheFuture(){
+        val expected = UtcNowPlusMs(10000).toInstant().getEpochSecond();
+        val actual = EpochSecondsPlusMs(10000);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void EpochSecondsPlusMsReturnsTimeInThePast(){
+        val expected = UtcNowPlusMs(-110000).toInstant().getEpochSecond();
+        val actual = EpochSecondsPlusMs(-110000);
+        assertEquals(expected, actual);
     }
 }

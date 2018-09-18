@@ -3,6 +3,7 @@ package com.tddapps.utils;
 import lombok.val;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -59,5 +60,13 @@ public abstract class DateExtensions {
 
         val delta = Duration.between(date1.toInstant(), date2.toInstant());
         return abs(delta.toMillis()) < abs(deltaMs);
+    }
+
+    public static long EpochSecondsNow(){
+        return EpochSecondsPlusMs(0);
+    }
+
+    public static long EpochSecondsPlusMs(int milliseconds){
+        return Instant.now().getEpochSecond() + (milliseconds / 1000);
     }
 }
