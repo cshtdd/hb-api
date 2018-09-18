@@ -39,6 +39,11 @@ public class HeartBeatPostTest {
     }
 
     @Test
+    public void CanBeConstructedUsingADefaultConstructor(){
+        assertNotNull(new HeartBeatPost());
+    }
+
+    @Test
     public void ReadsTheMaximumLengthHostId() {
         handleRequest(String.format(
                 "{\"hostId\": \"%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING

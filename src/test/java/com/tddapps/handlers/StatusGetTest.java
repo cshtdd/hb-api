@@ -31,6 +31,11 @@ public class StatusGetTest {
     }
 
     @Test
+    public void CanBeConstructedUsingADefaultConstructor(){
+        assertNotNull(new StatusGet());
+    }
+
+    @Test
     public void VerifiesHeartBeatsCanBeSaved() throws DalException {
         val expectedHeartBeat = new HeartBeat(
                 "StatusGet",

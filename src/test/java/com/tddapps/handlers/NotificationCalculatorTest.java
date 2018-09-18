@@ -28,6 +28,11 @@ public class NotificationCalculatorTest {
     }
 
     @Test
+    public void CanBeConstructedUsingADefaultConstructor(){
+        assertNotNull(new NotificationCalculator());
+    }
+
+    @Test
     public void ReadsAllTheHeartBeats() throws DalException {
         val result = handleRequest();
 
