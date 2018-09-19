@@ -5,9 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 import static com.tddapps.utils.DateExtensions.*;
 import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
@@ -21,16 +18,24 @@ public class HeartBeatTest {
 
     @Test
     public void HasSensibleStringRepresentation(){
-        val heartBeat = new HeartBeat("myHost", 10000000, false);
+        val seededTtl = EpochSecondsPlusMs(5000);
+        val expectedExpirationString = ToUtcString(seededTtl);
 
-        assertEquals("HeartBeat, hostId: myHost, ttl: 10000000, isTest: false", heartBeat.toString());
+        val heartBeat = new HeartBeat("myHost", seededTtl, false);
+
+        val expected = String.format(
+                "HeartBeat, expirationUtc: %s, hostId: myHost, ttl: %d, isTest: false",
+                expectedExpirationString,
+                seededTtl
+        );
+        assertEquals(expected, heartBeat.toString());
         assertFalse(heartBeat.isTest());
         assertTrue(heartBeat.isNotTest());
     }
 
     @Test
     public void HasSensibleStringRepresentationForEmptyObject(){
-        assertEquals("HeartBeat, hostId: , ttl: 0, isTest: false", new HeartBeat().toString());
+        assertEquals("HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, isTest: false", new HeartBeat().toString());
     }
 
     @Test

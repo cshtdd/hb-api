@@ -15,9 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 
-import static com.tddapps.utils.DateExtensions.*;
+import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
+import static com.tddapps.utils.DateExtensions.ToUtcString;
 import static com.tddapps.utils.JsonNodeHelper.readInt;
 import static com.tddapps.utils.JsonNodeHelper.readString;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
@@ -49,8 +49,9 @@ public class HeartBeat implements Cloneable{
     @Override
     public String toString() {
         return String.format(
-                "%s, hostId: %s, ttl: %d, isTest: %s",
+                "%s, expirationUtc: %s, hostId: %s, ttl: %d, isTest: %s",
                 getClass().getSimpleName(),
+                ToUtcString(ttl),
                 EmptyWhenNull(hostId),
                 ttl,
                 isTest
