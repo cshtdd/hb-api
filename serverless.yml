@@ -114,6 +114,9 @@ resources:
           WriteCapacityUnits: 1
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true
 
     HeartBeatNotificationsTopic:
       Type: AWS::SNS::Topic
