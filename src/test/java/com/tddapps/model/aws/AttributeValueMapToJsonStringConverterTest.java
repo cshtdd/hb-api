@@ -1,5 +1,7 @@
 package com.tddapps.model.aws;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -21,5 +23,14 @@ public class AttributeValueMapToJsonStringConverterTest {
     @Test
     public void EmptyMapProducesEmptyJson(){
         assertEquals("{}", ToJson(new HashMap<>()));
+    }
+
+    @Test
+    public void ConvertsNumericValues(){
+        val input = new HashMap<String, AttributeValue>(){{
+            put("AAA", new AttributeValue().withN("25"));
+        }};
+
+        assertEquals("{\"AAA\":25}", ToJson(input));
     }
 }
