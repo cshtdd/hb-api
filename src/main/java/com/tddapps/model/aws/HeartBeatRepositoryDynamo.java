@@ -2,9 +2,7 @@ package com.tddapps.model.aws;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatRepository;
@@ -13,11 +11,8 @@ import lombok.val;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 
 import static com.tddapps.utils.ArrayBatchExtensions.Split;
-import static com.tddapps.utils.DateExtensions.ToDynamoUtcString;
 
 @Log4j2
 public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
