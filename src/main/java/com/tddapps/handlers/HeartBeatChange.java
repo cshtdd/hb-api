@@ -90,9 +90,4 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     private static boolean isRecordDeletion(DynamodbEvent.DynamodbStreamRecord record){
         return record.getEventName().equals("REMOVE");
     }
-
-    private static Notification buildNotification(HeartBeat heartBeat){
-        val subject = String.format("Host missing [%s]", heartBeat.getHostId());
-        return new Notification(subject, subject);
-    }
 }
