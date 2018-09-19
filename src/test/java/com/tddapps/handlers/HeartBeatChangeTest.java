@@ -5,10 +5,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.StreamRecord;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.tddapps.ioc.IocContainer;
-import com.tddapps.model.DalException;
-import com.tddapps.model.Notification;
-import com.tddapps.model.NotificationSender;
-import com.tddapps.model.aws.DynamoDBMapperFactory;
+import com.tddapps.model.*;
 import lombok.Data;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -25,7 +22,9 @@ import static org.mockito.Mockito.*;
 
 public class HeartBeatChangeTest {
     private final NotificationSender notificationSender = mock(NotificationSender.class);
+    private final HeartBeatNotificationBuilderOneToOneStub notificationBuilder = new HeartBeatNotificationBuilderOneToOneStub();
     private final HeartBeatChange handler = new HeartBeatChange(
+            notificationBuilder,
             notificationSender,
             IocContainer.getInstance().Resolve(DynamoDBMapper.class)
     );
@@ -47,7 +46,6 @@ public class HeartBeatChangeTest {
 
     @Test
     public void SendsANotificationForEachDeletedRecord() throws DalException {
-
         val result = handleRequest(
                 new HeartBeatEvent("MODIFY", "host1", ttlNowString, "0"),
                 new HeartBeatEvent("INSERT", "host2", ttlNowString, "0"),
@@ -59,8 +57,8 @@ public class HeartBeatChangeTest {
         assertTrue(result);
         verify(notificationSender, times(2))
                 .Send(any(Notification.class));
-        verify(notificationSender).Send(new Notification("Host missing [host3]", "Host missing [host3]"));
-        verify(notificationSender).Send(new Notification("Host missing [host4]", "Host missing [host4]"));
+        verify(notificationSender).Send(new Notification("S-host3", "M-host3"));
+        verify(notificationSender).Send(new Notification("S-host4", "M-host4"));
     }
 
     @Test

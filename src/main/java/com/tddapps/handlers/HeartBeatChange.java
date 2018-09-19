@@ -8,31 +8,29 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.tddapps.ioc.IocContainer;
-import com.tddapps.model.DalException;
-import com.tddapps.model.HeartBeat;
-import com.tddapps.model.Notification;
-import com.tddapps.model.NotificationSender;
+import com.tddapps.model.*;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import lombok.var;
-
-import java.util.Arrays;
 
 @Log4j2
 @SuppressWarnings("unused")
 public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     private static final String FALSE_NUMERIC_STRING = "0";
+    private final HeartBeatNotificationBuilder notificationBuilder;
     private final NotificationSender notificationSender;
     private final DynamoDBMapper mapper;
 
     public HeartBeatChange(){
         this(
+                IocContainer.getInstance().Resolve(HeartBeatNotificationBuilder.class),
                 IocContainer.getInstance().Resolve(NotificationSender.class),
                 IocContainer.getInstance().Resolve(DynamoDBMapper.class)
         );
     }
 
-    public HeartBeatChange(NotificationSender notificationSender, DynamoDBMapper mapper) {
+    public HeartBeatChange(HeartBeatNotificationBuilder notificationBuilder, NotificationSender notificationSender, DynamoDBMapper mapper) {
+        this.notificationBuilder = notificationBuilder;
         this.notificationSender = notificationSender;
         this.mapper = mapper;
     }
@@ -43,7 +41,8 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
 
         val heartBeats = readDeletedHeartBeats(input);
         logHeartBeats(heartBeats);
-        val result = sendNotifications(heartBeats);
+        val notifications = notificationBuilder.build(heartBeats);
+        val result = sendNotifications(notifications);
 
         log.info(String.format("HeartBeat Change Completed; Result: %s", result));
 
@@ -56,11 +55,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         }
     }
 
-    private Boolean sendNotifications(HeartBeat[] heartBeats) {
-        val notifications = Arrays.stream(heartBeats)
-                .map(HeartBeatChange::buildNotification)
-                .toArray(Notification[]::new);
-
+    private Boolean sendNotifications(Notification[] notifications) {
         var result = true;
 
         for (val n : notifications){
