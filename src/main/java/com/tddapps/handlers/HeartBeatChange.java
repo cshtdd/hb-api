@@ -49,9 +49,9 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
-    private void logHeartBeats(HeartBeat[] hostIds) {
-        for (val hb : hostIds){
-            log.info(String.format("Host missing; %s", hb));
+    private void logHeartBeats(HeartBeat[] heartBeats) {
+        for (val hb : heartBeats){
+            log.info(String.format("Host missing; %s", hb.toString()));
         }
     }
 
