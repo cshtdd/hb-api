@@ -66,7 +66,7 @@ public abstract class DateExtensions {
         return Instant.now().getEpochSecond();
     }
 
-    public static long EpochSecondsPlusMs(int milliseconds){
+    public static long EpochSecondsPlusMs(long milliseconds){
         return Instant.now().getEpochSecond() + (milliseconds / 1000);
     }
 }
