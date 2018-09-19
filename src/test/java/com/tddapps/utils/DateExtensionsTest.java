@@ -54,6 +54,20 @@ public class DateExtensionsTest {
     }
 
     @Test
+    public void ToUtcStringReturnsTheIsoStringRepresentationOfEpochSeconds(){
+        val seededDate = ZonedDateTime.of(
+                2097, 7, 17,
+                20, 5, 31,
+                45000000,
+                ZoneId.of("UTC")
+        );
+        long secondsInTheFuture = seededDate.toInstant().getEpochSecond() - Instant.now().getEpochSecond();
+        val input = EpochSecondsPlusMs(secondsInTheFuture * 1000);
+
+        assertEquals("2097-07-17T20:05:31Z[UTC]", ToUtcString(input));
+    }
+
+    @Test
     public void ToDynamoUtcStringThrowsWhenThereIsNoDate(){
         try{
             ToDynamoUtcString(null);

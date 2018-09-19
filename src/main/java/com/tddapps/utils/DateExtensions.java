@@ -12,6 +12,12 @@ import java.util.Date;
 import static java.lang.Math.abs;
 
 public abstract class DateExtensions {
+    public static String ToUtcString(long epochSeconds){
+        val instant = Instant.ofEpochSecond(epochSeconds);
+        val date = Date.from(instant);
+        return ToUtcString(date);
+    }
+
     public static String ToUtcString(Date value) {
         return ToUtcString(value, "");
     }
