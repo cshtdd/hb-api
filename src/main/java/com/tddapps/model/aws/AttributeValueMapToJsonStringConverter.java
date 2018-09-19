@@ -9,6 +9,6 @@ public abstract class AttributeValueMapToJsonStringConverter {
         if (input == null){
             throw new NullPointerException("input");
         }
-        return null;
+        return "{}";
     }
 }
