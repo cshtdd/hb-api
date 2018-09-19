@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -29,10 +30,13 @@ public class HeartBeatChangeTest {
             IocContainer.getInstance().Resolve(DynamoDBMapper.class)
     );
 
+    private final String ttlNowString = String.format("%d", EpochSecondsNow());
+
     @Data
     private static class HeartBeatEvent{
         final String name;
         final String hostId;
+        final String ttl;
         final String test;
     }
 
@@ -43,12 +47,13 @@ public class HeartBeatChangeTest {
 
     @Test
     public void SendsANotificationForEachDeletedRecord() throws DalException {
+
         val result = handleRequest(
-                new HeartBeatEvent("MODIFY", "host1", "0"),
-                new HeartBeatEvent("INSERT", "host2", "0"),
-                new HeartBeatEvent("REMOVE", "host3", "0"),
-                new HeartBeatEvent("REMOVE", "host4", "0"),
-                new HeartBeatEvent("INSERT", "host5", "0")
+                new HeartBeatEvent("MODIFY", "host1", ttlNowString, "0"),
+                new HeartBeatEvent("INSERT", "host2", ttlNowString, "0"),
+                new HeartBeatEvent("REMOVE", "host3", ttlNowString, "0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString, "0"),
+                new HeartBeatEvent("INSERT", "host5", ttlNowString, "0")
         );
 
         assertTrue(result);
@@ -61,10 +66,10 @@ public class HeartBeatChangeTest {
     @Test
     public void DoesNotSendNotificationForDeletedTestRecords() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1", "0"),
-                new HeartBeatEvent("REMOVE", "host2", "0"),
-                new HeartBeatEvent("REMOVE", "host3", "0"),
-                new HeartBeatEvent("REMOVE", "host4", "1")
+                new HeartBeatEvent("REMOVE", "host1", ttlNowString,"0"),
+                new HeartBeatEvent("REMOVE", "host2", ttlNowString,"0"),
+                new HeartBeatEvent("REMOVE", "host3", ttlNowString,"0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString,"1")
         );
 
         assertTrue(result);
@@ -75,9 +80,9 @@ public class HeartBeatChangeTest {
     @Test
     public void NoNotificationsAreSentOnNoDeletions() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("MODIFY", "host1", "0"),
-                new HeartBeatEvent("INSERT", "host2", "0"),
-                new HeartBeatEvent("INSERT", "host5", "0")
+                new HeartBeatEvent("MODIFY", "host1", ttlNowString,"0"),
+                new HeartBeatEvent("INSERT", "host2", ttlNowString,"0"),
+                new HeartBeatEvent("INSERT", "host5", ttlNowString,"0")
         );
 
         assertTrue(result);
@@ -92,7 +97,7 @@ public class HeartBeatChangeTest {
                 .Send(any(Notification.class));
 
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1", "0")
+                new HeartBeatEvent("REMOVE", "host1", ttlNowString,"0")
         );
 
         assertFalse(result);
@@ -106,12 +111,10 @@ public class HeartBeatChangeTest {
                         put("host_id", new AttributeValue(e.getHostId()));
                     }});
 
-                    val testAttribute = new AttributeValue();
-                    testAttribute.setN(e.getTest());
-
                     d.setOldImage(new HashMap<String, AttributeValue>(){{
-                        put("host_id", new AttributeValue(e.getHostId()));
-                        put("test", testAttribute);
+                        put("host_id", new AttributeValue().withS(e.getHostId()));
+                        put("ttl", new AttributeValue().withN(e.getTtl()));
+                        put("test", new AttributeValue().withN(e.getTest()));
                     }});
 
                     val result = new DynamodbEvent.DynamodbStreamRecord();
