@@ -10,7 +10,7 @@ import lombok.val;
 
 import java.util.Map;
 
-import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
+import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 
 @SuppressWarnings("unused")
 @Log4j2
@@ -71,10 +71,9 @@ public class StatusGet extends ApiGatewayHandler {
     }
 
     private void VerifyDatabase() throws DalException {
-        //TODO: fix this, set the ttl
         val hb = new HeartBeat(
                 getClass().getSimpleName(),
-                UtcNowPlusMs(4*60*60*1000),
+                EpochSecondsPlusMs(4*60*60*1000),
                 true
         );
 

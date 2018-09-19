@@ -43,7 +43,6 @@ public class HeartBeatPostTest {
     public void ProcessWritesTheHeartBeat() throws DalException {
         val expectedHeartBeat = new HeartBeat(
                 "testHostA",
-                UtcNowPlusMs(34000),
                 EpochSecondsPlusMs(34000),
                 false
         );
@@ -52,7 +51,7 @@ public class HeartBeatPostTest {
 
         assertEquals(200, result.getStatusCode());
         assertEquals("{\"message\":\"OK\"}", result.getBody());
-        verify(heartBeatRepository).Save(argThat(expectedHeartBeat::almostEquals));
+        verify(heartBeatRepository).Save(expectedHeartBeat);
     }
 
     @Test

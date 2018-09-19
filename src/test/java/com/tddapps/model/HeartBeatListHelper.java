@@ -12,8 +12,7 @@ public abstract class HeartBeatListHelper {
     public static void ShouldMatch(HeartBeat[] listA, HeartBeat[] listB) {
         assertEquals(listA.length, listB.length);
 
-        Predicate<HeartBeat> listBContainsHeartBeat = hb -> Arrays.stream(listB)
-                .anyMatch(hb::almostEquals);
+        Predicate<HeartBeat> listBContainsHeartBeat = hb -> Arrays.asList(listB).contains(hb);
 
         val allSeededHeartBeatsHaveBeenRetrieved = Arrays.stream(listA)
                 .allMatch(listBContainsHeartBeat);

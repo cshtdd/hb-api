@@ -40,7 +40,6 @@ public class StatusGetTest {
     public void VerifiesHeartBeatsCanBeSaved() throws DalException {
         val expectedHeartBeat = new HeartBeat(
                 "StatusGet",
-                UtcNowPlusMs(4*60*60*1000),
                 EpochSecondsPlusMs(4*60*60*1000),
                 true
         );
@@ -51,7 +50,7 @@ public class StatusGetTest {
 
         assertEquals(200, result.getStatusCode());
         assertEquals("{\"message\":\"OK\"}", result.getBody());
-        verify(heartBeatRepository).Save(argThat(expectedHeartBeat::almostEquals));
+        verify(heartBeatRepository).Save(expectedHeartBeat);
     }
 
     @Test

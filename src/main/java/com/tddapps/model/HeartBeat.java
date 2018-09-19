@@ -35,10 +35,6 @@ public class HeartBeat implements Cloneable{
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
 
-    @Deprecated
-    @DynamoDBAttribute(attributeName = "expiration_utc_datetime")
-    private Date expirationUtc;
-
     @DynamoDBAttribute(attributeName = "ttl")
     private long ttl;
 
@@ -50,51 +46,19 @@ public class HeartBeat implements Cloneable{
         return !isTest();
     }
 
-    @Deprecated
-    public HeartBeat(String hostId, Date expirationUtc, boolean isTest){
-        this(hostId, expirationUtc, 0, isTest);
-    }
-
     @Override
     public String toString() {
         return String.format(
-                "%s, expirationUtc: %s, hostId: %s, ttl: %d, isTest: %s",
+                "%s, hostId: %s, ttl: %d, isTest: %s",
                 getClass().getSimpleName(),
-                ToUtcString(getExpirationUtc(), "null"),
                 EmptyWhenNull(hostId),
                 ttl,
                 isTest
         );
     }
 
-    @Deprecated
-    public boolean almostEquals(HeartBeat that) {
-        if (that == null){
-            return false;
-        }
-
-        if(this.isTest != that.isTest){
-            return false;
-        }
-
-        if (!EmptyWhenNull(this.hostId).equals(EmptyWhenNull(that.hostId))){
-            return false;
-        }
-
-        return AreAlmostEquals(this.expirationUtc, that.expirationUtc);
-    }
-
     public Object clone(){
-        return new HeartBeat(hostId, expirationUtc, ttl, isTest);
-    }
-
-    @Deprecated
-    public HeartBeat clone(Date updateExpirationUtc){
-        val result = (HeartBeat)this.clone();
-
-        result.setExpirationUtc(updateExpirationUtc);
-
-        return result;
+        return new HeartBeat(hostId, ttl, isTest);
     }
 
     public HeartBeat clone(long updatedTtl){
@@ -103,26 +67,6 @@ public class HeartBeat implements Cloneable{
         result.setTtl(updatedTtl);
 
         return result;
-    }
-
-    @Deprecated
-    @DynamoDBIgnore
-    public boolean isExpired() {
-        if (expirationUtc == null){
-            return true;
-        }
-
-        if (AreAlmostEquals(UtcNow(), expirationUtc)){
-            return false;
-        }
-
-        return UtcNow().compareTo(expirationUtc) >= 0;
-    }
-
-    @Deprecated
-    @DynamoDBIgnore
-    public boolean isNotExpired(){
-        return !isExpired();
     }
 
     public static HeartBeat parse(String jsonString) throws ParseException {
@@ -134,8 +78,7 @@ public class HeartBeat implements Cloneable{
         val hostId = parseHostId(json);
         val intervalMs = parseIntervalMs(json);
 
-        //TODO: fix this, set the ttl
-        return new HeartBeat(hostId, UtcNowPlusMs(intervalMs), false);
+        return new HeartBeat(hostId, EpochSecondsPlusMs(intervalMs), false);
     }
 
     private static JsonNode parseJson(String requestBody) throws ParseException{

@@ -5,8 +5,6 @@ import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-
 import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -35,7 +33,7 @@ public class SingleNotificationBuilderTest {
 
     @Test
     public void SendsNotificationForASingleHeartBeat(){
-        val hb1 = new HeartBeat("host1", UtcNow(), EpochSecondsNow(), false);
+        val hb1 = new HeartBeat("host1", EpochSecondsNow(), false);
         val input = new HeartBeat[]{
                 hb1
         };
@@ -59,8 +57,8 @@ public class SingleNotificationBuilderTest {
 
     @Test
     public void SendsSingleNotificationForMultipleHeartBeats(){
-        val hb1 = new HeartBeat("host1", UtcNow(), EpochSecondsNow(), false);
-        val hb2 = new HeartBeat("host2", UtcNow(), EpochSecondsNow(), false);
+        val hb1 = new HeartBeat("host1", EpochSecondsNow(), false);
+        val hb2 = new HeartBeat("host2", EpochSecondsNow(), false);
         val input = new HeartBeat[]{
                 hb1,
                 hb2

@@ -51,15 +51,6 @@ functions:
           path: /v1/hearbeat
           method: post
 
-  NotificationCalculator:
-    handler: com.tddapps.handlers.NotificationCalculator
-    timeout: 300
-    events:
-    - schedule:
-        rate: cron(* * * * ? *)
-    environment:
-      TOPIC_NAME: ${self:resources.Outputs.HeartBeatNotificationsTopicArn.Value}
-
   HeartBeatChange:
     handler: com.tddapps.handlers.HeartBeatChange
     events:
@@ -100,10 +91,6 @@ resources:
       Properties:
         RetentionInDays: "14"
     HeartBeatPostLogGroup:
-      Type: AWS::Logs::LogGroup
-      Properties:
-        RetentionInDays: "14"
-    NotificationCalculatorLogGroup:
       Type: AWS::Logs::LogGroup
       Properties:
         RetentionInDays: "14"
