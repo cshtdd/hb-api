@@ -13,6 +13,8 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import lombok.var;
 
+import java.util.Map;
+
 @Log4j2
 @SuppressWarnings("unused")
 public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
@@ -75,22 +77,18 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .stream()
                 .filter(HeartBeatChange::isRecordDeletion)
                 .map(Record::getDynamodb)
-                .filter(HeartBeatChange::isTestEvent)
-                .map(StreamRecord::getKeys)
-                .map(m -> mapper.marshallIntoObject(HeartBeat.class, m))
+                .map(StreamRecord::getOldImage)
+                .map(this::buildHeartBeat)
+                .filter(HeartBeat::isNotTest)
                 .toArray(HeartBeat[]::new);
+    }
+
+    private HeartBeat buildHeartBeat(Map<String, AttributeValue> map) {
+        return mapper.marshallIntoObject(HeartBeat.class, map);
     }
 
     private static boolean isRecordDeletion(DynamodbEvent.DynamodbStreamRecord record){
         return record.getEventName().equals("REMOVE");
-    }
-
-    private static boolean isTestEvent(StreamRecord record){
-        return record
-                .getOldImage()
-                .getOrDefault("test", new AttributeValue(FALSE_NUMERIC_STRING))
-                .getN()
-                .equals(FALSE_NUMERIC_STRING);
     }
 
     private static Notification buildNotification(HeartBeat heartBeat){
