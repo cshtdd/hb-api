@@ -1,11 +1,14 @@
 package com.tddapps.handlers;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.StreamRecord;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
+import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.DalException;
 import com.tddapps.model.Notification;
 import com.tddapps.model.NotificationSender;
+import com.tddapps.model.aws.DynamoDBMapperFactory;
 import lombok.Data;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -21,7 +24,10 @@ import static org.mockito.Mockito.*;
 
 public class HeartBeatChangeTest {
     private final NotificationSender notificationSender = mock(NotificationSender.class);
-    private final HeartBeatChange handler = new HeartBeatChange(notificationSender);
+    private final HeartBeatChange handler = new HeartBeatChange(
+            notificationSender,
+            IocContainer.getInstance().Resolve(DynamoDBMapper.class)
+    );
 
     @Data
     private static class HeartBeatEvent{
