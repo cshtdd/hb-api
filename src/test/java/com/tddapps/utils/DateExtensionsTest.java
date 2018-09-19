@@ -22,6 +22,14 @@ public class DateExtensionsTest {
     }
 
     @Test
+    public void ToUtcStringIncludesIncludesMillisecondsOnlyWhenPresent(){
+        val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 32000000, ZoneId.of("UTC"));
+        val date = Date.from(dateTime.toInstant());
+
+        assertEquals("2017-07-17T20:05:31.032Z[UTC]", ToUtcString(date));
+    }
+
+    @Test
     public void ToUtcStringReturnsTheIsoStringRepresentationOfAZonedDateTime(){
         val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
         val date = Date.from(dateTime.toInstant());
