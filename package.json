@@ -12,6 +12,7 @@
   "dependencies": {
     "serverless": "^1.31.0",
     "serverless-domain-manager": "^2.6.0",
+    "serverless-dynamodb-autoscaling": "^0.6.2",
     "serverless-dynamodb-local": "^0.2.33",
     "serverless-sam": "^0.1.0"
   }

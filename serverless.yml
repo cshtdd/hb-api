@@ -67,6 +67,7 @@ plugins:
   - serverless-domain-manager
   - serverless-sam
   - serverless-dynamodb-local
+  - serverless-dynamodb-autoscaling
 
 custom:
   tablePrefix: ${self:service}-${self:provider.stage}-
@@ -83,6 +84,17 @@ custom:
     start:
       inMemory: true
       migrate: true
+
+  capacities:
+  - table: HeartBeatsTable
+    read:
+      minimum: 1
+      maximum: 25
+      usage: 0.75
+    write:
+      minimum: 1
+      maximum: 25
+      usage: 0.5
 
 resources:
   Resources:
