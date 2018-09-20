@@ -1,16 +1,17 @@
 #!/usr/bin/bash
 
-INPUT_EMAIL=$1
+INPUT_ENDPOINT=$1
+INPUT_PROTOCOL=email
 TOPIC_NAME=$2
 
 if [[ $1 ]]; then
-    INPUT_EMAIL=$1
+    INPUT_ENDPOINT=$1
 else
-    echo "ERROR: missing email"
+    echo "ERROR: missing endpoint"
     echo ""
     echo "Usage:"
     echo "------"
-    echo "subscribe_email.sh <email> [snsTopicName]"
+    echo "create_subscription.sh <endpoint> [snsTopicName]"
     exit 1
 fi
 
@@ -20,7 +21,7 @@ else
     TOPIC_NAME="hb-api-dev-heartbeat-notifications"
 fi
 
-echo "INFO: Subscribing email:${INPUT_EMAIL} to topic:${TOPIC_NAME}"
+echo "INFO: Subscribing ${INPUT_PROTOCOL}:${INPUT_ENDPOINT} to topic:${TOPIC_NAME}"
 
 TOPIC_ARN=$(aws sns list-topics | jq -r ".Topics[].TopicArn | select(. | contains(\":${TOPIC_NAME}\"))")
 if [[ "${TOPIC_ARN}" == "" ]]; then
@@ -29,5 +30,5 @@ if [[ "${TOPIC_ARN}" == "" ]]; then
 fi
 
 # echo "DEBUG: TOPIC_ARN=${TOPIC_ARN}" 
-aws sns subscribe --topic-arn $TOPIC_ARN \
-    --protocol email --notification-endpoint $INPUT_EMAIL
+aws sns subscribe --topic-arn ${TOPIC_ARN} \
+    --protocol ${INPUT_PROTOCOL} --notification-endpoint ${INPUT_ENDPOINT}
