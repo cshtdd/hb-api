@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 
 INPUT_ENDPOINT=$1
-INPUT_PROTOCOL=email
-TOPIC_NAME=$2
+INPUT_PROTOCOL=$2
+TOPIC_NAME=$3
 
 if [[ $1 ]]; then
     INPUT_ENDPOINT=$1
@@ -11,12 +11,33 @@ else
     echo ""
     echo "Usage:"
     echo "------"
-    echo "create_subscription.sh <endpoint> [snsTopicName]"
+    echo "create_subscription.sh <endpoint> <email|sms> [snsTopicName]"
+    echo "------"
+    echo "example 1:"
+    echo "create_subscription.sh test@test.com email my-topic"
+    echo "example 2:"
+    echo "create_subscription.sh +17861234567 sms my-topic"
     exit 1
 fi
 
-if [[ $2 ]]; then
-    TOPIC_NAME=$2
+if [[ "$2" == "email" || "$2" == "sms" ]]; then
+    INPUT_PROTOCOL="$2"
+else
+    echo "ERROR: missing protocol"
+    echo ""
+    echo "Usage:"
+    echo "------"
+    echo "create_subscription.sh <endpoint> <email|sms> [snsTopicName]"
+    echo "------"
+    echo "example 1:"
+    echo "create_subscription.sh test@test.com email my-topic"
+    echo "example 2:"
+    echo "create_subscription.sh +17861234567 sms my-topic"
+    exit 1
+fi
+
+if [[ $3 ]]; then
+    TOPIC_NAME=$3
 else
     TOPIC_NAME="hb-api-dev-heartbeat-notifications"
 fi
