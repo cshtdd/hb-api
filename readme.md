@@ -66,7 +66,7 @@ lsof -Pn -i4 | grep -E ':8000|:3000'
 ## Create API Keys  
 
 ```bash
-sh ./dev/create_api_key.sh
+sh ./dev/create_api_key.sh server1
 ```
 
 ## API Validation  
