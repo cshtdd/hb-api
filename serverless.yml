@@ -7,10 +7,10 @@ service: hb-api
 provider:
   name: aws
   runtime: java8
-  region: ${opt:region}
+  region: ${opt:region, 'us-east-1'}
   endpointType: regional
-  stage: ${opt:stage}
-  domainName: ${opt:domainName}
+  stage: ${opt:stage, 'dev'}
+  domainName: ${opt:domainName, 'invalid.url'}
 
   environment:
     TABLE_PREFIX: ${self:custom.tablePrefix}
