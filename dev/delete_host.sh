@@ -1,31 +1,37 @@
 #!/usr/bin/bash
 
 HOST_ID=$1
-TABLE_NAME=$2
+REGION=$2
+TABLE_NAME="hb-api-dev-heartbeats"
 SET_TEST_BEFORE_DELETION=1
 
-if [[ $1 ]]; then
-    HOST_ID=$1
-else
+if [[ -z $1 ]]; then
     echo "ERROR: missing hostId"
     echo ""
     echo "Usage:"
     echo "------"
-    echo "delete_host.sh <hostId> [dynamoTableName] [--skip-set-test]"
+    echo "delete_host.sh <hostId> <region> [dynamoTableName] [--skip-set-test]"
     exit 1
 fi
 
-if [[ $2 ]]; then
-    TABLE_NAME=$2
-else
-    TABLE_NAME="hb-api-dev-heartbeats"
+if [[ -z $2 ]]; then
+    echo "ERROR: missing region"
+    echo ""
+    echo "Usage:"
+    echo "------"
+    echo "delete_host.sh <hostId> <region> [dynamoTableName] [--skip-set-test]"
+    exit 1
 fi
 
-if [[ "$3" == "--skip-set-test" ]]; then
+if [[ $3 ]]; then
+    TABLE_NAME=$3
+fi
+
+if [[ "$4" == "--skip-set-test" ]]; then
     SET_TEST_BEFORE_DELETION=0
 fi
 
-echo "INFO: Deleting hostId:$HOST_ID from tableName:$TABLE_NAME"
+echo "INFO: Deleting hostId:${HOST_ID} from tableName:${TABLE_NAME}[${REGION}]"
 
 TMP_KEY_FILE=$(mktemp)
 bash -c "cat <<EOF > ${TMP_KEY_FILE}
@@ -39,15 +45,17 @@ bash -c "cat <<EOF > ${TMP_VALUE_FILE}
 EOF"
 # echo "DEBUG: TMP_VALUE_FILE=${TMP_VALUE_FILE}\n`cat ${TMP_VALUE_FILE}`\n"
 
-if [[ $SET_TEST_BEFORE_DELETION -eq 1 ]]; then
+if [[ ${SET_TEST_BEFORE_DELETION} -eq 1 ]]; then
   # echo "DEBUG: updating test attribute"
   aws dynamodb update-item --table-name "${TABLE_NAME}" \
     --key file://${TMP_KEY_FILE} --update-expression "SET test = :t" \
-    --expression-attribute-values file://$TMP_VALUE_FILE
+    --expression-attribute-values file://${TMP_VALUE_FILE} \
+    --region ${REGION}
 fi
 
 # echo "DEBUG: deleting item"
-aws dynamodb delete-item --table-name "${TABLE_NAME}" --key file://${TMP_KEY_FILE}
+aws dynamodb delete-item --table-name "${TABLE_NAME}" \
+    --key file://${TMP_KEY_FILE} --region ${REGION}
 
 rm ${TMP_KEY_FILE}
 rm ${TMP_VALUE_FILE}
