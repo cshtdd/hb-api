@@ -10,6 +10,7 @@ provider:
   region: ${opt:region}
   endpointType: regional
   stage: ${opt:stage}
+  domainName: ${opt:domainName}
 
   environment:
     TABLE_PREFIX: ${self:custom.tablePrefix}
@@ -72,9 +73,8 @@ plugins:
 
 custom:
   tablePrefix: ${self:service}-${self:provider.stage}-
-  domainName: ${opt:domainName}
   customDomain:
-    domainName: ${self:custom.domainName}
+    domainName: ${self:provider.domainName}
     stage: ${self:provider.stage}
     endpointType: ${self:provider.endpointType}
     certificateRegion: ${self:provider.region}
