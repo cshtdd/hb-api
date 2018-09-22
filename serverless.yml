@@ -7,6 +7,9 @@ service: hb-api
 provider:
   name: aws
   runtime: java8
+  region: ${opt:region, 'us-east-1'}
+  endpointType: regional
+  stage: ${opt:stage, 'dev'}
 
   environment:
     TABLE_PREFIX: ${self:custom.tablePrefix}
@@ -20,8 +23,6 @@ provider:
       burstLimit: 20
       rateLimit: 10
 
-  stage: ${opt:stage, 'dev'}
-#  region: us-east-1
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -75,6 +76,8 @@ custom:
   customDomain:
     domainName: ${self:custom.domainName}
     stage: ${self:provider.stage}
+    endpointType: ${self:provider.endpointType}
+    certificateRegion: ${self:provider.region}
     basePath: ''
     createRoute53Record: false
 

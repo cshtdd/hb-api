@@ -1,10 +1,10 @@
 {
   "name": "hb-api",
   "scripts": {
-    "create-domain": "sls create_domain",
+    "create-domain": "sls create_domain --region us-east-1 && sls create_domain --region us-west-2",
     "int-tests-db": "sh ./dev/start_local_dynamo.sh 8001",
     "predeploy": "npm run int-tests-db",
-    "deploy": "mvn clean install && sls deploy",
+    "deploy": "mvn clean install && sls deploy --region us-east-1 && sls deploy --region us-west-2",
     "osa": "mvn clean verify -DskipTests",
     "start": "sh ./dev/run.sh",
     "debug": "sh ./dev/run.sh --debug"
