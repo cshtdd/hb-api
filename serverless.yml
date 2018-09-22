@@ -7,9 +7,9 @@ service: hb-api
 provider:
   name: aws
   runtime: java8
-  region: ${opt:region, 'us-east-1'}
+  region: ${opt:region}
   endpointType: regional
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage}
 
   environment:
     TABLE_PREFIX: ${self:custom.tablePrefix}
@@ -72,7 +72,7 @@ plugins:
 
 custom:
   tablePrefix: ${self:service}-${self:provider.stage}-
-  domainName: ${opt:domainName, 'hbapidev.tddapps.com'}
+  domainName: ${opt:domainName}
   customDomain:
     domainName: ${self:custom.domainName}
     stage: ${self:provider.stage}

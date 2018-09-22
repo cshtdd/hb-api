@@ -7,9 +7,9 @@ else
 fi
 
 mvn clean install -DskipTests && \
-    sls sam export --output .sam_template.yml --dynamoDbEndpointOverride="http://docker.for.mac.localhost:8000" && \
+    sls sam export --region us-east-1 --stage dev --domainName hbapidev.tddapps.com --output .sam_template.yml --dynamoDbEndpointOverride="http://docker.for.mac.localhost:8000" && \
     (trap 'kill 0' SIGINT; \
-        sls dynamodb start --stage dev & \
+        sls dynamodb start --region us-east-1 --stage dev --domainName hbapidev.tddapps.com & \
         ( \
             sam local start-api ${DEBUG_INFO} -t .sam_template.yml \
         ) \

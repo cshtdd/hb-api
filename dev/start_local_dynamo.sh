@@ -16,7 +16,7 @@ if [[ ${LOCAL_DYNAMO_TABLES} = *"\"TableNames\""* ]]; then
     echo "Success! Local Dynamo Already Running"
 else
     echo "Starting Local Dynamo..."
-    sls dynamodb start --stage dev --port ${PORT} &
+    sls dynamodb start --region us-east-1 --stage dev --domainName hbapidev.tddapps.com --port ${PORT} &
     sleep 2
 
     echo "Checking Local Dynamo..."
