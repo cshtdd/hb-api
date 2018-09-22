@@ -1,10 +1,16 @@
 {
   "name": "hb-api",
+  "config": {
+    "stage": "dev",
+    "region1": "us-east-1",
+    "region2": "us-west-2",
+    "domainname": "hbapidev.tddapps.com"
+  },
   "scripts": {
-    "create-domain": "sls create_domain --region us-east-1 --stage dev --domainName hbapidev.tddapps.com && sls create_domain --region us-west-2 --stage dev --domainName hbapidev.tddapps.com",
+    "create-domain": "sls create_domain --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname && sls create_domain --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
     "int-tests-db": "sh ./dev/start_local_dynamo.sh 8001",
     "predeploy": "npm run int-tests-db",
-    "deploy": "mvn clean install && sls deploy --region us-east-1 --stage dev --domainName hbapidev.tddapps.com && sls deploy --region us-west-2 --stage dev --domainName hbapidev.tddapps.com",
+    "deploy": "mvn clean install && sls deploy --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname && sls deploy --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
     "osa": "mvn clean verify -DskipTests",
     "start": "sh ./dev/run.sh",
     "debug": "sh ./dev/run.sh --debug"
