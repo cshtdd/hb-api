@@ -7,11 +7,20 @@
     "domainname": "hbapidev.tddapps.com"
   },
   "scripts": {
-    "create-domain": "sls create_domain --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname && sls create_domain --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
+    "create-domain": "npm run create-domain:region1 && npm run create-domain:region2",
+    "create-domain:region1": "sls create_domain --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
+    "create-domain:region2": "sls create_domain --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
+
     "int-tests-db": "sh ./dev/start_local_dynamo.sh 8001",
+
     "predeploy": "npm run int-tests-db",
-    "deploy": "mvn clean install && sls deploy --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname && sls deploy --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
+    "deploy": "npm run deploy:clean && npm run deploy:region1 && npm run deploy:region2",
+    "deploy:clean": "mvn clean install",
+    "deploy:region1": "sls deploy --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
+    "deploy:region2": "sls deploy --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
+
     "osa": "mvn clean verify -DskipTests",
+
     "start": "sh ./dev/run.sh",
     "debug": "sh ./dev/run.sh --debug"
   },
