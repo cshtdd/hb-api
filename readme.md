@@ -69,6 +69,12 @@ lsof -Pn -i4 | grep -E ':8000|:3000'
 sh ./dev/create_api_key.sh server1
 ```
 
+## Delete API Keys  
+
+```bash
+sh ./dev/delete_api_key.sh server1
+```
+
 ## API Validation  
 
 Prerequisite, store the api key in a variable
