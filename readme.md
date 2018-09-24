@@ -34,12 +34,18 @@ mvn clean integration-test
 
 ```bash
 npm run osa
-``` 
+```
 
 ## Deployment  
 
 ```bash
 npm run deploy
+```
+
+### Make sure to create the Global HeartBeats table  
+
+```bash
+sh ./dev/create_global_heartbeats_table.sh
 ```
 
 ## Run it locally  
