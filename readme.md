@@ -36,18 +36,6 @@ mvn clean integration-test
 npm run osa
 ```
 
-## Deployment  
-
-```bash
-npm run deploy
-```
-
-### Make sure to create the Global HeartBeats table  
-
-```bash
-sh ./dev/create_global_heartbeats_table.sh
-```
-
 ## Run it locally  
 
 ```bash
@@ -68,6 +56,28 @@ lsof -Pn -i4 | grep -E ':8000|:3000'
 4- Invoke the lambda  
 5- Click the Debug button next to the newly created configuration  
 
+## Deployment  
+
+### Prerequisites  
+  
+1- Make sure your domain is managed by Route53  
+2- Manually create a certificate using AWS ACM. They are free. The certificate can allow any subdomain `*.mydomain.com`  
+
+### Deployment process  
+
+```bash
+npm run deploy
+```
+
+**Note**: Make sure there is a basepath in the custom domain. If not, follow the steps in this [Github Issue](https://github.com/amplify-education/serverless-domain-manager/issues/57) to correct it. There is some buggy behavior between CloudFormation and the domain manager plugin
+
+### Make sure to create the Global HeartBeats table  
+
+Create the global dynamo tables after the first deployment  
+
+```bash
+sh ./dev/create_global_heartbeats_table.sh
+```
 
 ## Create API Keys  
 
@@ -92,27 +102,14 @@ Prerequisite, store the api key in a variable
 The status page should be up
 
 ```bash
-curl -w "\n%{http_code}\n" https://hbapidev.tddapps.com/v1/status
+curl -w "\n%{http_code}\n" https://hbapidev.cshtdd.com/v1/status
 ```
 
 Posting a heartbeat should succeed
 
 ```bash
-curl -w "\n%{http_code}\n" -H "x-api-key: $HB_API_KEY" -d '{"hostId": "testHost1"}' -X POST https://hbapidev.tddapps.com/v1/hearbeat
+curl -w "\n%{http_code}\n" -H "x-api-key: $HB_API_KEY" -d '{"hostId": "testHost1"}' -X POST https://hbapidev.cshtdd.com/v1/hearbeat
 ```
-
-## Create the Custom Domain
-  
-1- Manually create a certificate using AWS ACM. They are free
-2- Run the following command
-
-```bash
-npm run create-domain
-```
-
-4- Deploy the application
-4.1- Make sure there is a basepath in the custom domain. If not, follow the steps in this [Github Issue](https://github.com/amplify-education/serverless-domain-manager/issues/57) to correct it. There is some buggy behavior between CloudFormation and the domain manager plugin
-5- Create a `CNAME` record in the DNS provider for the cloudfront domain
 
 # Usage  
 
@@ -127,7 +124,7 @@ Add the following lines to the file
 ```bash
 HB_API_KEY=SUPER_SECRET_KEY
 
-*/5 * * * * curl -i -H "x-api-key: $HB_API_KEY" -d '{"hostId": "CHANGEME"}' -X POST https://hbapidev.tddapps.com/v1/hearbeat | logger -p local0.notice
+*/5 * * * * curl -i -H "x-api-key: $HB_API_KEY" -d '{"hostId": "CHANGEME"}' -X POST https://hbapidev.cshtdd.com/v1/hearbeat | logger -p local0.notice
 ```
 
 Verify the task is scheduled
