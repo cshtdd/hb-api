@@ -2,11 +2,9 @@ package com.tddapps.handlers;
 
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.infrastructure.KeysCacheStub;
-import com.tddapps.model.DalException;
-import com.tddapps.model.HeartBeat;
-import com.tddapps.model.HeartBeatRepository;
-import com.tddapps.model.NotificationSenderStatus;
+import com.tddapps.model.*;
 import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 
@@ -15,17 +13,21 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
-import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 public class StatusGetTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final NotificationSenderStatus notificationSenderStatus = mock(NotificationSenderStatus.class);
+    private final SettingsReader settingsReader = mock(SettingsReader.class);
     private final KeysCacheStub keysCache = new KeysCacheStub();
-    private final StatusGet handler = new StatusGet(heartBeatRepository, notificationSenderStatus, keysCache);
+    private final StatusGet handler = new StatusGet(heartBeatRepository, notificationSenderStatus, settingsReader, keysCache);
+
+    @BeforeEach
+    public void Setup(){
+        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn("us-test-1");
+    }
 
     private ApiGatewayResponse handleRequest() {
         return handler.handleRequest(new HashMap<>(), null);
@@ -39,7 +41,7 @@ public class StatusGetTest {
     @Test
     public void VerifiesHeartBeatsCanBeSaved() throws DalException {
         val expectedHeartBeat = new HeartBeat(
-                "StatusGet",
+                "StatusGet-us-test-1",
                 EpochSecondsPlusMs(4*60*60*1000),
                 true
         );

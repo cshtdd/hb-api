@@ -17,13 +17,26 @@ import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 public class StatusGet extends ApiGatewayHandler {
     private final HeartBeatRepository heartBeatRepository;
     private final NotificationSenderStatus notificationSenderStatus;
+    private final SettingsReader settingsReader;
     private final KeysCache cache;
 
     public StatusGet(){
         this(IocContainer.getInstance().Resolve(HeartBeatRepository.class),
                 IocContainer.getInstance().Resolve(NotificationSenderStatus.class),
+                IocContainer.getInstance().Resolve(SettingsReader.class),
                 IocContainer.getInstance().Resolve(KeysCache.class));
     }
+
+    public StatusGet(HeartBeatRepository heartBeatRepository,
+                     NotificationSenderStatus notificationSenderStatus,
+                     SettingsReader settingsReader,
+                     KeysCache cache){
+        this.heartBeatRepository = heartBeatRepository;
+        this.notificationSenderStatus = notificationSenderStatus;
+        this.settingsReader = settingsReader;
+        this.cache = cache;
+    }
+
 
     @Override
     protected ApiGatewayResponse processRequest(Map<String, Object> input) {
@@ -45,14 +58,6 @@ public class StatusGet extends ApiGatewayHandler {
         }
     }
 
-    public StatusGet(HeartBeatRepository heartBeatRepository,
-                     NotificationSenderStatus notificationSenderStatus,
-                     KeysCache cache){
-        this.heartBeatRepository = heartBeatRepository;
-        this.notificationSenderStatus = notificationSenderStatus;
-        this.cache = cache;
-    }
-
     private void VerifyApiStatus() throws DalException {
         if (ShouldReturnCachedResponse()){
             return;
@@ -72,12 +77,18 @@ public class StatusGet extends ApiGatewayHandler {
 
     private void VerifyDatabase() throws DalException {
         val hb = new HeartBeat(
-                getClass().getSimpleName(),
+                ReadStatusHostId(),
                 EpochSecondsPlusMs(4*60*60*1000),
                 true
         );
 
         heartBeatRepository.Save(hb);
+    }
+
+    private String ReadStatusHostId(){
+        return String.format("%s-%s",
+                getClass().getSimpleName(),
+                settingsReader.ReadString(Settings.AWS_REGION));
     }
 
     private void CacheResponse() {
