@@ -9,8 +9,9 @@
     "tld": "cshtdd.com"
   },
   "scripts": {
-    "create-domain": "run-s create-domain:create-dns-records create-domain:region1 create-domain:region2",
-    "create-domain:create-dns-records": "sh ./dev/create_dns_records.sh $npm_package_config_subdomain $npm_package_config_tld $npm_package_name-$npm_package_config_stage $npm_package_config_region1 $npm_package_config_region2",
+    "create-domain": "run-s create-domain:create-dns-records-region1 create-domain:create-dns-records-region2 create-domain:region1 create-domain:region2",
+    "create-domain:create-dns-records-region1": "sh ./dev/create_dns_records.sh $npm_package_config_subdomain $npm_package_config_tld $npm_package_name-$npm_package_config_stage $npm_package_config_region1",
+    "create-domain:create-dns-records-region2": "sh ./dev/create_dns_records.sh $npm_package_config_subdomain $npm_package_config_tld $npm_package_name-$npm_package_config_stage $npm_package_config_region2",
     "create-domain:region1": "sls create_domain --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
     "create-domain:region2": "sls create_domain --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
 
