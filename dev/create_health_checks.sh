@@ -40,5 +40,9 @@ if [[ "${HEALTH_CHECK_ID}" == "" ]]; then
       "MeasureLatency": true
     }'
 else
-  echo "INFO: Found previous health check. Updating the existing one"
+  echo "INFO: Found previous health check. Updating the existing one ${HEALTH_CHECK_ID}"
+  aws route53 update-health-check --health-check-id ${HEALTH_CHECK_ID} \
+    --resource-path ${RESOURCE_PATH} \
+    --port 443 \
+    --fully-qualified-domain-name ${REGION_DOMAIN}
 fi
