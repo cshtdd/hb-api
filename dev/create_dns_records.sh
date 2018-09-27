@@ -42,10 +42,10 @@ echo "INFO: Creating domain records ${DOMAIN_NAME} in ${STACKNAME}[${REGION}]"
 HOSTEDZONE=$(aws route53 list-hosted-zones --query 'HostedZones[?Name==`'${TLD}'.`].Id' --output text)
 echo "DEBUG: hostedZone: ${HOSTEDZONE}"
 
-REGION_DOMAIN=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`DomainName`].OutputValue' --output text)
-echo "DEBUG: domain: ${REGION_DOMAIN}"
+DNS_DOMAIN=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`DomainName`].OutputValue' --output text)
+echo "DEBUG: domain: ${DNS_DOMAIN}"
 
-HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${REGION_DOMAIN}'`].Id')
+HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${DNS_DOMAIN}'`].Id')
 echo "DEBUG: ${HEALTH_CHECK_ID}"
 
 aws route53 change-resource-record-sets \
@@ -62,7 +62,7 @@ aws route53 change-resource-record-sets \
             "Region": "'${REGION}'",
             "ResourceRecords": [
               {
-                "Value": "'${REGION_DOMAIN}'"
+                "Value": "'${DNS_DOMAIN}'"
               }
             ]
           }
