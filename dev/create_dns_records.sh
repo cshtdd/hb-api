@@ -45,21 +45,8 @@ echo "DEBUG: hostedZone: ${HOSTEDZONE}"
 REGION_DOMAIN=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`DomainName`].OutputValue' --output text)
 echo "DEBUG: domain: ${REGION_DOMAIN}"
 
-API_ENDPOINT=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)
-HEALTH_CHECK_URL=${API_ENDPOINT}/v1/status
-HEALTH_CHECK_NAME="${STACKNAME}-${REGION}"
-
-echo "DEBUG: healthCheck:${HEALTH_CHECK_NAME} url:${HEALTH_CHECK_URL}"
-
-
 HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${REGION_DOMAIN}'`].Id')
 echo "DEBUG: ${HEALTH_CHECK_ID}"
-
-if [[ "${HEALTH_CHECK_ID}" == "" ]]; then
-  echo "INFO: no previous health check found. Creating a new one"
-else
-  echo "INFO: Found previous health check. Updating the existing one"
-fi
 
 aws route53 change-resource-record-sets \
   --hosted-zone-id ${HOSTEDZONE} \
