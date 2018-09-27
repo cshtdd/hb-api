@@ -65,6 +65,7 @@ aws route53 change-resource-record-sets \
             "TTL": 60,
             "SetIdentifier": "'${REGION}'",
             "Region": "'${REGION}'",
+            "HealthCheckId": "'${HEALTH_CHECK_ID}'",
             "ResourceRecords": [
               {
                 "Value": "'${DNS_DOMAIN}'"
