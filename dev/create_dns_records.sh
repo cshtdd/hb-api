@@ -45,8 +45,13 @@ echo "DEBUG: hostedZone: ${HOSTEDZONE}"
 DNS_DOMAIN=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`DomainName`].OutputValue' --output text)
 echo "DEBUG: domain: ${DNS_DOMAIN}"
 
-HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${DNS_DOMAIN}'`].Id')
-echo "DEBUG: ${HEALTH_CHECK_ID}"
+SERVICE_ENDPOINT=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)
+echo "DEBUG: endpoint: ${SERVICE_ENDPOINT}"
+# https://stackoverflow.com/questions/2497215/extract-domain-name-from-url
+HEALTH_CHECK_DOMAIN=$(echo $SERVICE_ENDPOINT | awk -F[/:] '{print $4}')
+echo "DEBUG: healthCheckDomain: ${HEALTH_CHECK_DOMAIN}"
+HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${HEALTH_CHECK_DOMAIN}'`].Id')
+echo "DEBUG: existing healthCheckId: ${HEALTH_CHECK_ID}"
 
 aws route53 change-resource-record-sets \
   --hosted-zone-id ${HOSTEDZONE} \
