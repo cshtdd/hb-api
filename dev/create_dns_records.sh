@@ -47,8 +47,11 @@ echo "DEBUG: domain: ${REGION_DOMAIN}"
 
 API_ENDPOINT=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)
 HEALTH_CHECK_URL=${API_ENDPOINT}/v1/status
+HEALTH_CHECK_NAME="${REGION}-${STACKNAME}"
 
-echo "DEBUG: healthCheckUrl: ${HEALTH_CHECK_URL}"
+echo "DEBUG: healthCheck:${HEALTH_CHECK_NAME} url:${HEALTH_CHECK_URL}"
+
+
 
 aws route53 change-resource-record-sets \
   --hosted-zone-id ${HOSTEDZONE} \
