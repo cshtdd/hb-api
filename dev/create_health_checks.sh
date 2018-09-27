@@ -9,7 +9,7 @@ if [[ $2 ]]; then
     REGION=$2
 fi
 
-HEALTH_CHECK_NAME="${STACKNAME}-${REGION}"
+HEALTH_CHECK_NAME="${STACKNAME}-${REGION}-${RANDOM}"
 
 echo "INFO: Creating Health Check: ${HEALTH_CHECK_NAME}"
 
