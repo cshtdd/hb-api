@@ -35,10 +35,14 @@ if [[ "${HEALTH_CHECK_ID}" == "" ]]; then
       "FullyQualifiedDomainName": "'${HEALTH_CHECK_DOMAIN}'",
       "MeasureLatency": true
     }'
-else
-  echo "INFO: Found previous health check. Updating the existing one ${HEALTH_CHECK_ID}"
-  aws route53 update-health-check --health-check-id ${HEALTH_CHECK_ID} \
-    --resource-path ${RESOURCE_PATH} \
-    --port 443 \
-    --fully-qualified-domain-name ${HEALTH_CHECK_DOMAIN}
 fi
+
+HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${HEALTH_CHECK_DOMAIN}'`].Id')
+# echo "DEBUG: existing healthCheckId: ${HEALTH_CHECK_ID}"
+
+echo "INFO: Updating the existing one ${HEALTH_CHECK_ID}"
+aws route53 update-health-check --health-check-id ${HEALTH_CHECK_ID} \
+  --resource-path ${RESOURCE_PATH} \
+  --port 443 \
+  --fully-qualified-domain-name ${HEALTH_CHECK_DOMAIN} \
+  --failure-threshold 1
