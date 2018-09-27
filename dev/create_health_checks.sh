@@ -13,7 +13,11 @@ HEALTH_CHECK_NAME="${STACKNAME}-${REGION}"
 
 echo "INFO: Creating Health Check: ${HEALTH_CHECK_NAME}"
 
-REGION_DOMAIN=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`DomainName`].OutputValue' --output text)
+SERVICE_ENDPOINT=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)
+echo "DEBUG: endpoint: ${SERVICE_ENDPOINT}"
+
+# https://stackoverflow.com/questions/2497215/extract-domain-name-from-url
+REGION_DOMAIN=$(echo $SERVICE_ENDPOINT | awk -F[/:] '{print $4}')
 echo "DEBUG: domain: ${REGION_DOMAIN}"
 
 STAGE=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Tags[?Key==`STAGE`].Value' --output text)
