@@ -10,22 +10,18 @@ if [[ $2 ]]; then
 fi
 
 HEALTH_CHECK_NAME="${STACKNAME}-${REGION}-${RANDOM}"
-
 echo "INFO: Creating Health Check: ${HEALTH_CHECK_NAME}"
 
 SERVICE_ENDPOINT=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)
 # echo "DEBUG: endpoint: ${SERVICE_ENDPOINT}"
-
-# https://stackoverflow.com/questions/2497215/extract-domain-name-from-url
+# # https://stackoverflow.com/questions/2497215/extract-domain-name-from-url
 REGION_DOMAIN=$(echo $SERVICE_ENDPOINT | awk -F[/:] '{print $4}')
 # echo "DEBUG: domain: ${REGION_DOMAIN}"
-
-STAGE=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Tags[?Key==`STAGE`].Value' --output text)
-# echo "DEBUG: stage: ${STAGE}"
-
 HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${REGION_DOMAIN}'`].Id')
 # echo "DEBUG: existing healthCheckId: ${HEALTH_CHECK_ID}"
 
+STAGE=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Tags[?Key==`STAGE`].Value' --output text)
+# echo "DEBUG: stage: ${STAGE}"
 RESOURCE_PATH="/${STAGE}/v1/status"
 # echo "DEBUG: ResourcePath: ${RESOURCE_PATH}"
 
