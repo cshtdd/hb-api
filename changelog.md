@@ -12,11 +12,23 @@
 - Local lambda debugging  
 - Manual subscription management through the AWS console  
 
+*Shortcommings* Constrained to the availability of the components in a single region. Notifications are calculated once per minute. A full table scan is needed to determine what notifications to send.  
+
 # 0.2.0 - 2018-09-20 - Reduce Dynamo load  
-- Notifications are triggered by a lambda subscribed to a Dynamo stream on the HeartBeats table. This change reduces the precision of the notifications but significantly reduces the consumed read capacity  
+- Notifications are triggered by a lambda subscribed to a Dynamo stream on the HeartBeats table  
 - Heartbeats are expired leveraging Dynamo's TTL  
 - DynamoDB autoscaling  
 - Automated subscription management through CLI tools  
 - Simplified code architecture  
 
-# 0.3.0 - TBD - Multi-region  
+*Shortcommings* This change reduces the precision of the notifications but significantly reduces the consumed read capacity.  
+
+# 0.3.0 - 2018-09-27 Multi-region  
+- Heartbeats are replicated accross regions with a Dynamo Global table  
+- Api Gateway endpoints are regional  
+- Route53 returns the endpoint closest to the client  
+- Route53 performs automated healthchecks on the api and can dynamically enable/disable a region based on its health  
+
+*Shortcommings* Notifications are triggered once per region.  
+
+# 0.4.0 - TBD - Send notifications exactly once  
