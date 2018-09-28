@@ -36,8 +36,7 @@ public class HeartBeatChangeTest {
         final String name;
         final String hostId;
         final String ttl;
-//        TODO make sure regions can be seed
-//        final String region;
+        final String region;
         final String test;
     }
 
@@ -49,11 +48,11 @@ public class HeartBeatChangeTest {
     @Test
     public void SendsANotificationForEachDeletedRecord() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("MODIFY", "host1", ttlNowString, "0"),
-                new HeartBeatEvent("INSERT", "host2", ttlNowString, "0"),
-                new HeartBeatEvent("REMOVE", "host3", ttlNowString, "0"),
-                new HeartBeatEvent("REMOVE", "host4", ttlNowString, "0"),
-                new HeartBeatEvent("INSERT", "host5", ttlNowString, "0")
+                new HeartBeatEvent("MODIFY", "host1", ttlNowString, "us-test-1", "0"),
+                new HeartBeatEvent("INSERT", "host2", ttlNowString, "us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host3", ttlNowString, "us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString, "us-test-1", "0"),
+                new HeartBeatEvent("INSERT", "host5", ttlNowString, "us-test-1", "0")
         );
 
         assertTrue(result);
@@ -66,10 +65,10 @@ public class HeartBeatChangeTest {
     @Test
     public void DoesNotSendNotificationForDeletedTestRecords() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1", ttlNowString,"0"),
-                new HeartBeatEvent("REMOVE", "host2", ttlNowString,"0"),
-                new HeartBeatEvent("REMOVE", "host3", ttlNowString,"0"),
-                new HeartBeatEvent("REMOVE", "host4", ttlNowString,"1")
+                new HeartBeatEvent("REMOVE", "host1", ttlNowString,"us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host2", ttlNowString,"us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host3", ttlNowString,"us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString,"us-test-1", "1")
         );
 
         assertTrue(result);
@@ -80,9 +79,9 @@ public class HeartBeatChangeTest {
     @Test
     public void NoNotificationsAreSentOnNoDeletions() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("MODIFY", "host1", ttlNowString,"0"),
-                new HeartBeatEvent("INSERT", "host2", ttlNowString,"0"),
-                new HeartBeatEvent("INSERT", "host5", ttlNowString,"0")
+                new HeartBeatEvent("MODIFY", "host1", ttlNowString,"us-test-1", "0"),
+                new HeartBeatEvent("INSERT", "host2", ttlNowString,"us-test-1", "0"),
+                new HeartBeatEvent("INSERT", "host5", ttlNowString,"us-test-1", "0")
         );
 
         assertTrue(result);
@@ -97,7 +96,7 @@ public class HeartBeatChangeTest {
                 .Send(any(Notification.class));
 
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1", ttlNowString,"0")
+                new HeartBeatEvent("REMOVE", "host1", ttlNowString,"us-test-1", "0")
         );
 
         assertFalse(result);
@@ -114,8 +113,7 @@ public class HeartBeatChangeTest {
                     d.setOldImage(new HashMap<String, AttributeValue>(){{
                         put("host_id", new AttributeValue().withS(e.getHostId()));
                         put("ttl", new AttributeValue().withN(e.getTtl()));
-//                        TODO: read the region from the seed
-                        put("region", new AttributeValue().withS(""));
+                        put("region", new AttributeValue().withS(e.getRegion()));
                         put("test", new AttributeValue().withN(e.getTest()));
                     }});
 
