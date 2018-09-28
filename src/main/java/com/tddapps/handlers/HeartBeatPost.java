@@ -30,6 +30,7 @@ public class HeartBeatPost extends ApiGatewayHandler {
     protected ApiGatewayResponse processRequest(Map<String, Object> input){
         try {
             val requestBody = readBodyFrom(input);
+            //TODO figure out how to pass the region
             val heartBeat = HeartBeat.parse(requestBody);
 
             log.info(String.format("hostId: %s", heartBeat.getHostId()));

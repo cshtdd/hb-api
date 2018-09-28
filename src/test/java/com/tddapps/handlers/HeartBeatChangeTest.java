@@ -36,6 +36,8 @@ public class HeartBeatChangeTest {
         final String name;
         final String hostId;
         final String ttl;
+//        TODO make sure regions can be seed
+//        final String region;
         final String test;
     }
 
@@ -112,6 +114,8 @@ public class HeartBeatChangeTest {
                     d.setOldImage(new HashMap<String, AttributeValue>(){{
                         put("host_id", new AttributeValue().withS(e.getHostId()));
                         put("ttl", new AttributeValue().withN(e.getTtl()));
+//                        TODO: read the region from the seed
+                        put("region", new AttributeValue().withS(""));
                         put("test", new AttributeValue().withN(e.getTest()));
                     }});
 

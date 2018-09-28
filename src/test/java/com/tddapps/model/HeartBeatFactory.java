@@ -27,6 +27,7 @@ public abstract class HeartBeatFactory {
         return new HeartBeat(
                 HeartBeatHost(position),
                 EpochSecondsPlusMs(random.nextInt(1000000) + 10000),
+                "us-test-1",
                 true
         );
     }

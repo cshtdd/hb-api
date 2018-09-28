@@ -79,6 +79,7 @@ public class StatusGet extends ApiGatewayHandler {
         val hb = new HeartBeat(
                 ReadStatusHostId(),
                 EpochSecondsPlusMs(4*60*60*1000),
+                ReadRegion(),
                 true
         );
 
@@ -88,7 +89,11 @@ public class StatusGet extends ApiGatewayHandler {
     private String ReadStatusHostId(){
         return String.format("%s-%s",
                 getClass().getSimpleName(),
-                settingsReader.ReadString(Settings.AWS_REGION));
+                ReadRegion());
+    }
+
+    private String ReadRegion() {
+        return settingsReader.ReadString(Settings.AWS_REGION);
     }
 
     private void CacheResponse() {

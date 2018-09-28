@@ -43,6 +43,7 @@ public class StatusGetTest {
         val expectedHeartBeat = new HeartBeat(
                 "StatusGet-us-test-1",
                 EpochSecondsPlusMs(4*60*60*1000),
+                "us-test-1",
                 true
         );
 

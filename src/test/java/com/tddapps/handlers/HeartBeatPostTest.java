@@ -44,6 +44,8 @@ public class HeartBeatPostTest {
         val expectedHeartBeat = new HeartBeat(
                 "testHostA",
                 EpochSecondsPlusMs(34000),
+//                TODO the region should be read from the settings reader
+                "",
                 false
         );
 
