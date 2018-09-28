@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import lombok.var;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @Log4j2
@@ -48,9 +49,13 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     public Boolean handleRequest(DynamodbEvent input, Context context) {
         log.debug("HeartBeat Change");
 
-        val heartBeats = readDeletedHeartBeats(input);
-        logHeartBeats(heartBeats);
-        val notifications = notificationBuilder.build(heartBeats);
+        val deletedHeartBeats = readDeletedHeartBeats(input);
+        logHeartBeats(deletedHeartBeats);
+
+        val heartBeatsToNotify = readHeartBeatsFromCurrentRegion(deletedHeartBeats);
+        logMismatch(deletedHeartBeats, heartBeatsToNotify);
+
+        val notifications = notificationBuilder.build(heartBeatsToNotify);
         val result = sendNotifications(notifications);
 
         log.info(String.format("HeartBeat Change Completed; Result: %s", result));
@@ -58,9 +63,15 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
+    private void logMismatch(HeartBeat[] allHeartBeats, HeartBeat[] notificationHeartBeats) {
+        log.info(String.format("AllHeartBeatCount: %d; NotificationHeartBeatCount: %d;",
+                allHeartBeats.length, notificationHeartBeats.length));
+    }
+
     private void logHeartBeats(HeartBeat[] heartBeats) {
         for (val hb : heartBeats){
-            log.info(String.format("Host missing; %s", hb.toString()));
+            log.info(String.format("Host missing; currentRegion: %s; %s",
+                    ReadRegion(), hb.toString()));
         }
     }
 
@@ -87,6 +98,11 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .map(StreamRecord::getOldImage)
                 .map(this::buildHeartBeat)
                 .filter(HeartBeat::isNotTest)
+                .toArray(HeartBeat[]::new);
+    }
+
+    private HeartBeat[] readHeartBeatsFromCurrentRegion(HeartBeat[] heartBeats){
+        return Arrays.stream(heartBeats)
                 .filter(this::heartBeatLastUpdatedInCurrentRegion)
                 .toArray(HeartBeat[]::new);
     }
