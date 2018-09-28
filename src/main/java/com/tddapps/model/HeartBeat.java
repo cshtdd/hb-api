@@ -52,18 +52,19 @@ public class HeartBeat implements Cloneable{
     @Override
     public String toString() {
         return String.format(
-                "%s, expirationUtc: %s, hostId: %s, ttl: %d, isTest: %s",
+                "%s, expirationUtc: %s, hostId: %s, ttl: %d, region: %s, isTest: %s",
                 getClass().getSimpleName(),
                 ToUtcString(ttl),
                 EmptyWhenNull(hostId),
                 ttl,
+                EmptyWhenNull(region),
                 isTest
         );
     }
 
     public Object clone(){
         //TODO add the correct region here
-        return new HeartBeat(hostId, ttl, null, isTest);
+        return new HeartBeat(hostId, ttl, region, isTest);
     }
 
     public HeartBeat clone(long updatedTtl){
@@ -85,7 +86,7 @@ public class HeartBeat implements Cloneable{
         val intervalMs = parseIntervalMs(json);
 
         //TODO add the correct region here
-        return new HeartBeat(hostId, EpochSecondsPlusMs(intervalMs), null, false);
+        return new HeartBeat(hostId, EpochSecondsPlusMs(intervalMs), "", false);
     }
 
     private static JsonNode parseJson(String requestBody) throws ParseException{
