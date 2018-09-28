@@ -31,4 +31,7 @@
 
 **Shortcommings** Notifications are triggered once per region.  
 
-# 0.4.0 - TBD - Send notifications exactly once  
+# 0.4.0 - 2018-09-28 - Send notifications exactly once  
+- When a host dissapears, notifications will be sent only from the region that received its last update  
+
+**Shortcommings** If a hosts dissapears, and then DynamoDB has a regional outage, no notification will be sent  
