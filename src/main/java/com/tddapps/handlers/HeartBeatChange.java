@@ -22,19 +22,26 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     private final HeartBeatNotificationBuilder notificationBuilder;
     private final NotificationSender notificationSender;
     private final DynamoDBMapper mapper;
+    private final SettingsReader settingsReader;
 
     public HeartBeatChange(){
         this(
                 IocContainer.getInstance().Resolve(HeartBeatNotificationBuilder.class),
                 IocContainer.getInstance().Resolve(NotificationSender.class),
-                IocContainer.getInstance().Resolve(DynamoDBMapper.class)
+                IocContainer.getInstance().Resolve(DynamoDBMapper.class),
+                IocContainer.getInstance().Resolve(SettingsReader.class)
         );
     }
 
-    public HeartBeatChange(HeartBeatNotificationBuilder notificationBuilder, NotificationSender notificationSender, DynamoDBMapper mapper) {
+    public HeartBeatChange(
+            HeartBeatNotificationBuilder notificationBuilder,
+            NotificationSender notificationSender,
+            DynamoDBMapper mapper,
+            SettingsReader settingsReader) {
         this.notificationBuilder = notificationBuilder;
         this.notificationSender = notificationSender;
         this.mapper = mapper;
+        this.settingsReader = settingsReader;
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import lombok.Data;
 import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -23,10 +24,12 @@ import static org.mockito.Mockito.*;
 public class HeartBeatChangeTest {
     private final NotificationSender notificationSender = mock(NotificationSender.class);
     private final HeartBeatNotificationBuilderOneToOneStub notificationBuilder = new HeartBeatNotificationBuilderOneToOneStub();
+    private final SettingsReader settingsReader = mock(SettingsReader.class);
     private final HeartBeatChange handler = new HeartBeatChange(
             notificationBuilder,
             notificationSender,
-            IocContainer.getInstance().Resolve(DynamoDBMapper.class)
+            IocContainer.getInstance().Resolve(DynamoDBMapper.class),
+            settingsReader
     );
 
     private final String ttlNowString = String.format("%d", EpochSecondsNow());
@@ -38,6 +41,11 @@ public class HeartBeatChangeTest {
         final String ttl;
         final String region;
         final String test;
+    }
+
+    @BeforeEach
+    public void Setup(){
+        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn("us-test-1");
     }
 
     @Test
