@@ -3,10 +3,7 @@ package com.tddapps.handlers;
 import com.tddapps.handlers.infrastructure.ApiGatewayHandler;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.ioc.IocContainer;
-import com.tddapps.model.DalException;
-import com.tddapps.model.HeartBeat;
-import com.tddapps.model.HeartBeatRepository;
-import com.tddapps.model.TextMessage;
+import com.tddapps.model.*;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 
@@ -17,21 +14,26 @@ import java.util.Map;
 @Log4j2
 public class HeartBeatPost extends ApiGatewayHandler {
     private final HeartBeatRepository heartBeatRepository;
+    private final SettingsReader settingsReader;
 
     public HeartBeatPost(){
-        this(IocContainer.getInstance().Resolve(HeartBeatRepository.class));
+        this(
+                IocContainer.getInstance().Resolve(HeartBeatRepository.class),
+                IocContainer.getInstance().Resolve(SettingsReader.class)
+        );
     }
 
-    public HeartBeatPost(HeartBeatRepository heartBeatRepository) {
+    public HeartBeatPost(HeartBeatRepository heartBeatRepository, SettingsReader settingsReader) {
         this.heartBeatRepository = heartBeatRepository;
+        this.settingsReader = settingsReader;
     }
 
     @Override
     protected ApiGatewayResponse processRequest(Map<String, Object> input){
         try {
             val requestBody = readBodyFrom(input);
-            //TODO figure out how to pass the region
             val heartBeat = HeartBeat.parse(requestBody);
+            heartBeat.setRegion(ReadRegion());
 
             log.info(String.format("hostId: %s", heartBeat.getHostId()));
 
@@ -57,6 +59,10 @@ public class HeartBeatPost extends ApiGatewayHandler {
                     .setObjectBody(TextMessage.create(e.getMessage()))
                     .build();
         }
+    }
+
+    private String ReadRegion() {
+        return settingsReader.ReadString(Settings.AWS_REGION);
     }
 
     private String readBodyFrom(Map<String, Object> input){

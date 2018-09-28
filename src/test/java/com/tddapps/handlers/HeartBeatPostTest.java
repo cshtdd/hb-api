@@ -1,9 +1,7 @@
 package com.tddapps.handlers;
 
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
-import com.tddapps.model.DalException;
-import com.tddapps.model.HeartBeat;
-import com.tddapps.model.HeartBeatRepository;
+import com.tddapps.model.*;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +21,13 @@ import static org.mockito.Mockito.*;
 
 public class HeartBeatPostTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
-    private final HeartBeatPost handler = new HeartBeatPost(heartBeatRepository);
+    private final SettingsReader settingsReader = mock(SettingsReader.class);
+    private final HeartBeatPost handler = new HeartBeatPost(heartBeatRepository, settingsReader);
+
+    @BeforeEach
+    public void Setup(){
+        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn("us-test-1");
+    }
 
     @Test
     public void CanBeConstructedUsingADefaultConstructor(){
@@ -44,8 +48,7 @@ public class HeartBeatPostTest {
         val expectedHeartBeat = new HeartBeat(
                 "testHostA",
                 EpochSecondsPlusMs(34000),
-//                TODO the region should be read from the settings reader
-                "",
+                "us-test-1",
                 false
         );
 

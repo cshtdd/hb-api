@@ -31,6 +31,7 @@ public class HeartBeat implements Cloneable{
     public static final int MIN_INTERVAL_MS = 1000;
     public static final int MAX_INTERVAL_MS = 12*60*60*1000;
     public static final int DEFAULT_INTERVAL_MS = 10*60*1000;
+    public static final String NO_REGION = "";
 
     @DynamoDBHashKey(attributeName = "host_id")
     private String hostId;
@@ -63,7 +64,6 @@ public class HeartBeat implements Cloneable{
     }
 
     public Object clone(){
-        //TODO add the correct region here
         return new HeartBeat(hostId, ttl, region, isTest);
     }
 
@@ -75,7 +75,6 @@ public class HeartBeat implements Cloneable{
         return result;
     }
 
-    //TODO correct the tests that invoke parse
     public static HeartBeat parse(String jsonString) throws ParseException {
         if (jsonString == null || jsonString.trim().isEmpty()){
             throw new ParseException("Empty input", 0);
@@ -85,8 +84,7 @@ public class HeartBeat implements Cloneable{
         val hostId = parseHostId(json);
         val intervalMs = parseIntervalMs(json);
 
-        //TODO add the correct region here
-        return new HeartBeat(hostId, EpochSecondsPlusMs(intervalMs), "", false);
+        return new HeartBeat(hostId, EpochSecondsPlusMs(intervalMs), NO_REGION, false);
     }
 
     private static JsonNode parseJson(String requestBody) throws ParseException{
