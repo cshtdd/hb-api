@@ -87,6 +87,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .map(StreamRecord::getOldImage)
                 .map(this::buildHeartBeat)
                 .filter(HeartBeat::isNotTest)
+                .filter(this::heartBeatLastUpdatedInCurrentRegion)
                 .toArray(HeartBeat[]::new);
     }
 
@@ -96,5 +97,13 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
 
     private static boolean isRecordDeletion(DynamodbEvent.DynamodbStreamRecord record){
         return record.getEventName().equals("REMOVE");
+    }
+
+    private boolean heartBeatLastUpdatedInCurrentRegion(HeartBeat hb){
+        return ReadRegion().equals(hb.getRegion());
+    }
+
+    private String ReadRegion() {
+        return settingsReader.ReadString(Settings.AWS_REGION);
     }
 }

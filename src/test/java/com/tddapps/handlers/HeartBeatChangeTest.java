@@ -71,6 +71,22 @@ public class HeartBeatChangeTest {
     }
 
     @Test
+    public void SendsNotificationOnlyForDeletedRecordsInTheCurrentRegion() throws DalException {
+        val result = handleRequest(
+                new HeartBeatEvent("REMOVE", "host1", ttlNowString, "us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host2", ttlNowString, "us-test-2", "0"),
+                new HeartBeatEvent("REMOVE", "host3", ttlNowString, "us-test-2", "0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString, "us-test-1", "0")
+        );
+
+        assertTrue(result);
+        verify(notificationSender, times(2))
+                .Send(any(Notification.class));
+        verify(notificationSender).Send(new Notification("S-host1", "M-host1"));
+        verify(notificationSender).Send(new Notification("S-host4", "M-host4"));
+    }
+
+    @Test
     public void DoesNotSendNotificationForDeletedTestRecords() throws DalException {
         val result = handleRequest(
                 new HeartBeatEvent("REMOVE", "host1", ttlNowString,"us-test-1", "0"),
