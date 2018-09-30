@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
+import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static com.tddapps.utils.DateExtensions.ToUtcString;
 import static com.tddapps.utils.JsonNodeHelper.readInt;
 import static com.tddapps.utils.JsonNodeHelper.readString;
@@ -39,6 +40,9 @@ public class HeartBeat implements Cloneable{
     @DynamoDBAttribute(attributeName = "ttl")
     private long ttl;
 
+    @DynamoDBAttribute(attributeName = "expiration_minute_utc")
+    private String expirationMinuteUtc;
+
     @DynamoDBAttribute(attributeName = "region")
     private String region;
 
@@ -50,27 +54,33 @@ public class HeartBeat implements Cloneable{
         return !isTest();
     }
 
+    public HeartBeat(String hostId, long ttl, String region, boolean isTest){
+        this(hostId, ttl, ToReverseUtcMinuteString(ttl), region, isTest);
+    }
+
     @Override
     public String toString() {
         return String.format(
-                "%s, expirationUtc: %s, hostId: %s, ttl: %d, region: %s, isTest: %s",
+                "%s, expirationUtc: %s, hostId: %s, ttl: %d, expirationMinuteUtc: %s, region: %s, isTest: %s",
                 getClass().getSimpleName(),
                 ToUtcString(ttl),
                 EmptyWhenNull(hostId),
                 ttl,
+                EmptyWhenNull(expirationMinuteUtc),
                 EmptyWhenNull(region),
                 isTest
         );
     }
 
     public Object clone(){
-        return new HeartBeat(hostId, ttl, region, isTest);
+        return new HeartBeat(hostId, ttl, expirationMinuteUtc, region, isTest);
     }
 
     public HeartBeat clone(long updatedTtl){
         val result = (HeartBeat)this.clone();
 
         result.setTtl(updatedTtl);
+        result.setExpirationMinuteUtc(ToReverseUtcMinuteString(updatedTtl));
 
         return result;
     }

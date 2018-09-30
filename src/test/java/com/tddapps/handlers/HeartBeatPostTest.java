@@ -3,20 +3,16 @@ package com.tddapps.handlers;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.model.*;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.invocation.InvocationOnMock;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
-import static com.tddapps.utils.DateExtensions.UtcNowPlusMs;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 public class HeartBeatPostTest {
@@ -48,6 +44,7 @@ public class HeartBeatPostTest {
         val expectedHeartBeat = new HeartBeat(
                 "testHostA",
                 EpochSecondsPlusMs(34000),
+                ToReverseUtcMinuteString(EpochSecondsPlusMs(34000)),
                 "us-test-1",
                 false
         );

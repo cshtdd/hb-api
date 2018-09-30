@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
+import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 
 public abstract class HeartBeatFactory {
     private static final Random random = new Random();
@@ -24,9 +25,11 @@ public abstract class HeartBeatFactory {
     }
 
     private static HeartBeat CreateSingleHeartBeat(int position){
+        long ttl = EpochSecondsPlusMs(random.nextInt(1000000) + 10000);
         return new HeartBeat(
                 HeartBeatHost(position),
-                EpochSecondsPlusMs(random.nextInt(1000000) + 10000),
+                ttl,
+                ToReverseUtcMinuteString(ttl),
                 "us-test-1",
                 true
         );

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
+import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -32,13 +33,16 @@ public class HeartBeatChangeTest {
             settingsReader
     );
 
-    private final String ttlNowString = String.format("%d", EpochSecondsNow());
+    private final long ttlNow = EpochSecondsNow();
+    private final String ttlNowString = String.format("%d", ttlNow);
+    private final String reversedUtcMinuteNowString = ToReverseUtcMinuteString(ttlNow);
 
     @Data
     private static class HeartBeatEvent{
         final String name;
         final String hostId;
         final String ttl;
+        final String expirationMinuteUtc;
         final String region;
         final String test;
     }
@@ -56,11 +60,11 @@ public class HeartBeatChangeTest {
     @Test
     public void SendsANotificationForEachDeletedRecord() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("MODIFY", "host1", ttlNowString, "us-test-1", "0"),
-                new HeartBeatEvent("INSERT", "host2", ttlNowString, "us-test-1", "0"),
-                new HeartBeatEvent("REMOVE", "host3", ttlNowString, "us-test-1", "0"),
-                new HeartBeatEvent("REMOVE", "host4", ttlNowString, "us-test-1", "0"),
-                new HeartBeatEvent("INSERT", "host5", ttlNowString, "us-test-1", "0")
+                new HeartBeatEvent("MODIFY", "host1", ttlNowString, reversedUtcMinuteNowString, "us-test-1", "0"),
+                new HeartBeatEvent("INSERT", "host2", ttlNowString, reversedUtcMinuteNowString, "us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host3", ttlNowString, reversedUtcMinuteNowString, "us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString, reversedUtcMinuteNowString, "us-test-1", "0"),
+                new HeartBeatEvent("INSERT", "host5", ttlNowString, reversedUtcMinuteNowString, "us-test-1", "0")
         );
 
         assertTrue(result);
@@ -73,10 +77,10 @@ public class HeartBeatChangeTest {
     @Test
     public void SendsNotificationOnlyForDeletedRecordsInTheCurrentRegion() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1", ttlNowString, "us-test-1", "0"),
-                new HeartBeatEvent("REMOVE", "host2", ttlNowString, "us-test-2", "0"),
-                new HeartBeatEvent("REMOVE", "host3", ttlNowString, "us-test-2", "0"),
-                new HeartBeatEvent("REMOVE", "host4", ttlNowString, "us-test-1", "0")
+                new HeartBeatEvent("REMOVE", "host1", ttlNowString, reversedUtcMinuteNowString, "us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host2", ttlNowString, reversedUtcMinuteNowString, "us-test-2", "0"),
+                new HeartBeatEvent("REMOVE", "host3", ttlNowString, reversedUtcMinuteNowString, "us-test-2", "0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString, reversedUtcMinuteNowString, "us-test-1", "0")
         );
 
         assertTrue(result);
@@ -89,10 +93,10 @@ public class HeartBeatChangeTest {
     @Test
     public void DoesNotSendNotificationForDeletedTestRecords() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1", ttlNowString,"us-test-1", "0"),
-                new HeartBeatEvent("REMOVE", "host2", ttlNowString,"us-test-1", "0"),
-                new HeartBeatEvent("REMOVE", "host3", ttlNowString,"us-test-1", "0"),
-                new HeartBeatEvent("REMOVE", "host4", ttlNowString,"us-test-1", "1")
+                new HeartBeatEvent("REMOVE", "host1", ttlNowString, reversedUtcMinuteNowString,"us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host2", ttlNowString, reversedUtcMinuteNowString,"us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host3", ttlNowString, reversedUtcMinuteNowString,"us-test-1", "0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString, reversedUtcMinuteNowString,"us-test-1", "1")
         );
 
         assertTrue(result);
@@ -103,9 +107,9 @@ public class HeartBeatChangeTest {
     @Test
     public void NoNotificationsAreSentOnNoDeletions() throws DalException {
         val result = handleRequest(
-                new HeartBeatEvent("MODIFY", "host1", ttlNowString,"us-test-1", "0"),
-                new HeartBeatEvent("INSERT", "host2", ttlNowString,"us-test-1", "0"),
-                new HeartBeatEvent("INSERT", "host5", ttlNowString,"us-test-1", "0")
+                new HeartBeatEvent("MODIFY", "host1", ttlNowString, reversedUtcMinuteNowString,"us-test-1", "0"),
+                new HeartBeatEvent("INSERT", "host2", ttlNowString, reversedUtcMinuteNowString,"us-test-1", "0"),
+                new HeartBeatEvent("INSERT", "host5", ttlNowString, reversedUtcMinuteNowString,"us-test-1", "0")
         );
 
         assertTrue(result);
@@ -120,7 +124,7 @@ public class HeartBeatChangeTest {
                 .Send(any(Notification.class));
 
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1", ttlNowString,"us-test-1", "0")
+                new HeartBeatEvent("REMOVE", "host1", ttlNowString, reversedUtcMinuteNowString,"us-test-1", "0")
         );
 
         assertFalse(result);
@@ -137,6 +141,7 @@ public class HeartBeatChangeTest {
                     d.setOldImage(new HashMap<String, AttributeValue>(){{
                         put("host_id", new AttributeValue().withS(e.getHostId()));
                         put("ttl", new AttributeValue().withN(e.getTtl()));
+                        put("expiration_minute_utc", new AttributeValue().withS(e.getExpirationMinuteUtc()));
                         put("region", new AttributeValue().withS(e.getRegion()));
                         put("test", new AttributeValue().withN(e.getTest()));
                     }});

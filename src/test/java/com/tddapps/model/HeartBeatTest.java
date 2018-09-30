@@ -21,10 +21,10 @@ public class HeartBeatTest {
         val seededTtl = EpochSecondsPlusMs(5000);
         val expectedExpirationString = ToUtcString(seededTtl);
 
-        val heartBeat = new HeartBeat("myHost", seededTtl, "ap-east-1", false);
+        val heartBeat = new HeartBeat("myHost", seededTtl, "AAAA", "ap-east-1", false);
 
         val expected = String.format(
-                "HeartBeat, expirationUtc: %s, hostId: myHost, ttl: %d, region: ap-east-1, isTest: false",
+                "HeartBeat, expirationUtc: %s, hostId: myHost, ttl: %d, expirationMinuteUtc: AAAA, region: ap-east-1, isTest: false",
                 expectedExpirationString,
                 seededTtl
         );
@@ -35,18 +35,30 @@ public class HeartBeatTest {
 
     @Test
     public void HasSensibleStringRepresentationForEmptyObject(){
-        assertEquals("HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, region: , isTest: false", new HeartBeat().toString());
+        assertEquals(
+                "HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, expirationMinuteUtc: , region: , isTest: false",
+                new HeartBeat().toString());
+    }
+
+    @Test
+    public void CanBeConstructedWithoutSpecifyingTheExpirationMinuteUtc(){
+        long ttlNow = EpochSecondsNow();
+
+        val hb1 = new HeartBeat("host1", ttlNow, ToReverseUtcMinuteString(ttlNow), "us-test-1", true);
+        val hb2 = new HeartBeat("host1", ttlNow, "us-test-1", true);
+
+        assertEquals(hb1, hb2);
     }
 
     @Test
     public void IsTestIsConsideredForEquality(){
         val ttl1 = EpochSecondsNow();
 
-        val hb1 = new HeartBeat("host1", ttl1, "us-west-1", false);
-        val hb1Clone = new HeartBeat("host1", ttl1, "us-west-1", false);
-        val hb1CloneReallyCloseDate = new HeartBeat("host1", EpochSecondsPlusMs(1000), "us-west-1", false);
-        val hb1Test = new HeartBeat("host1", ttl1, "us-west-1", true);
-        val hb1TestReallyCloseDate = new HeartBeat("host1", EpochSecondsPlusMs(1000), "us-west-1", true);
+        val hb1 = new HeartBeat("host1", ttl1, "AAAA", "us-west-1", false);
+        val hb1Clone = new HeartBeat("host1", ttl1, "AAAA", "us-west-1", false);
+        val hb1CloneReallyCloseDate = new HeartBeat("host1", EpochSecondsPlusMs(1000), "BBBB", "us-west-1", false);
+        val hb1Test = new HeartBeat("host1", ttl1, "AAAA", "us-west-1", true);
+        val hb1TestReallyCloseDate = new HeartBeat("host1", EpochSecondsPlusMs(1000), "BBBB", "us-west-1", true);
 
         shouldBeEqual(hb1, hb1Clone);
         shouldNotBeEqual(hb1, hb1Test);
@@ -59,14 +71,15 @@ public class HeartBeatTest {
     public void CanBeCompared(){
         val ttl1 = EpochSecondsNow();
 
-        val hbNoHost = new HeartBeat(null, ttl1, "us-west-1", false);
-        val hbEmptyHost = new HeartBeat("", ttl1, "us-west-1", false);
-        val hb1 = new HeartBeat("host1", ttl1, "us-west-1", false);
-        val hb1Copy = new HeartBeat("host1", ttl1, "us-west-1", false);
-        val hb1DifferentRegion = new HeartBeat("host1", ttl1, "ap-east-2", false);
-        val hb1ReallyCloseDate = new HeartBeat("host1", EpochSecondsPlusMs(1000), "us-west-1", false);
-        val hb1DifferentDate = new HeartBeat("host1", EpochSecondsPlusMs(3000), "us-west-1", false);
-        val hb2 = new HeartBeat("host2", ttl1, "us-west-1", false);
+        val hbNoHost = new HeartBeat(null, ttl1, "AAAA", "us-west-1", false);
+        val hbEmptyHost = new HeartBeat("", ttl1, "AAAA", "us-west-1", false);
+        val hb1 = new HeartBeat("host1", ttl1, "AAAA", "us-west-1", false);
+        val hb1Copy = new HeartBeat("host1", ttl1, "AAAA", "us-west-1", false);
+        val hb1DifferentRegion = new HeartBeat("host1", ttl1, "AAAA", "ap-east-2", false);
+        val hb1DifferentExpirationMinuteUtc = new HeartBeat("host1", ttl1, "BBBB", "us-west-1", false);
+        val hb1ReallyCloseDate = new HeartBeat("host1", EpochSecondsPlusMs(1000), "AAAA", "us-west-1", false);
+        val hb1DifferentDate = new HeartBeat("host1", EpochSecondsPlusMs(3000), "AAAA", "us-west-1", false);
+        val hb2 = new HeartBeat("host2", ttl1, "AAAA","us-west-1", false);
 
         shouldBeEqual(hb1, hb1Copy);
 
@@ -75,6 +88,7 @@ public class HeartBeatTest {
         shouldNotBeEqual(hb1, 45);
         shouldNotBeEqual(hb1, hbNoHost);
         shouldNotBeEqual(hb1, hb2);
+        shouldNotBeEqual(hb1, hb1DifferentExpirationMinuteUtc);
         shouldNotBeEqual(hb1, hb1DifferentRegion);
         shouldNotBeEqual(hb1, hb1DifferentDate);
         shouldNotBeEqual(hb1, hb1ReallyCloseDate);
@@ -82,7 +96,7 @@ public class HeartBeatTest {
 
     @Test
     public void CanBeCloned(){
-        val hb = new HeartBeat("host1", EpochSecondsPlusMs(3000), "ap-east-2", false);
+        val hb = new HeartBeat("host1", EpochSecondsPlusMs(3000), "AAAA", "ap-east-2", false);
         val hbClone = (HeartBeat) hb.clone();
 
         assertFalse(hb == hbClone);
@@ -91,24 +105,32 @@ public class HeartBeatTest {
         assertEquals(hb.getHostId(), hbClone.getHostId());
         assertEquals(hb.getRegion(), hbClone.getRegion());
         assertEquals(hb.getTtl(), hbClone.getTtl());
+        assertEquals(hb.getExpirationMinuteUtc(), hbClone.getExpirationMinuteUtc());
         assertEquals(hb.isTest(), hbClone.isTest());
 
         hb.setHostId("different");
         hb.setRegion("us-east-2");
         hb.setTtl(EpochSecondsPlusMs(100000));
+        hb.setExpirationMinuteUtc("BBBB");
         hb.setTest(true);
 
         assertNotEquals(hb.getHostId(), hbClone.getHostId());
         assertNotEquals(hb.getRegion(), hbClone.getRegion());
         assertNotEquals(hb.getTtl(), hbClone.getTtl());
+        assertNotEquals(hb.getExpirationMinuteUtc(), hbClone.getExpirationMinuteUtc());
         assertNotEquals(hb.isTest(), hbClone.isTest());
     }
 
     @Test
     public void CloneWithUpdatedTtlReturnsACopyOfTheOriginalHeartBeatWithADifferentTtl(){
-        val expectedHeartBeat = new HeartBeat("host1", EpochSecondsPlusMs(3000), "ap-east-1", false);
+        val expectedHeartBeat = new HeartBeat(
+                "host1",
+                EpochSecondsPlusMs(3000),
+                ToReverseUtcMinuteString(EpochSecondsPlusMs(3000)),
+                "ap-east-1",
+                false);
 
-        val actualHeartBeat = new HeartBeat("host1", EpochSecondsNow(), "ap-east-1", false)
+        val actualHeartBeat = new HeartBeat("host1", EpochSecondsNow(), "AAAA", "ap-east-1", false)
                 .clone(EpochSecondsPlusMs(3000));
 
         assertEquals(expectedHeartBeat, actualHeartBeat);
@@ -119,6 +141,7 @@ public class HeartBeatTest {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(40000),
+                ToReverseUtcMinuteString(EpochSecondsPlusMs(40000)),
                 "",
                 false
         );
@@ -173,6 +196,7 @@ public class HeartBeatTest {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(3000),
+                ToReverseUtcMinuteString(EpochSecondsPlusMs(3000)),
                 "",
                 false
         );
@@ -187,6 +211,7 @@ public class HeartBeatTest {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(HeartBeat.DEFAULT_INTERVAL_MS),
+                ToReverseUtcMinuteString(EpochSecondsPlusMs(HeartBeat.DEFAULT_INTERVAL_MS)),
                 "",
                 false
         );

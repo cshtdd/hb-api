@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
+import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -43,6 +44,7 @@ public class StatusGetTest {
         val expectedHeartBeat = new HeartBeat(
                 "StatusGet-us-test-1",
                 EpochSecondsPlusMs(4*60*60*1000),
+                ToReverseUtcMinuteString(EpochSecondsPlusMs(4*60*60*1000)),
                 "us-test-1",
                 true
         );
