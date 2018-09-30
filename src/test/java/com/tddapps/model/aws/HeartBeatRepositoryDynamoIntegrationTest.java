@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.stream.IntStream;
 
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,16 +34,6 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
     }
 
     @Test
-    public void HeartBeatsCanBeSaved() throws DalException {
-        val seededHeartBeats = HeartBeatFactory.Create(1000);
-        for (val seededHeartBeat : seededHeartBeats) {
-            repository.Save(seededHeartBeat);
-        }
-
-        HeartBeatListHelper.ShouldMatch(seededHeartBeats, repository.All());
-    }
-
-    @Test
     public void MultipleHeartBeatsCanBeSavedInASingleOperation() throws DalException {
         val seededHeartBeats = HeartBeatFactory.Create(20001);
 
@@ -50,7 +41,6 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
         HeartBeatListHelper.ShouldMatch(seededHeartBeats, repository.All());
     }
-
 
     @Test
     public void ReadsHeartBeatsWithTTLInThePast() throws DalException {

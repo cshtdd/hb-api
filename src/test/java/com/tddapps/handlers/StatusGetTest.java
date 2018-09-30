@@ -41,13 +41,15 @@ public class StatusGetTest {
 
     @Test
     public void VerifiesHeartBeatsCanBeSaved() throws DalException {
-        val expectedHeartBeat = new HeartBeat(
-                "StatusGet-us-test-1",
-                EpochSecondsPlusMs(4*60*60*1000),
-                ToReverseUtcMinuteString(EpochSecondsPlusMs(4*60*60*1000)),
-                "us-test-1",
-                true
-        );
+        val expectedHeartBeats = new HeartBeat[]{
+                new HeartBeat(
+                        "StatusGet-us-test-1",
+                        EpochSecondsPlusMs(4*60*60*1000),
+                        ToReverseUtcMinuteString(EpochSecondsPlusMs(4*60*60*1000)),
+                        "us-test-1",
+                        true
+                )
+        };
 
 
         val result = handleRequest();
@@ -55,14 +57,14 @@ public class StatusGetTest {
 
         assertEquals(200, result.getStatusCode());
         assertEquals("{\"message\":\"OK\"}", result.getBody());
-        verify(heartBeatRepository).Save(expectedHeartBeat);
+        verify(heartBeatRepository).Save(expectedHeartBeats);
     }
 
     @Test
     public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved() throws DalException {
         doThrow(new DalException("Save failed"))
                 .when(heartBeatRepository)
-                .Save(any(HeartBeat.class));
+                .Save(any(HeartBeat[].class));
 
         val result = handleRequest();
 
@@ -94,7 +96,7 @@ public class StatusGetTest {
         final List<InvocationOnMock> invocations = new ArrayList<>();
         doAnswer(invocations::add)
                 .when(heartBeatRepository)
-                .Save(any(HeartBeat.class));
+                .Save(any(HeartBeat[].class));
 
         handleRequest();
         handleRequest();
@@ -113,7 +115,7 @@ public class StatusGetTest {
     public void ProcessDoesNotCacheFailures() throws DalException {
         doThrow(new DalException("Save failed"))
                 .when(heartBeatRepository)
-                .Save(any(HeartBeat.class));
+                .Save(any(HeartBeat[].class));
 
         handleRequest();
 

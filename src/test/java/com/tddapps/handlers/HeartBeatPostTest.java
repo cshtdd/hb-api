@@ -36,31 +36,33 @@ public class HeartBeatPostTest {
 
         assertEquals(400, result.getStatusCode());
         assertEquals("{\"message\":\"Invalid json\"}", result.getBody());
-        verify(heartBeatRepository, times(0)).Save(any(HeartBeat.class));
+        verify(heartBeatRepository, times(0)).Save(any(HeartBeat[].class));
     }
 
     @Test
     public void ProcessWritesTheHeartBeat() throws DalException {
-        val expectedHeartBeat = new HeartBeat(
-                "testHostA",
-                EpochSecondsPlusMs(34000),
-                ToReverseUtcMinuteString(EpochSecondsPlusMs(34000)),
-                "us-test-1",
-                false
-        );
+        val expectedHeartBeats = new HeartBeat[] {
+                new HeartBeat(
+                        "testHostA",
+                        EpochSecondsPlusMs(34000),
+                        ToReverseUtcMinuteString(EpochSecondsPlusMs(34000)),
+                        "us-test-1",
+                        false
+                )
+        };
 
         val result = handleRequest("{\"hostId\": \"testHostA\", \"intervalMs\": 34000}");
 
         assertEquals(200, result.getStatusCode());
         assertEquals("{\"message\":\"OK\"}", result.getBody());
-        verify(heartBeatRepository).Save(expectedHeartBeat);
+        verify(heartBeatRepository).Save(expectedHeartBeats);
     }
 
     @Test
     public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved() throws DalException {
         doThrow(new DalException("Save failed"))
                 .when(heartBeatRepository)
-                .Save(any(HeartBeat.class));
+                .Save(any(HeartBeat[].class));
 
         val result = handleRequest("{\"hostId\": \"testHostA\", \"intervalMs\": 34000}");
 

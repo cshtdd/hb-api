@@ -27,17 +27,6 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
     }
 
     @Override
-    public void Save(HeartBeat heartBeat) throws DalException {
-        try {
-            log.debug("Save Single Heartbeat;");
-            mapper.save(heartBeat);
-        } catch (AmazonClientException e){
-            log.debug("HeartBeat Save Error", e);
-            throw new DalException(e.getMessage());
-        }
-    }
-
-    @Override
     public void Save(HeartBeat[] heartBeat) throws DalException {
         try {
             val batches = Split(heartBeat, DYNAMO_MAX_BATCH_SIZE);

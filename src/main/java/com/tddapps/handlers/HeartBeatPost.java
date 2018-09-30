@@ -37,7 +37,7 @@ public class HeartBeatPost extends ApiGatewayHandler {
 
             log.info(String.format("hostId: %s", heartBeat.getHostId()));
 
-            heartBeatRepository.Save(heartBeat);
+            heartBeatRepository.Save(new HeartBeat[]{ heartBeat });
 
             return ApiGatewayResponse.builder()
                     .setStatusCode(200)

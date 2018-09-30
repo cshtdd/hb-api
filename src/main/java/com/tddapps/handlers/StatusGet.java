@@ -83,7 +83,7 @@ public class StatusGet extends ApiGatewayHandler {
                 true
         );
 
-        heartBeatRepository.Save(hb);
+        heartBeatRepository.Save(new HeartBeat[]{ hb });
     }
 
     private String ReadStatusHostId(){
