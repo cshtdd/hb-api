@@ -27,9 +27,9 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
     }
 
     @Override
-    public void Save(HeartBeat[] heartBeat) throws DalException {
+    public void Save(HeartBeat[] heartBeats) throws DalException {
         try {
-            val batches = Split(heartBeat, DYNAMO_MAX_BATCH_SIZE);
+            val batches = Split(heartBeats, DYNAMO_MAX_BATCH_SIZE);
             for (int i = 0; i < batches.length; i++) {
                 log.debug(String.format("Save; batchIndex:%s, batchCount:%s", i, batches.length));
                 mapper.batchWrite(Arrays.asList(batches[i]), new ArrayList<HeartBeat>());
