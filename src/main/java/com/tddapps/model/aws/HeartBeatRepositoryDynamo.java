@@ -76,4 +76,18 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
             throw new DalException(e.getMessage());
         }
     }
+
+    @Override
+    public void Delete(HeartBeat[] heartBeats) throws DalException{
+        try{
+            val batches = Split(heartBeats, DYNAMO_MAX_BATCH_SIZE);
+            for (int i = 0; i < batches.length; i++) {
+                log.debug(String.format("Delete; batchIndex:%s, batchCount:%s", i, batches.length));
+                mapper.batchDelete(Arrays.asList(batches[i]));
+            }
+        } catch (AmazonClientException e){
+            log.debug("HeartBeat Delete Error", e);
+            throw new DalException(e.getMessage());
+        }
+    }
 }

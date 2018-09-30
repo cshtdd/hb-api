@@ -11,7 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -93,4 +95,29 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
         HeartBeatListHelper.ShouldMatch(expected, actual);
     }
 
+    @Test
+    public void CanDeleteHeartBeats() throws DalException {
+        val seededHeartBeats = HeartBeatFactory.Create(2001);
+        repository.Save(seededHeartBeats);
+
+        val DELETION_START = 500;
+        val COUNT = 1001;
+        val heartBeatsToDelete = Arrays.stream(seededHeartBeats, DELETION_START, DELETION_START + COUNT)
+                .toArray(HeartBeat[]::new);
+        val expectedRemainingList = new ArrayList<HeartBeat>();
+        expectedRemainingList.addAll(
+                Arrays.stream(seededHeartBeats, 0, DELETION_START)
+                        .collect(Collectors.toList())
+        );
+        expectedRemainingList.addAll(
+                Arrays.stream(seededHeartBeats, DELETION_START + COUNT, seededHeartBeats.length)
+                        .collect(Collectors.toList())
+        );
+
+        repository.Delete(heartBeatsToDelete);
+
+        val remainingHeartBeats = repository.All();
+        assertEquals(seededHeartBeats.length - heartBeatsToDelete.length, remainingHeartBeats.length);
+        HeartBeatListHelper.ShouldMatch(expectedRemainingList.toArray(new HeartBeat[0]), remainingHeartBeats);
+    }
 }
