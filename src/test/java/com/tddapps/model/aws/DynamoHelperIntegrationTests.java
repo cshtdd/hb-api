@@ -2,11 +2,13 @@ package com.tddapps.model.aws;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.amazonaws.services.dynamodbv2.model.*;
 import com.tddapps.model.HeartBeat;
 import com.tddapps.model.Settings;
 import com.tddapps.model.SettingsReader;
 import lombok.val;
+
+import java.util.ArrayList;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,24 +38,35 @@ public abstract class DynamoHelperIntegrationTests {
         val mapper = createMapper();
         val client = createClient();
 
-        CreateEmptyTable(HEARTBEATS_TABLE_NAME, HeartBeat.class, mapper, client);
+        CreateEmptyHeartBeatsTable(mapper, client);
     }
 
-    public static void CreateEmptyTable(String tableName, Class<?> clazz){
-        CreateEmptyTable(tableName, clazz, createMapper(), createClient());
-    }
-
-    public static void CreateEmptyTable(String tableName, Class<?> clazz, DynamoDBMapper dbMapper, AmazonDynamoDB client) {
+    public static void CreateEmptyHeartBeatsTable(DynamoDBMapper dbMapper, AmazonDynamoDB client) {
         val heartBeatsTableExists = client.listTables()
                 .getTableNames()
-                .contains(tableName);
+                .contains(HEARTBEATS_TABLE_NAME);
         if (heartBeatsTableExists) {
-            client.deleteTable(tableName);
+            client.deleteTable(HEARTBEATS_TABLE_NAME);
         }
 
-        val throughput = new ProvisionedThroughput(1L, 1L);
-        val createTableRequest = dbMapper.generateCreateTableRequest(clazz)
-                .withProvisionedThroughput(throughput);
+        val createTableRequest = dbMapper.generateCreateTableRequest(HeartBeat.class)
+                .withAttributeDefinitions(new ArrayList<AttributeDefinition>(){{
+                    add(new AttributeDefinition("host_id", "S"));
+                    add(new AttributeDefinition("ttl", "N"));
+                    add(new AttributeDefinition("expiration_minute_utc", "S"));
+                }})
+                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
+                .withGlobalSecondaryIndexes(new ArrayList<GlobalSecondaryIndex>(){{
+                    add(new GlobalSecondaryIndex()
+                            .withIndexName("ExpirationMinuteIndex")
+                            .withKeySchema(new ArrayList<KeySchemaElement>(){{
+                                add(new KeySchemaElement("expiration_minute_utc", "HASH"));
+                                add(new KeySchemaElement("ttl", "RANGE"));
+                            }})
+                            .withProjection(new Projection().withProjectionType("ALL"))
+                            .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
+                    );
+                }});
         client.createTable(createTableRequest);
     }
 }

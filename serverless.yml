@@ -90,6 +90,8 @@ custom:
 
   capacities:
   - table: HeartBeatsTable
+    index:
+    - ExpirationMinuteIndex
     read:
       minimum: 1
       maximum: 25
@@ -121,6 +123,10 @@ resources:
         AttributeDefinitions:
           - AttributeName: host_id
             AttributeType: S
+          - AttributeName: expiration_minute_utc
+            AttributeType: S
+          - AttributeName: ttl
+            AttributeType: N
         KeySchema:
           - AttributeName: host_id
             KeyType: HASH
@@ -132,6 +138,19 @@ resources:
         TimeToLiveSpecification:
           AttributeName: ttl
           Enabled: true
+        GlobalSecondaryIndexes:
+        - IndexName: ExpirationMinuteIndex
+          KeySchema:
+          - AttributeName: expiration_minute_utc
+            KeyType: HASH
+          - AttributeName: ttl
+            KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+
 
     HeartBeatNotificationsTopic:
       Type: AWS::SNS::Topic
