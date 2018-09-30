@@ -95,48 +95,6 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void CanBeCloned(){
-        val hb = new HeartBeat("host1", EpochSecondsPlusMs(3000), "AAAA", "ap-east-2", false);
-        val hbClone = (HeartBeat) hb.clone();
-
-        assertFalse(hb == hbClone);
-        assertEquals(hb, hbClone);
-
-        assertEquals(hb.getHostId(), hbClone.getHostId());
-        assertEquals(hb.getRegion(), hbClone.getRegion());
-        assertEquals(hb.getTtl(), hbClone.getTtl());
-        assertEquals(hb.getExpirationMinuteUtc(), hbClone.getExpirationMinuteUtc());
-        assertEquals(hb.isTest(), hbClone.isTest());
-
-        hb.setHostId("different");
-        hb.setRegion("us-east-2");
-        hb.setTtl(EpochSecondsPlusMs(100000));
-        hb.setExpirationMinuteUtc("BBBB");
-        hb.setTest(true);
-
-        assertNotEquals(hb.getHostId(), hbClone.getHostId());
-        assertNotEquals(hb.getRegion(), hbClone.getRegion());
-        assertNotEquals(hb.getTtl(), hbClone.getTtl());
-        assertNotEquals(hb.getExpirationMinuteUtc(), hbClone.getExpirationMinuteUtc());
-        assertNotEquals(hb.isTest(), hbClone.isTest());
-    }
-
-    @Test
-    public void CloneWithUpdatedTtlReturnsACopyOfTheOriginalHeartBeatWithADifferentTtl(){
-        val expectedHeartBeat = new HeartBeat(
-                "host1",
-                EpochSecondsPlusMs(3000),
-                ToReverseUtcMinuteString(EpochSecondsPlusMs(3000)),
-                "ap-east-1",
-                false);
-
-        val actualHeartBeat = new HeartBeat("host1", EpochSecondsNow(), "AAAA", "ap-east-1", false)
-                .clone(EpochSecondsPlusMs(3000));
-
-        assertEquals(expectedHeartBeat, actualHeartBeat);
-    }
-
-    @Test
     public void ParseJsonBuildsAHeartBeat() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",

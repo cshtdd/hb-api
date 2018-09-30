@@ -28,7 +28,7 @@ import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 @AllArgsConstructor
 @DynamoDBTable(tableName = "heartbeats")
 @Log4j2
-public class HeartBeat implements Cloneable{
+public class HeartBeat{
     public static final int MIN_INTERVAL_MS = 1000;
     public static final int MAX_INTERVAL_MS = 12*60*60*1000;
     public static final int DEFAULT_INTERVAL_MS = 10*60*1000;
@@ -70,19 +70,6 @@ public class HeartBeat implements Cloneable{
                 EmptyWhenNull(region),
                 isTest
         );
-    }
-
-    public Object clone(){
-        return new HeartBeat(hostId, ttl, expirationMinuteUtc, region, isTest);
-    }
-
-    public HeartBeat clone(long updatedTtl){
-        val result = (HeartBeat)this.clone();
-
-        result.setTtl(updatedTtl);
-        result.setExpirationMinuteUtc(ToReverseUtcMinuteString(updatedTtl));
-
-        return result;
     }
 
     public static HeartBeat parse(String jsonString) throws ParseException {
