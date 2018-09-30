@@ -4,7 +4,7 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.time.*;
-import java.time.temporal.Temporal;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static com.tddapps.utils.DateExtensions.*;
@@ -65,6 +65,17 @@ public class DateExtensionsTest {
         val input = EpochSecondsPlusMs(secondsInTheFuture * 1000);
 
         assertEquals("2097-07-17T20:05:31Z[UTC]", ToUtcString(input));
+    }
+
+    @Test
+    public void ToReverseUtcMinuteStringReturnsTheExpectedValue(){
+        val nowInstant = UtcNow().toInstant();
+        val nowEpochSeconds = EpochSecondsNow();
+        val expected = ZonedDateTime
+                .ofInstant(nowInstant, ZoneId.of("UTC"))
+                .format(DateTimeFormatter.ofPattern("mm:HH dd-MM-yyyy"));
+
+        assertEquals(expected, ToReverseUtcMinuteString(nowEpochSeconds));
     }
 
     @Test

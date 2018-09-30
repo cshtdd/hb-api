@@ -18,6 +18,12 @@ public abstract class DateExtensions {
         return ToUtcString(date);
     }
 
+    public static String ToReverseUtcMinuteString(long epochSeconds){
+        val instant = Instant.ofEpochSecond(epochSeconds);
+        val utcDatetime = ZonedDateTime.ofInstant(instant, ZoneId.of("UTC"));
+        return utcDatetime.format(DateTimeFormatter.ofPattern("mm:HH dd-MM-yyyy"));
+    }
+
     public static String ToUtcString(Date value) {
         return ToUtcString(value, "");
     }
