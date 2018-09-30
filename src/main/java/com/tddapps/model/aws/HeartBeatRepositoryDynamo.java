@@ -88,7 +88,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
                     .getResults()
                     .toArray(new HeartBeat[0]);
         } catch (AmazonClientException e){
-            log.debug("HeartBeat All Error", e);
+            log.debug("HeartBeat ReadOlderThan Error", e);
             throw new DalException(e.getMessage());
         }
     }
