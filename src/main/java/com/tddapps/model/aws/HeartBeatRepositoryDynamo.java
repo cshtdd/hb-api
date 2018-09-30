@@ -51,20 +51,15 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
         }
     }
 
-    @Override
-    public HeartBeat[] All() throws DalException {
+    HeartBeat[] All() throws DalException {
         try {
-            return AllWithAScanInternal();
+            return mapper
+                    .scan(HeartBeat.class, new DynamoDBScanExpression())
+                    .toArray(new HeartBeat[0]);
         } catch (AmazonClientException e){
             log.debug("HeartBeat All Error", e);
             throw new DalException(e.getMessage());
         }
-    }
-
-    private HeartBeat[] AllWithAScanInternal() {
-        return mapper
-                .scan(HeartBeat.class, new DynamoDBScanExpression())
-                .toArray(new HeartBeat[0]);
     }
 
     @Override
