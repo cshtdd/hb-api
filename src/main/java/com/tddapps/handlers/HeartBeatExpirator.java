@@ -9,7 +9,6 @@ import com.tddapps.model.SettingsReader;
 import com.tddapps.utils.NowReader;
 import lombok.val;
 
-import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 
 public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
@@ -38,7 +37,7 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
         try {
             heartBeatRepository.ReadOlderThan(ToReverseUtcMinuteString(ttlNow), ttlNow, 25);
         } catch (DalException e) {
-
+            return false;
         }
 
         return true;

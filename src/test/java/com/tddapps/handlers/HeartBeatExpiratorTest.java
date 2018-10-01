@@ -37,6 +37,15 @@ public class HeartBeatExpiratorTest {
                 .ReadOlderThan(NOW_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT);
     }
 
+    @Test
+    public void ReturnsFalseWhenExpiredHeartBeatsCannotBeRead() throws DalException {
+        doThrow(new DalException("Read failed"))
+            .when(heartBeatRepository)
+            .ReadOlderThan(any(String.class), any(long.class), any(int.class));
+
+        assertFalse(handleRequest());
+    }
+
     private boolean handleRequest(){
         return handler.handleRequest(null, null);
     }
