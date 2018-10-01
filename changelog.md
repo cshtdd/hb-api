@@ -35,3 +35,9 @@
 - When a host dissapears, notifications will be sent only from the region that received its last update  
 
 **Shortcommings** If a hosts dissapears, and then DynamoDB has a regional outage, no notification will be sent  
+
+# 0.5.0 - 2018-10-01 - More responsive notifications  
+- Notifications are sent within a minute of the host expiration _mostly_  
+- The Dynamo TTL expiration is still in place as a fallback  
+- The Dynamo HeartBeats table has a new Global Secondary Index with the minute the host expires as `HASH` key and the TTL as `RANGE` key. A cron lambda that runs every minute will get at most 25 hosts that expired in the previous minute and delete them. **Why 25?**: To stay well below the index's read throughput.  
+- The new index will have the same thoughput and autoscaling settings as the HeartBeats table  
