@@ -33,6 +33,14 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
 
     @Override
     public Boolean handleRequest(String input, Context context) {
-        return null;
+        val ttlNow = nowReader.ReadEpochSecond();
+
+        try {
+            heartBeatRepository.ReadOlderThan(ToReverseUtcMinuteString(ttlNow), ttlNow, 25);
+        } catch (DalException e) {
+
+        }
+
+        return true;
     }
 }

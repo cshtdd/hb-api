@@ -29,5 +29,15 @@ public class HeartBeatExpiratorTest {
         assertNotNull(new HeartBeatExpirator());
     }
 
+    @Test
+    public void ReadsTheExpiredHeartBeatsInTheCurrentMinute() throws DalException {
+        assertTrue(handleRequest());
 
+        verify(heartBeatRepository)
+                .ReadOlderThan(NOW_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT);
+    }
+
+    private boolean handleRequest(){
+        return handler.handleRequest(null, null);
+    }
 }
