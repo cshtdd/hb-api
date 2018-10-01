@@ -12,6 +12,8 @@ import java.util.Arrays;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 
 public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
+    private final int MAX_COUNT_TO_PROCESS = 25;
+
     private final HeartBeatRepository heartBeatRepository;
     private final SettingsReader settingsReader;
     private final NowReader nowReader;
@@ -33,14 +35,8 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
     @Override
     public Boolean handleRequest(String input, Context context) {
         try {
-            val ttlNow = nowReader.ReadEpochSecond();
-
-            val heartBeats = heartBeatRepository.ReadOlderThan(
-                    ToReverseUtcMinuteString(ttlNow), ttlNow, 25);
-
-            val heartBeatsToDelete = Arrays.stream(heartBeats)
-                    .filter(this::heartBeatLastUpdatedInCurrentRegion)
-                    .toArray(HeartBeat[]::new);
+            val expiredHeartBeats = readExpiredHeartBeats();
+            val heartBeatsToDelete = readHeartBeatsFromCurrentRegion(expiredHeartBeats);
 
             heartBeatRepository.Delete(heartBeatsToDelete);
 
@@ -48,6 +44,18 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
         } catch (DalException e) {
             return false;
         }
+    }
+
+    private HeartBeat[] readExpiredHeartBeats() throws DalException {
+        val ttlNow = nowReader.ReadEpochSecond();
+        val minuteStringNow = ToReverseUtcMinuteString(ttlNow);
+        return heartBeatRepository.ReadOlderThan(minuteStringNow, ttlNow, MAX_COUNT_TO_PROCESS);
+    }
+
+    private HeartBeat[] readHeartBeatsFromCurrentRegion(HeartBeat[] heartBeats){
+        return Arrays.stream(heartBeats)
+                .filter(this::heartBeatLastUpdatedInCurrentRegion)
+                .toArray(HeartBeat[]::new);
     }
 
     private boolean heartBeatLastUpdatedInCurrentRegion(HeartBeat hb){
