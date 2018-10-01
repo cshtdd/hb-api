@@ -65,6 +65,12 @@ functions:
     environment:
       TOPIC_NAME: ${self:resources.Outputs.HeartBeatNotificationsTopicArn.Value}
 
+  HeartBeatExpirator:
+    handler: com.tddapps.handlers.HeartBeatExpirator
+    events:
+    - schedule:
+        rate: cron(* * * * ? *)
+
 plugins:
   - serverless-domain-manager
   - serverless-sam
@@ -112,6 +118,10 @@ resources:
       Properties:
         RetentionInDays: "14"
     HeartBeatChangeLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        RetentionInDays: "14"
+    HeartBeatExpiratorLogGroup:
       Type: AWS::Logs::LogGroup
       Properties:
         RetentionInDays: "14"
