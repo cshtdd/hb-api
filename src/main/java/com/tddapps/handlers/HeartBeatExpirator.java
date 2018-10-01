@@ -59,7 +59,8 @@ public class HeartBeatExpirator implements RequestHandler<Map<String, Object>, B
 
     private HeartBeat[] readExpiredHeartBeats() throws DalException {
         val ttlNow = nowReader.ReadEpochSecond();
-        val minuteStringNow = ToReverseUtcMinuteString(ttlNow);
+        val minuteStringNow = ToReverseUtcMinuteString(ttlNow - 60);
+
         return heartBeatRepository.ReadOlderThan(minuteStringNow, ttlNow, MAX_COUNT_TO_PROCESS);
     }
 
