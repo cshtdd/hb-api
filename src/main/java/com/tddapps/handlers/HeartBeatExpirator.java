@@ -9,12 +9,13 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 
 @Log4j2
 @SuppressWarnings("unused")
-public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
+public class HeartBeatExpirator implements RequestHandler<Map<String, Object>, Boolean> {
     private final int MAX_COUNT_TO_PROCESS = 25;
 
     private final HeartBeatRepository heartBeatRepository;
@@ -36,7 +37,7 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
     }
 
     @Override
-    public Boolean handleRequest(String input, Context context) {
+    public Boolean handleRequest(Map<String, Object> input, Context context) {
         try {
             log.info("Removing expired HeartBeats");
 
