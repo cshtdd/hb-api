@@ -82,7 +82,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
             try {
                 notificationSender.Send(n);
             } catch (DalException e) {
-                log.error("Action processing failed", e);
+                log.error("Send notification failed", e);
                 result = false;
             }
         }
