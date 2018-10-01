@@ -1,6 +1,10 @@
 package com.tddapps.model;
+import lombok.extern.log4j.Log4j2;
+import lombok.val;
+
 import java.util.Arrays;
 
+@Log4j2
 public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
     private final SettingsReader settingsReader;
 
@@ -10,7 +14,22 @@ public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
 
     @Override
     public HeartBeat[] filter(HeartBeat[] heartBeats) {
-        return readHeartBeatsFromCurrentRegion(heartBeats);
+        logHeartBeats(heartBeats);
+        val result = readHeartBeatsFromCurrentRegion(heartBeats);
+        logMismatch(heartBeats, result);
+        return result;
+    }
+
+    private void logHeartBeats(HeartBeat[] heartBeats) {
+        for (val hb : heartBeats){
+            log.info(String.format("Host missing; currentRegion: %s; %s",
+                    ReadRegion(), hb.toString()));
+        }
+    }
+
+    private void logMismatch(HeartBeat[] allHeartBeats, HeartBeat[] subsetCount) {
+        log.info(String.format("AllHeartBeatCount: %d; CurrentRegionCount: %d;",
+                allHeartBeats.length, subsetCount.length));
     }
 
     private HeartBeat[] readHeartBeatsFromCurrentRegion(HeartBeat[] heartBeats){
