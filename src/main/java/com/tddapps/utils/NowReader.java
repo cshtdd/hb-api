@@ -4,4 +4,5 @@ import java.util.Date;
 
 public interface NowReader {
     Date ReadUtc();
+    long ReadEpochSecond();
 }
