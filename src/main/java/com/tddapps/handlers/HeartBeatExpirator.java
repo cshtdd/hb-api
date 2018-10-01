@@ -5,12 +5,15 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import com.tddapps.utils.NowReader;
+import lombok.extern.log4j.Log4j2;
 import lombok.val;
 
 import java.util.Arrays;
 
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 
+@Log4j2
+@SuppressWarnings("unused")
 public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
     private final int MAX_COUNT_TO_PROCESS = 25;
 
@@ -35,13 +38,20 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
     @Override
     public Boolean handleRequest(String input, Context context) {
         try {
+            log.info("Removing expired HeartBeats");
+
             val expiredHeartBeats = readExpiredHeartBeats();
+            logHeartBeats(expiredHeartBeats);
+
             val heartBeatsToDelete = readHeartBeatsFromCurrentRegion(expiredHeartBeats);
+            logMismatch(expiredHeartBeats, heartBeatsToDelete);
 
             heartBeatRepository.Delete(heartBeatsToDelete);
 
+            log.info("Removing expired HeartBeats Completed");
             return true;
         } catch (DalException e) {
+            log.error("Removing expired HeartBeats failed", e);
             return false;
         }
     }
@@ -56,6 +66,18 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
         return Arrays.stream(heartBeats)
                 .filter(this::heartBeatLastUpdatedInCurrentRegion)
                 .toArray(HeartBeat[]::new);
+    }
+
+    private void logHeartBeats(HeartBeat[] heartBeats) {
+        for (val hb : heartBeats){
+            log.info(String.format("Host missing; currentRegion: %s; %s",
+                    ReadRegion(), hb.toString()));
+        }
+    }
+
+    private void logMismatch(HeartBeat[] allHeartBeats, HeartBeat[] subsetCount) {
+        log.info(String.format("AllHeartBeatCount: %d; CurrentRegionCount: %d;",
+                allHeartBeats.length, subsetCount.length));
     }
 
     private boolean heartBeatLastUpdatedInCurrentRegion(HeartBeat hb){
