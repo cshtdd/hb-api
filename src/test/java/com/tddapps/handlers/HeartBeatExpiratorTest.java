@@ -1,23 +1,27 @@
 package com.tddapps.handlers;
 
-import com.tddapps.model.HeartBeatRepository;
-import com.tddapps.model.Settings;
-import com.tddapps.model.SettingsReader;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.tddapps.model.*;
+import com.tddapps.utils.NowReader;
+import lombok.val;
+import org.junit.jupiter.api.*;
+import static com.tddapps.utils.DateExtensions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class HeartBeatExpiratorTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final SettingsReader settingsReader = mock(SettingsReader.class);
-    private final HeartBeatExpirator handler = new HeartBeatExpirator(heartBeatRepository, settingsReader);
+    private final NowReader nowReader = mock(NowReader.class);
+    private final HeartBeatExpirator handler = new HeartBeatExpirator(heartBeatRepository, settingsReader, nowReader);
+
+    private final long NOW_EPOCH_SECOND = 1538395893;
+    private final String NOW_MINUTE_STRING = ToReverseUtcMinuteString(NOW_EPOCH_SECOND);
+    private final int MAX_COUNT = 25;
 
     @BeforeEach
     public void Setup(){
         when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn("us-test-1");
+        when(nowReader.ReadEpochSecond()).thenReturn(NOW_EPOCH_SECOND);
     }
 
     @Test
