@@ -35,7 +35,9 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
         val ttlNow = nowReader.ReadEpochSecond();
 
         try {
-            heartBeatRepository.ReadOlderThan(ToReverseUtcMinuteString(ttlNow), ttlNow, 25);
+            val heartBeats = heartBeatRepository.ReadOlderThan(
+                    ToReverseUtcMinuteString(ttlNow), ttlNow, 25);
+            heartBeatRepository.Delete(heartBeats);
         } catch (DalException e) {
             return false;
         }

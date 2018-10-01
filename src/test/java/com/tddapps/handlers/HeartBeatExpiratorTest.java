@@ -46,6 +46,17 @@ public class HeartBeatExpiratorTest {
         assertFalse(handleRequest());
     }
 
+    @Test
+    public void DeletesTheExpiredHeartBeats() throws DalException{
+        val seededHeartBeats = HeartBeatFactory.Create(10);
+        when(heartBeatRepository.ReadOlderThan(NOW_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT))
+                .thenReturn(seededHeartBeats);
+
+        assertTrue(handleRequest());
+
+        verify(heartBeatRepository).Delete(seededHeartBeats);
+    }
+
     private boolean handleRequest(){
         return handler.handleRequest(null, null);
     }
