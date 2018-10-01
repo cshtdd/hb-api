@@ -32,6 +32,7 @@ public class IocContainer {
                 .addComponent(NotificationSender.class, NotificationSenderSns.class)
                 .addComponent(SettingsReader.class, EnvironmentSettingsReader.class)
                 .addComponent(NowReader.class, NowReaderImpl.class)
+                .addComponent(RequestHandlerHelper.class, RequestHandlerHelperCurrentRegion.class)
                 .addComponent(HeartBeatNotificationBuilder.class, SingleNotificationBuilder.class)
                 .addAdapter(new AmazonDynamoDBFactory())
                 .as(CACHE).addAdapter(new DynamoDBMapperFactory())

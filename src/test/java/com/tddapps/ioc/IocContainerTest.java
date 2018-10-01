@@ -25,6 +25,7 @@ public class IocContainerTest {
     @Test
     public void RegisterDependencies(){
         assertTrue(IocContainer.getInstance().Resolve(NowReader.class) instanceof NowReaderImpl);
+        assertTrue(IocContainer.getInstance().Resolve(RequestHandlerHelper.class) instanceof RequestHandlerHelperCurrentRegion);
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatRepository.class) instanceof HeartBeatRepositoryDynamo);
         assertTrue(IocContainer.getInstance().Resolve(NotificationSender.class) instanceof NotificationSenderSns);
         assertTrue(IocContainer.getInstance().Resolve(NotificationSenderStatus.class) instanceof NotificationSenderSns);
