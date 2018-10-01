@@ -4,7 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.tddapps.model.DalException;
 import com.tddapps.model.HeartBeat;
 import com.tddapps.model.HeartBeatFactory;
-import com.tddapps.model.HeartBeatListHelper;
+import com.tddapps.model.HeartBeatListTestHelper;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
+import static com.tddapps.model.HeartBeatListTestHelper.ShouldMatch;
 import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,7 +48,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
         repository.Save(seededHeartBeats);
 
-        HeartBeatListHelper.ShouldMatch(seededHeartBeats, repository.All());
+        ShouldMatch(seededHeartBeats, repository.All());
     }
 
     @Test
@@ -98,7 +99,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
         val actual = repository.Read(expirationMinuteUtcNow, 5);
 
-        HeartBeatListHelper.ShouldMatch(expected, actual);
+        ShouldMatch(expected, actual);
     }
 
     @Test
@@ -124,6 +125,6 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
         val remainingHeartBeats = repository.All();
         assertEquals(seededHeartBeats.length - heartBeatsToDelete.length, remainingHeartBeats.length);
-        HeartBeatListHelper.ShouldMatch(expectedRemainingList.toArray(new HeartBeat[0]), remainingHeartBeats);
+        ShouldMatch(expectedRemainingList.toArray(new HeartBeat[0]), remainingHeartBeats);
     }
 }

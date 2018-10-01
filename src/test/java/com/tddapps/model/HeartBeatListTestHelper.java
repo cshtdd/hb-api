@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public abstract class HeartBeatListHelper {
+public abstract class HeartBeatListTestHelper {
     public static void ShouldMatch(HeartBeat[] listA, HeartBeat[] listB) {
         assertEquals(listA.length, listB.length);
 
