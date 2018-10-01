@@ -7,16 +7,15 @@ import org.junit.jupiter.api.*;
 
 import java.util.Arrays;
 
-import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class HeartBeatExpiratorTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
-    private final SettingsReader settingsReader = mock(SettingsReader.class);
+    private final RequestHandlerHelper requestHandlerHelper = mock(RequestHandlerHelper.class);
     private final NowReader nowReader = mock(NowReader.class);
-    private final HeartBeatExpirator handler = new HeartBeatExpirator(heartBeatRepository, settingsReader, nowReader);
+    private final HeartBeatExpirator handler = new HeartBeatExpirator(heartBeatRepository, nowReader, requestHandlerHelper);
 
     private final long NOW_EPOCH_SECOND = 1538395893;
     private final String PREVIOUS_MINUTE_STRING = ToReverseUtcMinuteString(NOW_EPOCH_SECOND - 60);
@@ -24,7 +23,6 @@ public class HeartBeatExpiratorTest {
 
     @BeforeEach
     public void Setup(){
-        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn(TEST_REGION_DEFAULT);
         when(nowReader.ReadEpochSecond()).thenReturn(NOW_EPOCH_SECOND);
     }
 
@@ -34,7 +32,7 @@ public class HeartBeatExpiratorTest {
     }
 
     @Test
-    public void ReadsTheExpiredHeartBeatsInTheCurrentMinute() throws DalException {
+    public void ReadsTheExpiredHeartBeatsInThePreviousMinute() throws DalException {
         when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
                 .thenReturn(new HeartBeat[]{});
 
@@ -54,40 +52,25 @@ public class HeartBeatExpiratorTest {
     }
 
     @Test
-    public void DeletesTheExpiredHeartBeats() throws DalException{
-        val seededHeartBeats = HeartBeatFactory.Create(10);
-        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
-                .thenReturn(seededHeartBeats);
+    public void DeletesTheExpiredHeartBeatsAfterFilteringThem() throws DalException{
+        val allHeartBeats = HeartBeatFactory.Create(30);
+        val seededHeartBeats = Arrays.copyOfRange(allHeartBeats, 0, 15);
+        val filteredHeartBeats = Arrays.copyOfRange(allHeartBeats, 15, 30);
+        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT)).thenReturn(seededHeartBeats);
+        when(requestHandlerHelper.filter(seededHeartBeats)).thenReturn(filteredHeartBeats);
 
         assertTrue(handleRequest());
 
-        verify(heartBeatRepository).Delete(seededHeartBeats);
+        verify(heartBeatRepository).Delete(filteredHeartBeats);
     }
 
     @Test
     public void ReturnsFalseWhenExpiredHeartBeatsCannotBeDeleted() throws DalException{
-        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
-                .thenReturn(new HeartBeat[]{});
         doThrow(new DalException("Delete failed"))
                 .when(heartBeatRepository)
                 .Delete(any());
 
         assertFalse(handleRequest());
-    }
-
-    @Test
-    public void OnlyDeletesTheExpiredHeartBeatsFromTheCurrentRegion() throws DalException {
-        val seededHeartBeats = HeartBeatFactory.Create(10);
-        seededHeartBeats[8].setRegion("us-test-2");
-        seededHeartBeats[9].setRegion("us-test-2");
-        val expectedDeletions = Arrays.copyOfRange(seededHeartBeats, 0, 8);
-
-        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
-                .thenReturn(seededHeartBeats);
-
-        assertTrue(handleRequest());
-
-        verify(heartBeatRepository).Delete(expectedDeletions);
     }
 
     private boolean handleRequest(){

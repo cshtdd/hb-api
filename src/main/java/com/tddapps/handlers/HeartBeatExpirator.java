@@ -23,15 +23,15 @@ public class HeartBeatExpirator implements RequestHandler<Map<String, Object>, B
     public HeartBeatExpirator(){
         this(
                 IocContainer.getInstance().Resolve(HeartBeatRepository.class),
-                IocContainer.getInstance().Resolve(SettingsReader.class),
-                IocContainer.getInstance().Resolve(NowReader.class)
+                IocContainer.getInstance().Resolve(NowReader.class),
+                IocContainer.getInstance().Resolve(RequestHandlerHelper.class)
         );
     }
 
-    public HeartBeatExpirator(HeartBeatRepository heartBeatRepository, SettingsReader settingsReader, NowReader nowReader) {
+    public HeartBeatExpirator(HeartBeatRepository heartBeatRepository, NowReader nowReader, RequestHandlerHelper requestHandlerHelper) {
         this.heartBeatRepository = heartBeatRepository;
         this.nowReader = nowReader;
-        this.requestHandlerHelper = new RequestHandlerHelperCurrentRegion(settingsReader);
+        this.requestHandlerHelper = requestHandlerHelper;
     }
 
     @Override
