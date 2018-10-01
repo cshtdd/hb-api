@@ -1,5 +1,5 @@
 package com.tddapps.model;
 
-public interface HeartBeatListHandlerHelper {
+public interface RequestHandlerHelper {
     HeartBeat[] filter(HeartBeat[] heartBeats);
 }

@@ -1,9 +1,9 @@
 package com.tddapps.model;
 
-public class HeartBeatListHandlerHelperCurrentRegion implements HeartBeatListHandlerHelper {
+public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
     private final SettingsReader settingsReader;
 
-    public HeartBeatListHandlerHelperCurrentRegion(SettingsReader settingsReader) {
+    public RequestHandlerHelperCurrentRegion(SettingsReader settingsReader) {
         this.settingsReader = settingsReader;
     }
 

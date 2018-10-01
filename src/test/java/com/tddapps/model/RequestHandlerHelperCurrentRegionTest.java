@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class HeartBeatListHandlerHelperCurrentRegionTest {
+public class RequestHandlerHelperCurrentRegionTest {
     private final SettingsReader settingsReader = mock(SettingsReader.class);
-    private final HeartBeatListHandlerHelperCurrentRegion helper = new HeartBeatListHandlerHelperCurrentRegion(settingsReader);
+    private final RequestHandlerHelperCurrentRegion helper = new RequestHandlerHelperCurrentRegion(settingsReader);
 
     @BeforeEach
     public void Setup(){
