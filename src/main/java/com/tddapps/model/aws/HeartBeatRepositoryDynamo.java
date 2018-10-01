@@ -52,7 +52,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
     }
 
     @Override
-    public HeartBeat[] ReadOlderThan(String expirationMinuteUtc, long ttl, int maxCount) throws DalException {
+    public HeartBeat[] Read(String expirationMinuteUtc, long ttl, int maxCount) throws DalException {
         try {
             val query = new DynamoDBQueryExpression<HeartBeat>()
                     .withLimit(maxCount)

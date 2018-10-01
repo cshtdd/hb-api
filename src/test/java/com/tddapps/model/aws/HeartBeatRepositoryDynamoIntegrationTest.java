@@ -38,7 +38,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
 
         val ttlNow = EpochSecondsNow();
         val minuteStringNow = ToReverseUtcMinuteString(ttlNow);
-        assertEquals(0, repository.ReadOlderThan(minuteStringNow, ttlNow, 100).length);
+        assertEquals(0, repository.Read(minuteStringNow, ttlNow, 100).length);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
         };
         repository.Save(seededHeartBeats);
 
-        val actual = repository.ReadOlderThan(expirationMinuteUtcNow, ttlNow, 5);
+        val actual = repository.Read(expirationMinuteUtcNow, ttlNow, 5);
 
         HeartBeatListHelper.ShouldMatch(expected, actual);
     }

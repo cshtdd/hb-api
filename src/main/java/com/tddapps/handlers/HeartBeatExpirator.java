@@ -61,7 +61,7 @@ public class HeartBeatExpirator implements RequestHandler<Map<String, Object>, B
         val ttlNow = nowReader.ReadEpochSecond();
         val minuteStringNow = ToReverseUtcMinuteString(ttlNow - 60);
 
-        return heartBeatRepository.ReadOlderThan(minuteStringNow, ttlNow, MAX_COUNT_TO_PROCESS);
+        return heartBeatRepository.Read(minuteStringNow, ttlNow, MAX_COUNT_TO_PROCESS);
     }
 
     private HeartBeat[] readHeartBeatsFromCurrentRegion(HeartBeat[] heartBeats){
