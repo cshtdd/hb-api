@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
+import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,6 +35,10 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
     @Test
     public void ThereAreNoHeartBeatsByDefault() throws DalException {
         assertEquals(0, repository.All().length);
+
+        val ttlNow = EpochSecondsNow();
+        val minuteStringNow = ToReverseUtcMinuteString(ttlNow);
+        assertEquals(0, repository.ReadOlderThan(minuteStringNow, ttlNow, 100).length);
     }
 
     @Test
