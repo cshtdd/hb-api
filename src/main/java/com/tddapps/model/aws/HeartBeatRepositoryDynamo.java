@@ -52,20 +52,18 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
     }
 
     @Override
-    public HeartBeat[] Read(String expirationMinuteUtc, long ttl, int maxCount) throws DalException {
+    public HeartBeat[] Read(String expirationMinuteUtc, int maxCount) throws DalException {
         try {
             val query = new DynamoDBQueryExpression<HeartBeat>()
                     .withLimit(maxCount)
                     .withIndexName("ExpirationMinuteIndex")
                     .withConsistentRead(false)
-                    .withKeyConditionExpression("#name1 = :val1 AND #name2 < :val2")
+                    .withKeyConditionExpression("#name1 = :val1")
                     .withExpressionAttributeNames(new HashMap<String, String>(){{
                         put("#name1", "expiration_minute_utc");
-                        put("#name2", "ttl");
                     }})
                     .withExpressionAttributeValues(new HashMap<String, AttributeValue>(){{
                         put(":val1", new AttributeValue().withS(expirationMinuteUtc));
-                        put(":val2", new AttributeValue().withN(String.format("%d", ttl)));
                     }});
 
             return mapper.queryPage(HeartBeat.class, query)

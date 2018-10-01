@@ -35,20 +35,20 @@ public class HeartBeatExpiratorTest {
 
     @Test
     public void ReadsTheExpiredHeartBeatsInTheCurrentMinute() throws DalException {
-        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT))
+        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
                 .thenReturn(new HeartBeat[]{});
 
         assertTrue(handleRequest());
 
         verify(heartBeatRepository)
-                .Read(PREVIOUS_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT);
+                .Read(PREVIOUS_MINUTE_STRING, MAX_COUNT);
     }
 
     @Test
     public void ReturnsFalseWhenExpiredHeartBeatsCannotBeRead() throws DalException {
         doThrow(new DalException("Read failed"))
             .when(heartBeatRepository)
-            .Read(any(String.class), any(long.class), any(int.class));
+            .Read(any(String.class), any(int.class));
 
         assertFalse(handleRequest());
     }
@@ -56,7 +56,7 @@ public class HeartBeatExpiratorTest {
     @Test
     public void DeletesTheExpiredHeartBeats() throws DalException{
         val seededHeartBeats = HeartBeatFactory.Create(10);
-        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT))
+        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
                 .thenReturn(seededHeartBeats);
 
         assertTrue(handleRequest());
@@ -66,7 +66,7 @@ public class HeartBeatExpiratorTest {
 
     @Test
     public void ReturnsFalseWhenExpiredHeartBeatsCannotBeDeleted() throws DalException{
-        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT))
+        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
                 .thenReturn(new HeartBeat[]{});
         doThrow(new DalException("Delete failed"))
                 .when(heartBeatRepository)
@@ -82,7 +82,7 @@ public class HeartBeatExpiratorTest {
         seededHeartBeats[9].setRegion("us-test-2");
         val expectedDeletions = Arrays.copyOfRange(seededHeartBeats, 0, 8);
 
-        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT))
+        when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
                 .thenReturn(seededHeartBeats);
 
         assertTrue(handleRequest());
