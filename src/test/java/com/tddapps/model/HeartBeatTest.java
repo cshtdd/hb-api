@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
+import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.*;
 import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
 import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;
@@ -44,8 +45,8 @@ public class HeartBeatTest {
     public void CanBeConstructedWithoutSpecifyingTheExpirationMinuteUtc(){
         long ttlNow = EpochSecondsNow();
 
-        val hb1 = new HeartBeat("host1", ttlNow, ToReverseUtcMinuteString(ttlNow), "us-test-1", true);
-        val hb2 = new HeartBeat("host1", ttlNow, "us-test-1", true);
+        val hb1 = new HeartBeat("host1", ttlNow, ToReverseUtcMinuteString(ttlNow), TEST_REGION_DEFAULT, true);
+        val hb2 = new HeartBeat("host1", ttlNow, TEST_REGION_DEFAULT, true);
 
         assertEquals(hb1, hb2);
     }

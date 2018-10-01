@@ -4,6 +4,8 @@ import com.tddapps.model.*;
 import com.tddapps.utils.NowReader;
 import lombok.val;
 import org.junit.jupiter.api.*;
+
+import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,7 +22,7 @@ public class HeartBeatExpiratorTest {
 
     @BeforeEach
     public void Setup(){
-        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn("us-test-1");
+        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn(TEST_REGION_DEFAULT);
         when(nowReader.ReadEpochSecond()).thenReturn(NOW_EPOCH_SECOND);
     }
 

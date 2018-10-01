@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
+import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +23,7 @@ public class HeartBeatPostTest {
 
     @BeforeEach
     public void Setup(){
-        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn("us-test-1");
+        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn(TEST_REGION_DEFAULT);
     }
 
     @Test
@@ -46,7 +47,7 @@ public class HeartBeatPostTest {
                         "testHostA",
                         EpochSecondsPlusMs(34000),
                         ToReverseUtcMinuteString(EpochSecondsPlusMs(34000)),
-                        "us-test-1",
+                        TEST_REGION_DEFAULT,
                         false
                 )
         };

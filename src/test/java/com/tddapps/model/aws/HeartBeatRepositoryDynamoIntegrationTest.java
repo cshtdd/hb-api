@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -61,25 +62,25 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
         val ttlMoreThanOneMinuteAgo = ttlNow - 80;
         val ttlFuture = ttlNow + 1;
         val seededHeartBeats = new HeartBeat[]{
-                new HeartBeat("host-00", ttlOneSecondAgo, "us-test-1", false),
+                new HeartBeat("host-00", ttlOneSecondAgo, TEST_REGION_DEFAULT, false),
                 new HeartBeat("host-01", ttlOneSecondAgo - 1, "us-test-2", false),
                 new HeartBeat("host-02", ttlOneSecondAgo - 2, "us-test-2", false),
                 new HeartBeat("host-03", ttlOneSecondAgo - 3, "us-test-2", false),
-                new HeartBeat("host-04", ttlOneSecondAgo - 4, "us-test-1", false),
-                new HeartBeat("host-05", ttlOneSecondAgo - 5, "us-test-1", false),
-                new HeartBeat("host-06", ttlFuture, "us-test-1", false),
-                new HeartBeat("host-07", ttlFuture, "us-test-1", false),
-                new HeartBeat("host-08", ttlTenSecondsAgo, "us-test-1", false),
-                new HeartBeat("host-09", ttlTenSecondsAgo - 1, "us-test-1", false),
-                new HeartBeat("host-10", ttlTenSecondsAgo - 2, "us-test-1", false),
+                new HeartBeat("host-04", ttlOneSecondAgo - 4, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-05", ttlOneSecondAgo - 5, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-06", ttlFuture, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-07", ttlFuture, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-08", ttlTenSecondsAgo, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-09", ttlTenSecondsAgo - 1, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-10", ttlTenSecondsAgo - 2, TEST_REGION_DEFAULT, false),
                 new HeartBeat("host-11", ttlTenSecondsAgo - 3, "us-test-2", false),
                 new HeartBeat("host-12", ttlTenSecondsAgo - 4, "us-test-2", false),
-                new HeartBeat("host-13", ttlTenSecondsAgo - 5, "us-test-1", false),
-                new HeartBeat("host-14", ttlMoreThanOneMinuteAgo, "us-test-1", false),
-                new HeartBeat("host-15", ttlMoreThanOneMinuteAgo, "us-test-1", false),
-                new HeartBeat("host-16", ttlMoreThanOneMinuteAgo, "us-test-1", false),
-                new HeartBeat("host-17", ttlMoreThanOneMinuteAgo, "us-test-1", false),
-                new HeartBeat("host-18", ttlMoreThanOneMinuteAgo, "us-test-1", false),
+                new HeartBeat("host-13", ttlTenSecondsAgo - 5, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-14", ttlMoreThanOneMinuteAgo, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-15", ttlMoreThanOneMinuteAgo, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-16", ttlMoreThanOneMinuteAgo, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-17", ttlMoreThanOneMinuteAgo, TEST_REGION_DEFAULT, false),
+                new HeartBeat("host-18", ttlMoreThanOneMinuteAgo, TEST_REGION_DEFAULT, false),
         };
         val expected = new HeartBeat[]{
                 seededHeartBeats[9],

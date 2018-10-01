@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +28,7 @@ public class StatusGetTest {
 
     @BeforeEach
     public void Setup(){
-        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn("us-test-1");
+        when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn(TEST_REGION_DEFAULT);
     }
 
     private ApiGatewayResponse handleRequest() {
@@ -46,7 +47,7 @@ public class StatusGetTest {
                         "StatusGet-us-test-1",
                         EpochSecondsPlusMs(4*60*60*1000),
                         ToReverseUtcMinuteString(EpochSecondsPlusMs(4*60*60*1000)),
-                        "us-test-1",
+                        TEST_REGION_DEFAULT,
                         true
                 )
         };

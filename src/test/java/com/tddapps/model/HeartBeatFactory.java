@@ -8,6 +8,8 @@ import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 
 public abstract class HeartBeatFactory {
+    public static final String TEST_REGION_DEFAULT = "us-test-1";
+
     private static final Random random = new Random();
 
     public static HeartBeat Create(){
@@ -30,7 +32,7 @@ public abstract class HeartBeatFactory {
                 HeartBeatHost(position),
                 ttl,
                 ToReverseUtcMinuteString(ttl),
-                "us-test-1",
+                TEST_REGION_DEFAULT,
                 true
         );
     }
