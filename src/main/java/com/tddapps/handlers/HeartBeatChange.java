@@ -28,7 +28,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 IocContainer.getInstance().Resolve(HeartBeatNotificationBuilder.class),
                 IocContainer.getInstance().Resolve(NotificationSender.class),
                 IocContainer.getInstance().Resolve(DynamoDBMapper.class),
-                IocContainer.getInstance().Resolve(SettingsReader.class)
+                IocContainer.getInstance().Resolve(RequestHandlerHelper.class)
         );
     }
 
@@ -36,12 +36,11 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
             HeartBeatNotificationBuilder notificationBuilder,
             NotificationSender notificationSender,
             DynamoDBMapper mapper,
-            SettingsReader settingsReader) {
+            RequestHandlerHelper requestHandlerHelper) {
         this.notificationBuilder = notificationBuilder;
         this.notificationSender = notificationSender;
         this.mapper = mapper;
-
-        this.requestHandlerHelper = new RequestHandlerHelperCurrentRegion(settingsReader);
+        this.requestHandlerHelper = requestHandlerHelper;
     }
 
     @Override
