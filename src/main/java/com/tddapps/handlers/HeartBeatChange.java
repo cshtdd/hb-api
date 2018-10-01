@@ -63,9 +63,9 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
-    private void logMismatch(HeartBeat[] allHeartBeats, HeartBeat[] notificationHeartBeats) {
-        log.info(String.format("AllHeartBeatCount: %d; NotificationHeartBeatCount: %d;",
-                allHeartBeats.length, notificationHeartBeats.length));
+    private void logMismatch(HeartBeat[] allHeartBeats, HeartBeat[] subsetCount) {
+        log.info(String.format("AllHeartBeatCount: %d; CurrentRegionCount: %d;",
+                allHeartBeats.length, subsetCount.length));
     }
 
     private void logHeartBeats(HeartBeat[] heartBeats) {
