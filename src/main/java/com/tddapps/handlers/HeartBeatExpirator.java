@@ -32,22 +32,29 @@ public class HeartBeatExpirator implements RequestHandler<String, Boolean> {
 
     @Override
     public Boolean handleRequest(String input, Context context) {
-        val ttlNow = nowReader.ReadEpochSecond();
-        val currentRegion = settingsReader.ReadString(Settings.AWS_REGION);
-
         try {
+            val ttlNow = nowReader.ReadEpochSecond();
+
             val heartBeats = heartBeatRepository.ReadOlderThan(
                     ToReverseUtcMinuteString(ttlNow), ttlNow, 25);
 
             val heartBeatsToDelete = Arrays.stream(heartBeats)
-                    .filter(hb -> hb.getRegion().equals(currentRegion))
+                    .filter(this::heartBeatLastUpdatedInCurrentRegion)
                     .toArray(HeartBeat[]::new);
 
             heartBeatRepository.Delete(heartBeatsToDelete);
+
+            return true;
         } catch (DalException e) {
             return false;
         }
+    }
 
-        return true;
+    private boolean heartBeatLastUpdatedInCurrentRegion(HeartBeat hb){
+        return ReadRegion().equals(hb.getRegion());
+    }
+
+    private String ReadRegion() {
+        return settingsReader.ReadString(Settings.AWS_REGION);
     }
 }
