@@ -12,8 +12,6 @@ import com.tddapps.model.*;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import lombok.var;
-
-import java.util.Arrays;
 import java.util.Map;
 
 @Log4j2
@@ -23,7 +21,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     private final HeartBeatNotificationBuilder notificationBuilder;
     private final NotificationSender notificationSender;
     private final DynamoDBMapper mapper;
-    private final SettingsReader settingsReader;
+    private final RequestHandlerHelper requestHandlerHelper;
 
     public HeartBeatChange(){
         this(
@@ -42,7 +40,8 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         this.notificationBuilder = notificationBuilder;
         this.notificationSender = notificationSender;
         this.mapper = mapper;
-        this.settingsReader = settingsReader;
+
+        this.requestHandlerHelper = new RequestHandlerHelperCurrentRegion(settingsReader);
     }
 
     @Override
@@ -50,10 +49,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         log.debug("HeartBeat Change");
 
         val deletedHeartBeats = readDeletedHeartBeats(input);
-        logHeartBeats(deletedHeartBeats);
-
-        val heartBeatsToNotify = readHeartBeatsFromCurrentRegion(deletedHeartBeats);
-        logMismatch(deletedHeartBeats, heartBeatsToNotify);
+        val heartBeatsToNotify = requestHandlerHelper.filter(deletedHeartBeats);
 
         val notifications = notificationBuilder.build(heartBeatsToNotify);
         val result = sendNotifications(notifications);
@@ -61,18 +57,6 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         log.info(String.format("HeartBeat Change Completed; Result: %s", result));
 
         return result;
-    }
-
-    private void logMismatch(HeartBeat[] allHeartBeats, HeartBeat[] subsetCount) {
-        log.info(String.format("AllHeartBeatCount: %d; CurrentRegionCount: %d;",
-                allHeartBeats.length, subsetCount.length));
-    }
-
-    private void logHeartBeats(HeartBeat[] heartBeats) {
-        for (val hb : heartBeats){
-            log.info(String.format("Host missing; currentRegion: %s; %s",
-                    ReadRegion(), hb.toString()));
-        }
     }
 
     private Boolean sendNotifications(Notification[] notifications) {
@@ -101,25 +85,11 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .toArray(HeartBeat[]::new);
     }
 
-    private HeartBeat[] readHeartBeatsFromCurrentRegion(HeartBeat[] heartBeats){
-        return Arrays.stream(heartBeats)
-                .filter(this::heartBeatLastUpdatedInCurrentRegion)
-                .toArray(HeartBeat[]::new);
-    }
-
     private HeartBeat buildHeartBeat(Map<String, AttributeValue> map) {
         return mapper.marshallIntoObject(HeartBeat.class, map);
     }
 
     private static boolean isRecordDeletion(DynamodbEvent.DynamodbStreamRecord record){
         return record.getEventName().equals("REMOVE");
-    }
-
-    private boolean heartBeatLastUpdatedInCurrentRegion(HeartBeat hb){
-        return ReadRegion().equals(hb.getRegion());
-    }
-
-    private String ReadRegion() {
-        return settingsReader.ReadString(Settings.AWS_REGION);
     }
 }
