@@ -5,6 +5,8 @@ import com.tddapps.utils.NowReader;
 import lombok.val;
 import org.junit.jupiter.api.*;
 
+import java.util.Arrays;
+
 import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +35,9 @@ public class HeartBeatExpiratorTest {
 
     @Test
     public void ReadsTheExpiredHeartBeatsInTheCurrentMinute() throws DalException {
+        when(heartBeatRepository.ReadOlderThan(NOW_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT))
+                .thenReturn(new HeartBeat[]{});
+
         assertTrue(handleRequest());
 
         verify(heartBeatRepository)
@@ -61,11 +66,28 @@ public class HeartBeatExpiratorTest {
 
     @Test
     public void ReturnsFalseWhenExpiredHeartBeatsCannotBeDeleted() throws DalException{
+        when(heartBeatRepository.ReadOlderThan(NOW_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT))
+                .thenReturn(new HeartBeat[]{});
         doThrow(new DalException("Delete failed"))
                 .when(heartBeatRepository)
                 .Delete(any());
 
         assertFalse(handleRequest());
+    }
+
+    @Test
+    public void OnlyDeletesTheExpiredHeartBeatsFromTheCurrentRegion() throws DalException {
+        val seededHeartBeats = HeartBeatFactory.Create(10);
+        seededHeartBeats[8].setRegion("us-test-2");
+        seededHeartBeats[9].setRegion("us-test-2");
+        val expectedDeletions = Arrays.copyOfRange(seededHeartBeats, 0, 8);
+
+        when(heartBeatRepository.ReadOlderThan(NOW_MINUTE_STRING, NOW_EPOCH_SECOND, MAX_COUNT))
+                .thenReturn(seededHeartBeats);
+
+        assertTrue(handleRequest());
+
+        verify(heartBeatRepository).Delete(expectedDeletions);
     }
 
     private boolean handleRequest(){
