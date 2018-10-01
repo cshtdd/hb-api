@@ -6,8 +6,8 @@ import com.tddapps.model.*;
 import com.tddapps.model.aws.*;
 import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
 import com.tddapps.infrastructure.KeysCache;
-import com.tddapps.utils.UtcNowReader;
-import com.tddapps.utils.UtcNowReaderImpl;
+import com.tddapps.utils.NowReader;
+import com.tddapps.utils.NowReaderImpl;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ public class IocContainerTest {
 
     @Test
     public void RegisterDependencies(){
-        assertTrue(IocContainer.getInstance().Resolve(UtcNowReader.class) instanceof UtcNowReaderImpl);
+        assertTrue(IocContainer.getInstance().Resolve(NowReader.class) instanceof NowReaderImpl);
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatRepository.class) instanceof HeartBeatRepositoryDynamo);
         assertTrue(IocContainer.getInstance().Resolve(NotificationSender.class) instanceof NotificationSenderSns);
         assertTrue(IocContainer.getInstance().Resolve(NotificationSenderStatus.class) instanceof NotificationSenderSns);

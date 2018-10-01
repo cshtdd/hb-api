@@ -31,7 +31,7 @@ public class IocContainer {
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
                 .addComponent(NotificationSender.class, NotificationSenderSns.class)
                 .addComponent(SettingsReader.class, EnvironmentSettingsReader.class)
-                .addComponent(UtcNowReader.class, UtcNowReaderImpl.class)
+                .addComponent(NowReader.class, NowReaderImpl.class)
                 .addComponent(HeartBeatNotificationBuilder.class, SingleNotificationBuilder.class)
                 .addAdapter(new AmazonDynamoDBFactory())
                 .as(CACHE).addAdapter(new DynamoDBMapperFactory())

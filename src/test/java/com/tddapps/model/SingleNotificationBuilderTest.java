@@ -1,6 +1,6 @@
 package com.tddapps.model;
 
-import com.tddapps.utils.UtcNowReader;
+import com.tddapps.utils.NowReader;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +11,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class SingleNotificationBuilderTest {
-    private final UtcNowReader utcNowReaderMock = mock(UtcNowReader.class);
-    private final SingleNotificationBuilder builder = new SingleNotificationBuilder(utcNowReaderMock);
+    private final NowReader nowReaderMock = mock(NowReader.class);
+    private final SingleNotificationBuilder builder = new SingleNotificationBuilder(nowReaderMock);
 
     private String utcNowFormatted;
 
@@ -21,7 +21,7 @@ public class SingleNotificationBuilderTest {
         val seededDate = UtcNowPlusMs(1000);
         utcNowFormatted = ToUtcString(seededDate);
 
-        when(utcNowReaderMock.Read())
+        when(nowReaderMock.ReadUtc())
                 .thenReturn(seededDate);
     }
 

@@ -1,6 +1,6 @@
 package com.tddapps.model;
 
-import com.tddapps.utils.UtcNowReader;
+import com.tddapps.utils.NowReader;
 import lombok.val;
 
 import java.util.Arrays;
@@ -8,10 +8,10 @@ import java.util.Arrays;
 import static com.tddapps.utils.DateExtensions.*;
 
 public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
-    private final UtcNowReader utcNowReader;
+    private final NowReader nowReader;
 
-    public SingleNotificationBuilder(UtcNowReader utcNowReader) {
-        this.utcNowReader = utcNowReader;
+    public SingleNotificationBuilder(NowReader nowReader) {
+        this.nowReader = nowReader;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
         val message = String.format("%s\n\n%s\n--\nNotification Built: %s\n--",
                 subject,
                 getHeartBeatDetails(heartBeats),
-                ToUtcString(utcNowReader.Read())
+                ToUtcString(nowReader.ReadUtc())
         );
 
         return new Notification[]{
