@@ -57,6 +57,15 @@ public class HeartBeatExpiratorTest {
         verify(heartBeatRepository).Delete(seededHeartBeats);
     }
 
+    @Test
+    public void ReturnsFalseWhenExpiredHeartBeatsCannotBeDeleted() throws DalException{
+        doThrow(new DalException("Delete failed"))
+                .when(heartBeatRepository)
+                .Delete(any());
+
+        assertFalse(handleRequest());
+    }
+
     private boolean handleRequest(){
         return handler.handleRequest(null, null);
     }
