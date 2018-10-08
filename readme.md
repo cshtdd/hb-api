@@ -10,8 +10,8 @@ Heartbeat api backed by AWS lambdas
 - [Deployment](docs/deployment.md)  
 - [Usage](docs/usage.md)  
 - [Code Architecture](docs/code-architecture.md)  
-- [License](TODO.md)  
-- [Contributing](TODO.md)  
+- [License](LICENSE)  
+- [Code of Conduct](CODE_OF_CONDUCT.md)  
 
 ## Getting Started  
 
