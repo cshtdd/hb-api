@@ -1,5 +1,7 @@
 # Code Architecture
 
+![Architecture](images/hb-api-0.5.0.png)  
+
 ## `handlers` package  
 The actual implementation of the functions should be placed in `com.tddapps.handlers`. These classes have some knowledge of the serverless framework. If testing becomes too cumbersome extract services.  
 
