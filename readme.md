@@ -6,12 +6,12 @@ AWS Serverless API to receive heartbeats and sends notifications when computers 
 
 - [Introduction](#introduction)  
 - [Getting Started](#getting-started)  
-- [Design Considerations](#design-considerations)  
 - [Development](docs/development.md)  
-- [API Key Management](docs/api-key-management.md)  
 - [Deployment](docs/deployment.md)  
-- [Usage](docs/usage.md)
+- [API Key Management](docs/api-key-management.md)  
 - [Subscription Management](docs/subscription-management.md)  
+- [Usage](docs/usage.md)  
+- [Design Considerations](#design-considerations)  
 - [Code Architecture](docs/code-architecture.md)  
 - [Changelog](changelog.md)  
 - [License](LICENSE)  
@@ -34,11 +34,24 @@ This pattern is known as [Heartbeat](https://en.wikipedia.org/wiki/Heartbeat_(co
 
 ## Getting Started  
 
-TODO
+### Prerequisites  
+
+1- Make sure to have the api deployed following the steps from the [Deployment](docs/deployment.md) document  
+2- Create at least one API Key following the steps from the [API Key Management](docs/api-key-management.md) document  
+3- Create at least one subscription to receive notifications when hosts disappear. Follow the steps from the [Subscription Management](docs/subscription-management.md) document  
+
+### Usage  
+
+Configure a cronjob to post heartbeats following the steps from the [Usage](docs/usage.md) document.  
+
+```bash
+*/5 * * * * curl -i -H "x-api-key: ${HB_API_KEY}" -d '{"hostId": "'${HOSTNAME}'"}' -X POST https://hbapidev.cshtdd.com/v1/hearbeat | logger -p local0.notice
+```
 
 ## Design considerations  
 
 The application runs simultaneously on two different AWS regions.  
 Load balancing and region failover is managed by Route53 healthchecks.  
 Data is globally replicated with DynamoDB Global Tables.  
-Notifications are sent using SNS Topics and we did our best to ensure they are delivered exactly once.  
+Notifications are sent using SNS Topics. And we did our best to ensure they are delivered exactly once.  
+Costs are kept at a minimum and increase only with increased usage.  
