@@ -29,7 +29,7 @@ And the additional security risks of doing so.
 
 ### The solution  
 
-Rather than actively monitoring each computer. We make every computer send a message whenever it can. A lack of messages from a computer for a sustained period of time indicate a problem.  
+Rather than actively monitoring each computer. We make every computer send a message whenever it can. A lack of messages from a computer for a sustained period of time indicates a problem.  
 This pattern is known as [Heartbeat](https://en.wikipedia.org/wiki/Heartbeat_(computing)) and is widely used through the industry.  
 
 ## Getting Started  
