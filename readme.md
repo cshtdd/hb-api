@@ -1,6 +1,6 @@
 # hb-api  
 
-AWS Serverless API to receive heartbeats and sends notifications when computers disappear.  
+AWS Serverless API to receive heartbeats and send notifications when computers disappear.  
 
 ## Table of Contents  
 
