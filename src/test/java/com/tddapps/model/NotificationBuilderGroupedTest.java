@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SingleNotificationBuilderTest {
+public class NotificationBuilderGroupedTest {
     private final NowReader nowReaderMock = mock(NowReader.class);
-    private final SingleNotificationBuilder builder = new SingleNotificationBuilder(nowReaderMock);
+    private final NotificationBuilderGrouped builder = new NotificationBuilderGrouped(nowReaderMock);
 
     private String utcNowFormatted;
 

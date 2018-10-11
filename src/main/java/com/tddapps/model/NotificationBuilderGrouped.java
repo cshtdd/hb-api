@@ -9,10 +9,10 @@ import java.util.List;
 
 import static com.tddapps.utils.DateExtensions.*;
 
-public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
+public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder {
     private final NowReader nowReader;
 
-    public SingleNotificationBuilder(NowReader nowReader) {
+    public NotificationBuilderGrouped(NowReader nowReader) {
         this.nowReader = nowReader;
     }
 
