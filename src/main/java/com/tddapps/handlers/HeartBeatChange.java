@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Log4j2
 @SuppressWarnings("unused")
@@ -64,11 +63,11 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     }
 
     private HeartBeat[] readHeartBeats(DynamodbEvent input) {
-        val imagesToNotify = new ArrayList<Map<String, AttributeValue>>(){{
-            addAll(readDeletedRecordImages(input));
-            addAll(readInsertedRecordImages(input));
+        val records = new ArrayList<Map<String, AttributeValue>>(){{
+            addAll(readDeletedRecords(input));
+            addAll(readInsertedRecords(input));
         }};
-        return imagesToNotify
+        return records
                 .stream()
                 .map(this::buildHeartBeat)
                 .filter(HeartBeat::isNotTest)
@@ -90,7 +89,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
-    private List<Map<String, AttributeValue>> readDeletedRecordImages(DynamodbEvent input){
+    private List<Map<String, AttributeValue>> readDeletedRecords(DynamodbEvent input){
         return input.getRecords()
                 .stream()
                 .filter(HeartBeatChange::isRecordDeletion)
@@ -99,7 +98,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .collect(Collectors.toList());
     }
 
-    private List<Map<String, AttributeValue>> readInsertedRecordImages(DynamodbEvent input){
+    private List<Map<String, AttributeValue>> readInsertedRecords(DynamodbEvent input){
         return input.getRecords()
                 .stream()
                 .filter(HeartBeatChange::isRecordInsertion)
