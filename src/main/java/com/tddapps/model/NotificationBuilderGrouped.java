@@ -17,6 +17,12 @@ public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder 
     }
 
     @Override
+    public Notification[] build(HeartBeatChangeEvent[] events) {
+        return new Notification[0];
+    }
+
+    @Deprecated
+    @Override
     public Notification[] build(HeartBeat[] heartBeats) {
         val expiredHeartBeats = Arrays.stream(heartBeats)
                 .filter(HeartBeat::isExpired)

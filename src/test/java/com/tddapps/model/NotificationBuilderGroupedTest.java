@@ -31,7 +31,7 @@ public class NotificationBuilderGroupedTest {
     @Test
     public void DoesNotAllowANullInput(){
         try{
-            builder.build(null);
+            builder.build((HeartBeat[]) null);
             fail("Should have thrown");
         }catch (NullPointerException e){
             assertNotNull(e);
