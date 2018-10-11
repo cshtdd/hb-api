@@ -144,13 +144,20 @@ public class HeartBeatChangeTest {
                         put("host_id", new AttributeValue(e.getHostId()));
                     }});
 
-                    d.setOldImage(new HashMap<String, AttributeValue>(){{
+                    val imageData = new HashMap<String, AttributeValue>() {{
                         put("host_id", new AttributeValue().withS(e.getHostId()));
                         put("ttl", new AttributeValue().withN(e.getTtl()));
                         put("expiration_minute_utc", new AttributeValue().withS(e.getExpirationMinuteUtc()));
                         put("region", new AttributeValue().withS(e.getRegion()));
                         put("test", new AttributeValue().withN(e.getTest()));
-                    }});
+                    }};
+
+                    if (e.getName().equals("INSERT")) {
+                        d.setNewImage(imageData);
+                    }
+                    else {
+                        d.setOldImage(imageData);
+                    }
 
                     val result = new DynamodbEvent.DynamodbStreamRecord();
                     result.setEventName(e.getName());
