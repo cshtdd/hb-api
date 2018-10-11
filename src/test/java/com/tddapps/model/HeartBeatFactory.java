@@ -1,5 +1,7 @@
 package com.tddapps.model;
 
+import lombok.val;
+
 import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -14,6 +16,12 @@ public abstract class HeartBeatFactory {
 
     public static HeartBeat Create(){
         return Create(1)[0];
+    }
+
+    public static HeartBeat Create(String hostId){
+        val result = Create();
+        result.setHostId(hostId);
+        return result;
     }
 
     public static HeartBeat[] Create(int count){
