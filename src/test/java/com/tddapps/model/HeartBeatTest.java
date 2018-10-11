@@ -35,6 +35,24 @@ public class HeartBeatTest {
     }
 
     @Test
+    public void HeartBeatsAreExpiredWhenTtlIsInThePast(){
+        long ttlInThePast = EpochSecondsPlusMs(-1001);
+        val heartBeat = new HeartBeat("host1", ttlInThePast, "AAAA", "region1",false);
+
+        assertTrue(heartBeat.isExpired());
+        assertFalse(heartBeat.isNotExpired());
+    }
+
+    @Test
+    public void HeartBeatsAreNotExpiredWhenTtlIsInTheFuture(){
+        long ttlInTheFuture = EpochSecondsPlusMs(1001);
+        val heartBeat = new HeartBeat("host1", ttlInTheFuture, "AAAA", "region1",false);
+
+        assertFalse(heartBeat.isExpired());
+        assertTrue(heartBeat.isNotExpired());
+    }
+
+    @Test
     public void HasSensibleStringRepresentationForEmptyObject(){
         assertEquals(
                 "HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, expirationMinuteUtc: , region: , isTest: false",

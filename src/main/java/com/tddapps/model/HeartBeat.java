@@ -16,9 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.text.ParseException;
 
-import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
-import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
-import static com.tddapps.utils.DateExtensions.ToUtcString;
+import static com.tddapps.utils.DateExtensions.*;
 import static com.tddapps.utils.JsonNodeHelper.readInt;
 import static com.tddapps.utils.JsonNodeHelper.readString;
 import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
@@ -52,6 +50,16 @@ public class HeartBeat{
     @DynamoDBIgnore
     public boolean isNotTest(){
         return !isTest();
+    }
+
+    @DynamoDBIgnore
+    public boolean isExpired() {
+        return ttl < EpochSecondsNow();
+    }
+
+    @DynamoDBIgnore
+    public boolean isNotExpired() {
+        return !isExpired();
     }
 
     public HeartBeat(String hostId, long ttl, String region, boolean isTest){
