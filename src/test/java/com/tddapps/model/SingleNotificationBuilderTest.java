@@ -34,8 +34,8 @@ public class SingleNotificationBuilderTest {
 
     @Test
     public void SendsNotificationForASingleHeartBeat(){
-        long ttlNow = EpochSecondsNow();
-        val hb1 = new HeartBeat("host1", ttlNow, ToReverseUtcMinuteString(ttlNow), TEST_REGION_DEFAULT, false);
+        long ttlInThePast = EpochSecondsPlusMs(-2000);
+        val hb1 = new HeartBeat("host1", ttlInThePast, ToReverseUtcMinuteString(ttlInThePast), TEST_REGION_DEFAULT, false);
         val input = new HeartBeat[]{
                 hb1
         };
@@ -59,9 +59,9 @@ public class SingleNotificationBuilderTest {
 
     @Test
     public void SendsSingleNotificationForMultipleHeartBeats(){
-        long ttlNow = EpochSecondsNow();
-        val hb1 = new HeartBeat("host1", ttlNow, ToReverseUtcMinuteString(ttlNow), "us-test-2", false);
-        val hb2 = new HeartBeat("host2", ttlNow, ToReverseUtcMinuteString(ttlNow), "us-test-2", false);
+        long ttlInThePast = EpochSecondsPlusMs(-2000);
+        val hb1 = new HeartBeat("host1", ttlInThePast, ToReverseUtcMinuteString(ttlInThePast), "us-test-2", false);
+        val hb2 = new HeartBeat("host2", ttlInThePast, ToReverseUtcMinuteString(ttlInThePast), "us-test-2", false);
         val input = new HeartBeat[]{
                 hb1,
                 hb2
