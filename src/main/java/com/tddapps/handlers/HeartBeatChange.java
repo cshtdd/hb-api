@@ -12,7 +12,11 @@ import com.tddapps.model.*;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import lombok.var;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 @SuppressWarnings("unused")
@@ -48,7 +52,13 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         log.debug("HeartBeat Change");
 
         val deletedHeartBeats = readDeletedHeartBeats(input);
-        val heartBeatsToNotify = requestHandlerHelper.filter(deletedHeartBeats);
+        val insertedHeartBeats = readInsertedHeartBeats(input);
+
+        val heartBeatsToNotifyRaw = new ArrayList<HeartBeat>(){{
+            addAll(deletedHeartBeats);
+            addAll(insertedHeartBeats);
+        }}.toArray(new HeartBeat[0]);
+        val heartBeatsToNotify = requestHandlerHelper.filter(heartBeatsToNotifyRaw);
 
         val notifications = notificationBuilder.build(heartBeatsToNotify);
         val result = sendNotifications(notifications);
@@ -73,7 +83,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
-    private HeartBeat[] readDeletedHeartBeats(DynamodbEvent input) {
+    private List<HeartBeat> readDeletedHeartBeats(DynamodbEvent input) {
         return input.getRecords()
                 .stream()
                 .filter(HeartBeatChange::isRecordDeletion)
@@ -81,7 +91,18 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .map(StreamRecord::getOldImage)
                 .map(this::buildHeartBeat)
                 .filter(HeartBeat::isNotTest)
-                .toArray(HeartBeat[]::new);
+                .collect(Collectors.toList());
+    }
+
+    private List<HeartBeat> readInsertedHeartBeats(DynamodbEvent input) {
+        return input.getRecords()
+                .stream()
+                .filter(HeartBeatChange::isRecordInsertion)
+                .map(Record::getDynamodb)
+                .map(StreamRecord::getNewImage)
+                .map(this::buildHeartBeat)
+                .filter(HeartBeat::isNotTest)
+                .collect(Collectors.toList());
     }
 
     private HeartBeat buildHeartBeat(Map<String, AttributeValue> map) {
@@ -90,5 +111,9 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
 
     private static boolean isRecordDeletion(DynamodbEvent.DynamodbStreamRecord record){
         return record.getEventName().equals("REMOVE");
+    }
+
+    private static boolean isRecordInsertion(DynamodbEvent.DynamodbStreamRecord record){
+        return record.getEventName().equals("INSERT");
     }
 }

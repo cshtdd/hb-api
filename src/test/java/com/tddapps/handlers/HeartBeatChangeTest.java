@@ -54,25 +54,30 @@ public class HeartBeatChangeTest {
     }
 
     @Test
-    public void SendsANotificationForEachDeletedRecord() throws DalException {
+    public void SendsANotificationForEachDeletedOrInsertedRecord() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         val result = handleRequest(
                 new HeartBeatEvent("MODIFY", "host1", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
                 new HeartBeatEvent("INSERT", "host2", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
                 new HeartBeatEvent("REMOVE", "host3", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
                 new HeartBeatEvent("REMOVE", "host4", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
-                new HeartBeatEvent("INSERT", "host5", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0")
+                new HeartBeatEvent("INSERT", "host5", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
+                new HeartBeatEvent("INSERT", "host6", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
+                new HeartBeatEvent("MODIFY", "host7", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0")
         );
 
         assertTrue(result);
-        verify(notificationSender, times(2))
+        verify(notificationSender, times(5))
                 .Send(any(Notification.class));
+        verify(notificationSender).Send(new Notification("S-host2", "M-host2"));
         verify(notificationSender).Send(new Notification("S-host3", "M-host3"));
         verify(notificationSender).Send(new Notification("S-host4", "M-host4"));
+        verify(notificationSender).Send(new Notification("S-host5", "M-host5"));
+        verify(notificationSender).Send(new Notification("S-host6", "M-host6"));
     }
 
     @Test
-    public void SendsNotificationOnlyForDeletedRecordsInTheCurrentRegion() throws DalException {
+    public void SendsNotificationOnlyForRecordsInTheCurrentRegion() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> {
             HeartBeat[] heartBeats = i.getArgument(0);
             return Arrays.stream(heartBeats)
@@ -83,38 +88,46 @@ public class HeartBeatChangeTest {
                 new HeartBeatEvent("REMOVE", "host1", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
                 new HeartBeatEvent("REMOVE", "host2", ttlNowString, reversedUtcMinuteNowString, "us-test-2", "0"),
                 new HeartBeatEvent("REMOVE", "host3", ttlNowString, reversedUtcMinuteNowString, "us-test-2", "0"),
-                new HeartBeatEvent("REMOVE", "host4", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0")
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
+                new HeartBeatEvent("INSERT", "host5", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
+                new HeartBeatEvent("INSERT", "host6", ttlNowString, reversedUtcMinuteNowString, "us-test-2", "0"),
+                new HeartBeatEvent("INSERT", "host7", ttlNowString, reversedUtcMinuteNowString, "us-test-2", "0"),
+                new HeartBeatEvent("INSERT", "host8", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0")
         );
 
         assertTrue(result);
-        verify(notificationSender, times(2))
+        verify(notificationSender, times(4))
                 .Send(any(Notification.class));
         verify(notificationSender).Send(new Notification("S-host1", "M-host1"));
         verify(notificationSender).Send(new Notification("S-host4", "M-host4"));
+        verify(notificationSender).Send(new Notification("S-host5", "M-host5"));
+        verify(notificationSender).Send(new Notification("S-host8", "M-host8"));
     }
 
     @Test
-    public void DoesNotSendNotificationForDeletedTestRecords() throws DalException {
+    public void DoesNotSendNotificationForTestRecords() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         val result = handleRequest(
-                new HeartBeatEvent("REMOVE", "host1", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
+                new HeartBeatEvent("INSERT", "host1", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
                 new HeartBeatEvent("REMOVE", "host2", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
-                new HeartBeatEvent("REMOVE", "host3", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
-                new HeartBeatEvent("REMOVE", "host4", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "1")
+                new HeartBeatEvent("INSERT", "host3", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
+                new HeartBeatEvent("REMOVE", "host4", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
+                new HeartBeatEvent("INSERT", "host5", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "1"),
+                new HeartBeatEvent("REMOVE", "host6", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "1")
         );
 
         assertTrue(result);
-        verify(notificationSender, times(3))
+        verify(notificationSender, times(4))
                 .Send(any(Notification.class));
     }
 
     @Test
-    public void NoNotificationsAreSentOnNoDeletions() throws DalException {
+    public void NoNotificationsAreSentOnModifications() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         val result = handleRequest(
                 new HeartBeatEvent("MODIFY", "host1", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
-                new HeartBeatEvent("INSERT", "host2", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
-                new HeartBeatEvent("INSERT", "host5", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0")
+                new HeartBeatEvent("MODIFY", "host2", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0"),
+                new HeartBeatEvent("MODIFY", "host5", ttlNowString, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, "0")
         );
 
         assertTrue(result);
