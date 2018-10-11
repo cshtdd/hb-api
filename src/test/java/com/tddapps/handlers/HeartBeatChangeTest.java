@@ -8,7 +8,6 @@ import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import lombok.Data;
 import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -81,7 +80,7 @@ public class HeartBeatChangeTest {
         when(requestHandlerHelper.filter(any())).then(i -> {
             HeartBeat[] heartBeats = i.getArgument(0);
             return Arrays.stream(heartBeats)
-                    .filter(hb -> hb.getRegion() == TEST_REGION_DEFAULT)
+                    .filter(hb -> hb.getRegion().equals(TEST_REGION_DEFAULT))
                     .toArray(HeartBeat[]::new);
         });
         val result = handleRequest(
