@@ -33,7 +33,7 @@ public class SingleNotificationBuilderTest {
     }
 
     @Test
-    public void SendsNotificationForASingleHeartBeat(){
+    public void SendsNotificationForASingleExpiredHeartBeat(){
         long ttlInThePast = EpochSecondsPlusMs(-2000);
         val hb1 = new HeartBeat("host1", ttlInThePast, ToReverseUtcMinuteString(ttlInThePast), TEST_REGION_DEFAULT, false);
         val input = new HeartBeat[]{
@@ -46,6 +46,31 @@ public class SingleNotificationBuilderTest {
 
         assertEquals("Hosts missing [host1]", notification.getSubject());
         val expectedBody = "Hosts missing [host1]\n" +
+                "\n" +
+                hb1.toString() +
+                "\n" +
+                "--" +
+                "\n" +
+                "Notification Built: " + utcNowFormatted +
+                "\n" +
+                "--";
+        assertEquals(expectedBody, notification.getMessage());
+    }
+
+    @Test
+    public void SendsNotificationForASingleNotExpiredHeartBeat(){
+        long ttlInThePast = EpochSecondsPlusMs(2000);
+        val hb1 = new HeartBeat("host1", ttlInThePast, ToReverseUtcMinuteString(ttlInThePast), TEST_REGION_DEFAULT, false);
+        val input = new HeartBeat[]{
+                hb1
+        };
+
+        val notifications = builder.build(input);
+        assertEquals(1, notifications.length);
+        val notification = notifications[0];
+
+        assertEquals("Hosts registered [host1]", notification.getSubject());
+        val expectedBody = "Hosts registered [host1]\n" +
                 "\n" +
                 hb1.toString() +
                 "\n" +

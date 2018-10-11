@@ -20,7 +20,8 @@ public class SingleNotificationBuilder implements HeartBeatNotificationBuilder {
             return NoNotifications();
         }
 
-        val subject = String.format("Hosts missing [%s]", getHostNames(heartBeats));
+        val header = heartBeats[0].isExpired() ? "Hosts missing" : "Hosts registered";
+        val subject = String.format("%s [%s]", header, getHostNames(heartBeats));
         val message = String.format("%s\n\n%s\n--\nNotification Built: %s\n--",
                 subject,
                 getHeartBeatDetails(heartBeats),
