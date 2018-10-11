@@ -41,3 +41,6 @@
 - The Dynamo TTL expiration is still in place as a fallback  
 - The Dynamo HeartBeats table has a new Global Secondary Index with the minute the host expires as `HASH` key and the TTL as `RANGE` key. A cron lambda that runs every minute will get at most 25 hosts that expired in the previous minute and delete them. **Why 25?**: To stay well below the index's read throughput.  
 - The new index will have the same thoughput and autoscaling settings as the HeartBeats table  
+
+# 0.6.0 - 2018-10-11 - Notifications on host registration  
+- Notifications are sent whenever a new host is registered or reappears  
