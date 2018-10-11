@@ -39,7 +39,7 @@ public class HeartBeatExpirator implements RequestHandler<Map<String, Object>, B
         try {
             log.info("Removing expired HeartBeats");
 
-            val expiredHeartBeats = readExpiredHeartBeats();
+            val expiredHeartBeats = readHeartBeatsExpiredAMinuteAgo();
             val heartBeatsToDelete = requestHandlerHelper.filter(expiredHeartBeats);
 
             heartBeatRepository.Delete(heartBeatsToDelete);
@@ -52,10 +52,10 @@ public class HeartBeatExpirator implements RequestHandler<Map<String, Object>, B
         }
     }
 
-    private HeartBeat[] readExpiredHeartBeats() throws DalException {
+    private HeartBeat[] readHeartBeatsExpiredAMinuteAgo() throws DalException {
         val ttlNow = nowReader.ReadEpochSecond();
-        val minuteStringNow = ToReverseUtcMinuteString(ttlNow - 60);
+        val previousMinuteString = ToReverseUtcMinuteString(ttlNow - 60);
 
-        return heartBeatRepository.Read(minuteStringNow, MAX_COUNT_TO_PROCESS);
+        return heartBeatRepository.Read(previousMinuteString, MAX_COUNT_TO_PROCESS);
     }
 }
