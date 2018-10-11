@@ -69,14 +69,15 @@ public class HeartBeat{
     @Override
     public String toString() {
         return String.format(
-                "%s, expirationUtc: %s, hostId: %s, ttl: %d, expirationMinuteUtc: %s, region: %s, isTest: %s",
+                "%s, expirationUtc: %s, hostId: %s, ttl: %d, expirationMinuteUtc: %s, region: %s, isTest: %s, isExpired: %s",
                 getClass().getSimpleName(),
                 ToUtcString(ttl),
                 EmptyWhenNull(hostId),
                 ttl,
                 EmptyWhenNull(expirationMinuteUtc),
                 EmptyWhenNull(region),
-                isTest
+                isTest,
+                isExpired()
         );
     }
 

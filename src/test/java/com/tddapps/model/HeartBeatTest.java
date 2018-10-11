@@ -25,7 +25,7 @@ public class HeartBeatTest {
         val heartBeat = new HeartBeat("myHost", seededTtl, "AAAA", "ap-east-1", false);
 
         val expected = String.format(
-                "HeartBeat, expirationUtc: %s, hostId: myHost, ttl: %d, expirationMinuteUtc: AAAA, region: ap-east-1, isTest: false",
+                "HeartBeat, expirationUtc: %s, hostId: myHost, ttl: %d, expirationMinuteUtc: AAAA, region: ap-east-1, isTest: false, isExpired: false",
                 expectedExpirationString,
                 seededTtl
         );
@@ -55,7 +55,7 @@ public class HeartBeatTest {
     @Test
     public void HasSensibleStringRepresentationForEmptyObject(){
         assertEquals(
-                "HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, expirationMinuteUtc: , region: , isTest: false",
+                "HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, expirationMinuteUtc: , region: , isTest: false, isExpired: true",
                 new HeartBeat().toString());
     }
 
