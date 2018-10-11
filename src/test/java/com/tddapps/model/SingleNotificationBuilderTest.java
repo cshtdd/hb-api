@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,8 +29,17 @@ public class SingleNotificationBuilderTest {
     }
 
     @Test
+    public void DoesNotAllowANullInput(){
+        try{
+            builder.build(null);
+            fail("Should have thrown");
+        }catch (NullPointerException e){
+            assertNotNull(e);
+        }
+    }
+
+    @Test
     public void DoesNotSendNotificationWhenNoHeartBeatsAreProvided(){
-        assertEquals(0, builder.build(null).length);
         assertEquals(0, builder.build(new HeartBeat[]{}).length);
     }
 
@@ -85,19 +96,19 @@ public class SingleNotificationBuilderTest {
     @Test
     public void SendsSingleNotificationForMultipleHeartBeats(){
         long ttlInThePast = EpochSecondsPlusMs(-2000);
+        long ttlInTheFuture = EpochSecondsPlusMs(2000);
         val hb1 = new HeartBeat("host1", ttlInThePast, ToReverseUtcMinuteString(ttlInThePast), "us-test-2", false);
         val hb2 = new HeartBeat("host2", ttlInThePast, ToReverseUtcMinuteString(ttlInThePast), "us-test-2", false);
-        val input = new HeartBeat[]{
-                hb1,
-                hb2
-        };
+        val hb3 = new HeartBeat("host3", ttlInTheFuture, ToReverseUtcMinuteString(ttlInTheFuture), "us-test-2", false);
+        val hb4 = new HeartBeat("host4", ttlInTheFuture, ToReverseUtcMinuteString(ttlInTheFuture), "us-test-2", false);
+        val input = new HeartBeat[]{ hb3, hb1, hb2, hb4 };
 
         val notifications = builder.build(input);
-        assertEquals(1, notifications.length);
-        val notification = notifications[0];
+        assertEquals(2, notifications.length);
 
-        assertEquals("Hosts missing [host1, host2]", notification.getSubject());
-        val expectedBody = "Hosts missing [host1, host2]\n" +
+        val hostsMissingNotification = notifications[0];
+        assertEquals("Hosts missing [host1, host2]", hostsMissingNotification.getSubject());
+        val expectedBody1 = "Hosts missing [host1, host2]\n" +
                 "\n" +
                 hb1.toString() +
                 "\n" +
@@ -108,6 +119,21 @@ public class SingleNotificationBuilderTest {
                 "Notification Built: " + utcNowFormatted +
                 "\n" +
                 "--";
-        assertEquals(expectedBody, notification.getMessage());
+        assertEquals(expectedBody1, hostsMissingNotification.getMessage());
+
+        val hostsRegisteredNotification = notifications[1];
+        assertEquals("Hosts registered [host3, host4]", hostsRegisteredNotification.getSubject());
+        val expectedBody2 = "Hosts registered [host3, host4]\n" +
+                "\n" +
+                hb3.toString() +
+                "\n" +
+                hb4.toString() +
+                "\n" +
+                "--" +
+                "\n" +
+                "Notification Built: " + utcNowFormatted +
+                "\n" +
+                "--";
+        assertEquals(expectedBody2, hostsRegisteredNotification.getMessage());
     }
 }
