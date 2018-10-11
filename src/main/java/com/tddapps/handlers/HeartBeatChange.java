@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Log4j2
 @SuppressWarnings("unused")
@@ -51,14 +52,8 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     public Boolean handleRequest(DynamodbEvent input, Context context) {
         log.debug("HeartBeat Change");
 
-        val deletedHeartBeats = readDeletedHeartBeats(input);
-        val insertedHeartBeats = readInsertedHeartBeats(input);
-
-        val heartBeatsToNotifyRaw = new ArrayList<HeartBeat>(){{
-            addAll(deletedHeartBeats);
-            addAll(insertedHeartBeats);
-        }}.toArray(new HeartBeat[0]);
-        val heartBeatsToNotify = requestHandlerHelper.filter(heartBeatsToNotifyRaw);
+        val allHeartBeatsToNotify = readHeartBeats(input);
+        val heartBeatsToNotify = requestHandlerHelper.filter(allHeartBeatsToNotify);
 
         val notifications = notificationBuilder.build(heartBeatsToNotify);
         val result = sendNotifications(notifications);
@@ -66,6 +61,18 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         log.info(String.format("HeartBeat Change Completed; Result: %s", result));
 
         return result;
+    }
+
+    private HeartBeat[] readHeartBeats(DynamodbEvent input) {
+        val imagesToNotify = new ArrayList<Map<String, AttributeValue>>(){{
+            addAll(readDeletedRecordImages(input));
+            addAll(readInsertedRecordImages(input));
+        }};
+        return imagesToNotify
+                .stream()
+                .map(this::buildHeartBeat)
+                .filter(HeartBeat::isNotTest)
+                .toArray(HeartBeat[]::new);
     }
 
     private Boolean sendNotifications(Notification[] notifications) {
@@ -83,25 +90,21 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
-    private List<HeartBeat> readDeletedHeartBeats(DynamodbEvent input) {
+    private List<Map<String, AttributeValue>> readDeletedRecordImages(DynamodbEvent input){
         return input.getRecords()
                 .stream()
                 .filter(HeartBeatChange::isRecordDeletion)
                 .map(Record::getDynamodb)
                 .map(StreamRecord::getOldImage)
-                .map(this::buildHeartBeat)
-                .filter(HeartBeat::isNotTest)
                 .collect(Collectors.toList());
     }
 
-    private List<HeartBeat> readInsertedHeartBeats(DynamodbEvent input) {
+    private List<Map<String, AttributeValue>> readInsertedRecordImages(DynamodbEvent input){
         return input.getRecords()
                 .stream()
                 .filter(HeartBeatChange::isRecordInsertion)
                 .map(Record::getDynamodb)
                 .map(StreamRecord::getNewImage)
-                .map(this::buildHeartBeat)
-                .filter(HeartBeat::isNotTest)
                 .collect(Collectors.toList());
     }
 
