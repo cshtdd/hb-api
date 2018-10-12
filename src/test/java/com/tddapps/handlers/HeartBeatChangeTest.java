@@ -41,13 +41,13 @@ public class HeartBeatChangeTest {
     public void SendsANotificationForEachDeletedOrInsertedRecord() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
-            add(new HeartBeat("host3", ttlNow, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, false));
-            add(new HeartBeat("host4", ttlNow, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, false));
+            add(HeartBeatFactory.Create("host3"));
+            add(HeartBeatFactory.Create("host4"));
         }});
         when(eventParser.readInsertions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
-            add(new HeartBeat("host2", ttlNow, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, false));
-            add(new HeartBeat("host5", ttlNow, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, false));
-            add(new HeartBeat("host6", ttlNow, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, false));
+            add(HeartBeatFactory.Create("host2"));
+            add(HeartBeatFactory.Create("host5"));
+            add(HeartBeatFactory.Create("host6"));
         }});
 
         assertTrue(run());
@@ -100,7 +100,7 @@ public class HeartBeatChangeTest {
 
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
-            add(new HeartBeat("host1", ttlNow, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, false));
+            add(HeartBeatFactory.Create());
         }});
 
         assertFalse(run());
