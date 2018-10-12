@@ -68,11 +68,11 @@ public class HeartBeatChangeTest {
         assertTrue(result);
         verify(notificationSender, times(5))
                 .Send(any(Notification.class));
-        verify(notificationSender).Send(new Notification("S-host2", "M-host2"));
-        verify(notificationSender).Send(new Notification("S-host3", "M-host3"));
-        verify(notificationSender).Send(new Notification("S-host4", "M-host4"));
-        verify(notificationSender).Send(new Notification("S-host5", "M-host5"));
-        verify(notificationSender).Send(new Notification("S-host6", "M-host6"));
+        verify(notificationSender).Send(new Notification("S-host2", "M-host2-Hosts registered"));
+        verify(notificationSender).Send(new Notification("S-host3", "M-host3-Hosts missing"));
+        verify(notificationSender).Send(new Notification("S-host4", "M-host4-Hosts missing"));
+        verify(notificationSender).Send(new Notification("S-host5", "M-host5-Hosts registered"));
+        verify(notificationSender).Send(new Notification("S-host6", "M-host6-Hosts registered"));
     }
 
     @Test
@@ -97,10 +97,10 @@ public class HeartBeatChangeTest {
         assertTrue(result);
         verify(notificationSender, times(4))
                 .Send(any(Notification.class));
-        verify(notificationSender).Send(new Notification("S-host1", "M-host1"));
-        verify(notificationSender).Send(new Notification("S-host4", "M-host4"));
-        verify(notificationSender).Send(new Notification("S-host5", "M-host5"));
-        verify(notificationSender).Send(new Notification("S-host8", "M-host8"));
+        verify(notificationSender).Send(new Notification("S-host1", "M-host1-Hosts missing"));
+        verify(notificationSender).Send(new Notification("S-host4", "M-host4-Hosts missing"));
+        verify(notificationSender).Send(new Notification("S-host5", "M-host5-Hosts registered"));
+        verify(notificationSender).Send(new Notification("S-host8", "M-host8-Hosts registered"));
     }
 
     @Test

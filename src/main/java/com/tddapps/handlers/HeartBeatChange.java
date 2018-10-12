@@ -14,6 +14,7 @@ import lombok.val;
 import lombok.var;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,10 +52,14 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     public Boolean handleRequest(DynamodbEvent input, Context context) {
         log.debug("HeartBeat Change");
 
-        val allHeartBeatsToNotify = readHeartBeats(input);
-        val heartBeatsToNotify = requestHandlerHelper.filter(allHeartBeatsToNotify);
+        val deletedRecords = readDeletedRecords(input);
+        val insertedRecords = readInsertedRecords(input);
+        val events = new ArrayList<HeartBeatChangeEvent>(){{
+            addAll(buildEvents("Hosts missing", deletedRecords));
+            addAll(buildEvents("Hosts registered", insertedRecords));
+        }}.toArray(new HeartBeatChangeEvent[0]);
 
-        val notifications = notificationBuilder.build(heartBeatsToNotify);
+        val notifications = notificationBuilder.build(events);
         val result = sendNotifications(notifications);
 
         log.info(String.format("HeartBeat Change Completed; Result: %s", result));
@@ -62,11 +67,32 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
+    @Deprecated
     private HeartBeat[] readHeartBeats(DynamodbEvent input) {
         val records = new ArrayList<Map<String, AttributeValue>>(){{
             addAll(readDeletedRecords(input));
             addAll(readInsertedRecords(input));
         }};
+        return records
+                .stream()
+                .map(this::buildHeartBeat)
+                .filter(HeartBeat::isNotTest)
+                .toArray(HeartBeat[]::new);
+    }
+
+    private List<HeartBeatChangeEvent> buildEvents(String type, List<Map<String, AttributeValue>> records){
+        val allHeartBeats = buildHeartBeats(records);
+        val heartBeats = requestHandlerHelper.filter(allHeartBeats);
+        return buildEvents(type, heartBeats);
+    }
+
+    private List<HeartBeatChangeEvent> buildEvents(String type, HeartBeat[] heartBeats){
+        return Arrays.stream(heartBeats)
+                .map(hb -> new HeartBeatChangeEvent(type, hb))
+                .collect(Collectors.toList());
+    }
+
+    private HeartBeat[] buildHeartBeats(List<Map<String, AttributeValue>> records) {
         return records
                 .stream()
                 .map(this::buildHeartBeat)
