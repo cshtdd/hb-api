@@ -15,7 +15,7 @@ public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
     @Override
     public HeartBeat[] filter(HeartBeat[] heartBeats) {
         logHeartBeats(heartBeats);
-        val result = readHeartBeatsFromCurrentRegion(heartBeats);
+        val result = filterInternal(heartBeats);
         logMismatch(heartBeats, result);
         return result;
     }
@@ -32,8 +32,9 @@ public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
                 allHeartBeats.length, subsetCount.length));
     }
 
-    private HeartBeat[] readHeartBeatsFromCurrentRegion(HeartBeat[] heartBeats){
+    private HeartBeat[] filterInternal(HeartBeat[] heartBeats){
         return Arrays.stream(heartBeats)
+                .filter(HeartBeat::isNotTest)
                 .filter(this::heartBeatLastUpdatedInCurrentRegion)
                 .toArray(HeartBeat[]::new);
     }
