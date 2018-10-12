@@ -6,6 +6,7 @@ import lombok.val;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.tddapps.utils.DateExtensions.*;
 import static java.util.stream.Collectors.groupingBy;
@@ -38,7 +39,8 @@ public class NotificationBuilderGrouped implements HeartBeatChangeEventNotificat
                 .map(HeartBeatChangeEvent::getHeartBeat)
                 .toArray(HeartBeat[]::new);
 
-        return BuildSingleNotificationWithHeader(header, heartBeats);
+        val result = notificationBuilder.build(new NotificationMetadata(header), heartBeats);
+        return Arrays.stream(result).collect(Collectors.toList());
     }
 
     @Deprecated

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class NotificationBuilderGroupedTest {
     @Deprecated
     private final NowReader nowReaderMock = mock(NowReader.class);
-    private final HeartBeatNotificationBuilder notificationBuilderMock = mock(HeartBeatNotificationBuilder.class);
+    private final HeartBeatNotificationBuilder notificationBuilderMock = new HeartBeatNotificationBuilderOneToOneStub();
     private final NotificationBuilderGrouped builder = new NotificationBuilderGrouped(nowReaderMock, notificationBuilderMock);
 
     private String utcNowFormatted;
@@ -48,29 +48,19 @@ public class NotificationBuilderGroupedTest {
     }
 
     @Test
-    public void SendsNotificationForASingleEvent() {
+    public void SendsNotificationForASingleEvent2() {
         val hb1 = new HeartBeat("host1", EpochSecondsNow(), ToReverseUtcMinuteString(EpochSecondsNow()), TEST_REGION_DEFAULT, false);
         val event1 = new HeartBeatChangeEvent("deleted", hb1);
 
         val notifications = builder.build(new HeartBeatChangeEvent[]{event1});
-        assertEquals(1, notifications.length);
-        val notification = notifications[0];
 
-        assertEquals("deleted [host1]", notification.getSubject());
-        val expectedBody = "deleted [host1]\n" +
-                "\n" +
-                hb1.toString() +
-                "\n" +
-                "--" +
-                "\n" +
-                "Notification Built: " + utcNowFormatted +
-                "\n" +
-                "--";
-        assertEquals(expectedBody, notification.getMessage());
+        assertEquals(1, notifications.length);
+        assertEquals("SS-host1", notifications[0].getSubject());
+        assertEquals("MM-host1-deleted", notifications[0].getMessage());
     }
 
     @Test
-    public void GroupsNotificationsByEventType(){
+    public void GroupsNotificationsByEventType2(){
         val input = new HeartBeatChangeEvent[]{
                 new HeartBeatChangeEvent("deleted", HeartBeatFactory.Create("host1")),
                 new HeartBeatChangeEvent("deleted", HeartBeatFactory.Create("host2")),
@@ -79,36 +69,17 @@ public class NotificationBuilderGroupedTest {
         };
 
         val notifications = builder.build(input);
-        assertEquals(2, notifications.length);
 
-        val hostsMissingNotification = notifications[0];
-        assertEquals("deleted [host1, host2]", hostsMissingNotification.getSubject());
-        val expectedBody1 = "deleted [host1, host2]\n" +
-                "\n" +
-                input[0].getHeartBeat().toString() +
-                "\n" +
-                input[1].getHeartBeat().toString() +
-                "\n" +
-                "--" +
-                "\n" +
-                "Notification Built: " + utcNowFormatted +
-                "\n" +
-                "--";
-        assertEquals(expectedBody1, hostsMissingNotification.getMessage());
+        assertEquals(4, notifications.length);
 
-        val hostsRegisteredNotification = notifications[1];
-        assertEquals("created [host3, host4]", hostsRegisteredNotification.getSubject());
-        val expectedBody2 = "created [host3, host4]\n" +
-                "\n" +
-                input[2].getHeartBeat().toString() +
-                "\n" +
-                input[3].getHeartBeat().toString() +
-                "\n" +
-                "--" +
-                "\n" +
-                "Notification Built: " + utcNowFormatted +
-                "\n" +
-                "--";
-        assertEquals(expectedBody2, hostsRegisteredNotification.getMessage());
+        assertEquals("SS-host1", notifications[0].getSubject());
+        assertEquals("MM-host1-deleted", notifications[0].getMessage());
+        assertEquals("SS-host2", notifications[1].getSubject());
+        assertEquals("MM-host2-deleted", notifications[1].getMessage());
+
+        assertEquals("SS-host3", notifications[2].getSubject());
+        assertEquals("MM-host3-created", notifications[2].getMessage());
+        assertEquals("SS-host4", notifications[3].getSubject());
+        assertEquals("MM-host4-created", notifications[3].getMessage());
     }
 }
