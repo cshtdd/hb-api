@@ -21,20 +21,11 @@ public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder 
 
     @Override
     public Notification[] build(HeartBeatChangeEvent[] events) {
-        val groupedEvents = Arrays.stream(events)
-                .collect(groupingBy(HeartBeatChangeEvent::getType));
-
-        return groupedEvents
-                .keySet()
+        return Arrays.stream(events)
+                .collect(groupingBy(HeartBeatChangeEvent::getType))
+                .values()
                 .stream()
-                .map(k -> {
-                    val heartBeats = groupedEvents
-                            .get(k)
-                            .stream()
-                            .map(HeartBeatChangeEvent::getHeartBeat)
-                            .toArray(HeartBeat[]::new);
-                    return BuildSingleNotificationWithHeader(k, heartBeats);
-                })
+                .map(this::BuildSingleNotification)
                 .flatMap(List::stream)
                 .toArray(Notification[]::new);
     }
@@ -59,6 +50,16 @@ public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder 
         return result.toArray(new Notification[0]);
     }
 
+    private List<Notification> BuildSingleNotification(List<HeartBeatChangeEvent> events){
+        val header = events.get(0).type;
+        val heartBeats = events
+                .stream()
+                .map(HeartBeatChangeEvent::getHeartBeat)
+                .toArray(HeartBeat[]::new);
+
+        return BuildSingleNotificationWithHeader(header, heartBeats);
+    }
+
     private List<Notification> BuildSingleNotificationWithHeader(String header, HeartBeat[] heartBeats) {
         if (isEmpty(heartBeats)){
             return NoNotifications();
@@ -77,25 +78,25 @@ public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder 
         }};
     }
 
-    private String getHeartBeatDetails(HeartBeat[] heartBeats) {
+    private static String getHeartBeatDetails(HeartBeat[] heartBeats) {
         return Arrays.stream(heartBeats)
                 .map(HeartBeat::toString)
                 .reduce((a, b) -> String.format("%s\n%s", a, b))
                 .orElse("");
     }
 
-    private String getHostNames(HeartBeat[] heartBeats) {
+    private static String getHostNames(HeartBeat[] heartBeats) {
         return Arrays.stream(heartBeats)
                 .map(HeartBeat::getHostId)
                 .reduce((a, b) -> String.format("%s, %s", a, b))
                 .orElse("");
     }
 
-    private boolean isEmpty(HeartBeat[] heartBeats) {
+    private static boolean isEmpty(HeartBeat[] heartBeats) {
         return heartBeats == null || heartBeats.length == 0;
     }
 
-    private List<Notification> NoNotifications() {
+    private static List<Notification> NoNotifications() {
         return new ArrayList<>();
     }
 }
