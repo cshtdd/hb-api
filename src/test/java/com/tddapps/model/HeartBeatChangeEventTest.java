@@ -1,5 +1,6 @@
 package com.tddapps.model;
 
+import com.tddapps.model.test.HeartBeatFactory;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 

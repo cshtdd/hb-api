@@ -4,6 +4,9 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sns.model.Topic;
 import com.tddapps.model.*;
+import com.tddapps.model.notifications.Notification;
+import com.tddapps.model.notifications.NotificationSender;
+import com.tddapps.model.notifications.NotificationSenderStatus;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 

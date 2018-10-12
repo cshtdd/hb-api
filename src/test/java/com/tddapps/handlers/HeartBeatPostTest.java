@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
+import static com.tddapps.model.test.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;

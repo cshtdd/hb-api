@@ -1,9 +1,13 @@
-package com.tddapps.model;
+package com.tddapps.model.notifications;
 
+import com.tddapps.model.HeartBeat;
+import com.tddapps.model.HeartBeatChangeEvent;
+import com.tddapps.model.notifications.test.HeartBeatNotificationBuilderOneToOneStub;
+import com.tddapps.model.test.HeartBeatFactory;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
+import static com.tddapps.model.test.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.*;

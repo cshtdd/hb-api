@@ -1,6 +1,7 @@
 package com.tddapps.handlers;
 
 import com.tddapps.model.*;
+import com.tddapps.model.test.HeartBeatFactory;
 import com.tddapps.utils.NowReader;
 import lombok.val;
 import org.junit.jupiter.api.*;

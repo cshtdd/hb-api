@@ -1,5 +1,6 @@
-package com.tddapps.model;
+package com.tddapps.model.test;
 
+import com.tddapps.model.HeartBeat;
 import lombok.val;
 
 import java.util.Arrays;

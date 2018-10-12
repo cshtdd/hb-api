@@ -1,4 +1,8 @@
-package com.tddapps.model;
+package com.tddapps.model.notifications.test;
+
+import com.tddapps.model.HeartBeatChangeEvent;
+import com.tddapps.model.notifications.HeartBeatChangeEventNotificationBuilder;
+import com.tddapps.model.notifications.Notification;
 
 import java.util.Arrays;
 

@@ -1,5 +1,6 @@
-package com.tddapps.model;
+package com.tddapps.model.notifications;
 
+import com.tddapps.model.notifications.NotificationMetadata;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 

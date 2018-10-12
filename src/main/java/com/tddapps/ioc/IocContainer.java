@@ -3,6 +3,7 @@ package com.tddapps.ioc;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.*;
 import com.tddapps.infrastructure.*;
+import com.tddapps.model.notifications.*;
 import com.tddapps.utils.*;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.PicoContainer;

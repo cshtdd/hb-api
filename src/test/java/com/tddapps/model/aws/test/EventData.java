@@ -1,4 +1,4 @@
-package com.tddapps.model.aws;
+package com.tddapps.model.aws.test;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;

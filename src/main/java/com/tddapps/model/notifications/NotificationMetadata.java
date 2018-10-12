@@ -1,4 +1,4 @@
-package com.tddapps.model;
+package com.tddapps.model.notifications;
 
 import lombok.Data;
 import lombok.NonNull;
