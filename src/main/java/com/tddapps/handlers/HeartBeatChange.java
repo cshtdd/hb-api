@@ -49,22 +49,13 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     public Boolean handleRequest(DynamodbEvent input, Context context) {
         log.debug("HeartBeat Change");
 
-        val allDeletedHeartBeats = eventParser.readDeletions(input, HeartBeat.class);
-        val allInsertedHeartBeats = eventParser.readInsertions(input, HeartBeat.class);
-        val intersection = allDeletedHeartBeats
-                .stream()
-                .filter(allInsertedHeartBeats::contains)
-                .collect(Collectors.toList());
-        logHeartBeatsThatFlipped(intersection.toArray(new HeartBeat[0]));
+        val allDeletedHeartBeats = readDeletedHeartBeats(input);
+        val allInsertedHeartBeats = readInsertedHeartBeats(input);
+        val intersection = intersection(allDeletedHeartBeats, allInsertedHeartBeats);
+        logHeartBeatsThatFlipped(intersection);
 
-        val deletedHeartBeats = allDeletedHeartBeats
-                .stream()
-                .filter(hb -> !intersection.contains(hb))
-                .collect(Collectors.toList());
-        val insertedHeartBeats = allInsertedHeartBeats
-                .stream()
-                .filter(hb -> !intersection.contains(hb))
-                .collect(Collectors.toList());
+        val deletedHeartBeats = difference(allDeletedHeartBeats, intersection);
+        val insertedHeartBeats = difference(allInsertedHeartBeats, intersection);
 
         val events = new ArrayList<HeartBeatChangeEvent>(){{
             addAll(buildEvents("Hosts missing", deletedHeartBeats));
@@ -79,16 +70,43 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
-    private void logHeartBeatsThatFlipped(HeartBeat[] heartBeats){
+    private List<HeartBeat> readDeletedHeartBeats(DynamodbEvent input){
+        val all = eventParser.readDeletions(input, HeartBeat.class)
+                .toArray(new HeartBeat[0]);
+        return Arrays.stream(requestHandlerHelper.filter(all))
+                .collect(Collectors.toList());
+    }
+
+    private List<HeartBeat> readInsertedHeartBeats(DynamodbEvent input){
+        val all = eventParser.readInsertions(input, HeartBeat.class)
+                .toArray(new HeartBeat[0]);
+        return Arrays.stream(requestHandlerHelper.filter(all))
+                .collect(Collectors.toList());
+    }
+
+    private static void logHeartBeatsThatFlipped(List<HeartBeat> heartBeats){
         for (val hb : heartBeats){
             log.info(String.format("Flipped Host; %s", hb.toString()));
         }
     }
 
-    private List<HeartBeatChangeEvent> buildEvents(String type, List<HeartBeat> heartBeats) {
-        val eventHeartBeats = requestHandlerHelper.filter(heartBeats.toArray(new HeartBeat[0]));
+    private static List<HeartBeat> intersection(List<HeartBeat> l1, List<HeartBeat> l2){
+        return l1
+                .stream()
+                .filter(l2::contains)
+                .collect(Collectors.toList());
+    }
 
-        return Arrays.stream(eventHeartBeats)
+    private static List<HeartBeat> difference(List<HeartBeat> all, List<HeartBeat> subset){
+        return all
+                .stream()
+                .filter(hb -> !subset.contains(hb))
+                .collect(Collectors.toList());
+    }
+
+    private List<HeartBeatChangeEvent> buildEvents(String type, List<HeartBeat> heartBeats) {
+        return heartBeats
+                .stream()
                 .map(hb -> new HeartBeatChangeEvent(type, hb))
                 .collect(Collectors.toList());
     }
