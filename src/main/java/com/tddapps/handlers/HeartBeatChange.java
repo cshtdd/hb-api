@@ -3,7 +3,6 @@ package com.tddapps.handlers;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
-import com.amazonaws.util.CollectionUtils;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.DynamoDBEventParser;
@@ -15,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.tddapps.utils.CollectionExtensions.Difference;
+import static com.tddapps.utils.CollectionExtensions.Intersection;
 
 @Log4j2
 @SuppressWarnings("unused")
@@ -51,11 +53,11 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
 
         val allDeletedHeartBeats = readDeletedHeartBeats(input);
         val allInsertedHeartBeats = readInsertedHeartBeats(input);
-        val intersection = intersection(allDeletedHeartBeats, allInsertedHeartBeats);
+        val intersection = Intersection(allDeletedHeartBeats, allInsertedHeartBeats);
         logHeartBeatsThatFlipped(intersection);
 
-        val deletedHeartBeats = difference(allDeletedHeartBeats, intersection);
-        val insertedHeartBeats = difference(allInsertedHeartBeats, intersection);
+        val deletedHeartBeats = Difference(allDeletedHeartBeats, intersection);
+        val insertedHeartBeats = Difference(allInsertedHeartBeats, intersection);
 
         val events = new ArrayList<HeartBeatChangeEvent>(){{
             addAll(buildEvents("Hosts missing", deletedHeartBeats));
@@ -88,22 +90,6 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         for (val hb : heartBeats){
             log.info(String.format("Flipped Host; %s", hb.toString()));
         }
-    }
-
-    @Deprecated
-    private static List<HeartBeat> intersection(List<HeartBeat> l1, List<HeartBeat> l2){
-        return l1
-                .stream()
-                .filter(l2::contains)
-                .collect(Collectors.toList());
-    }
-
-    @Deprecated
-    private static List<HeartBeat> difference(List<HeartBeat> all, List<HeartBeat> subset){
-        return all
-                .stream()
-                .filter(hb -> !subset.contains(hb))
-                .collect(Collectors.toList());
     }
 
     private List<HeartBeatChangeEvent> buildEvents(String type, List<HeartBeat> heartBeats) {
