@@ -39,6 +39,7 @@ public class NotificationBuilderGrouped implements HeartBeatChangeEventNotificat
         return BuildSingleNotificationWithHeader(header, heartBeats);
     }
 
+    @Deprecated
     private List<Notification> BuildSingleNotificationWithHeader(String header, HeartBeat[] heartBeats) {
         if (isEmpty(heartBeats)){
             return NoNotifications();
@@ -57,6 +58,7 @@ public class NotificationBuilderGrouped implements HeartBeatChangeEventNotificat
         }};
     }
 
+    @Deprecated
     private static String getHeartBeatDetails(HeartBeat[] heartBeats) {
         return Arrays.stream(heartBeats)
                 .map(HeartBeat::toString)
@@ -64,6 +66,7 @@ public class NotificationBuilderGrouped implements HeartBeatChangeEventNotificat
                 .orElse("");
     }
 
+    @Deprecated
     private static String getHostNames(HeartBeat[] heartBeats) {
         return Arrays.stream(heartBeats)
                 .map(HeartBeat::getHostId)
@@ -71,6 +74,7 @@ public class NotificationBuilderGrouped implements HeartBeatChangeEventNotificat
                 .orElse("");
     }
 
+    @Deprecated
     private static boolean isEmpty(HeartBeat[] heartBeats) {
         return heartBeats == null || heartBeats.length == 0;
     }
