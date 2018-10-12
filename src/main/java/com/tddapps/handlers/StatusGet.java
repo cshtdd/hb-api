@@ -2,9 +2,13 @@ package com.tddapps.handlers;
 
 import com.tddapps.handlers.infrastructure.ApiGatewayHandler;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
-import com.tddapps.infrastructure.KeysCache;
+import com.tddapps.model.infrastructure.KeysCache;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
+import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.heartbeats.HeartBeatRepository;
+import com.tddapps.model.infrastructure.Settings;
+import com.tddapps.model.infrastructure.SettingsReader;
 import com.tddapps.model.notifications.NotificationSenderStatus;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;

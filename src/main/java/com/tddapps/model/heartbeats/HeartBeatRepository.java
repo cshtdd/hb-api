@@ -1,4 +1,6 @@
-package com.tddapps.model;
+package com.tddapps.model.heartbeats;
+
+import com.tddapps.model.DalException;
 
 public interface HeartBeatRepository {
     void Save(HeartBeat[] heartBeat) throws DalException;

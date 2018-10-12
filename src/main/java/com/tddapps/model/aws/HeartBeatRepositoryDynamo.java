@@ -6,8 +6,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.tddapps.model.DalException;
-import com.tddapps.model.HeartBeat;
-import com.tddapps.model.HeartBeatRepository;
+import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.heartbeats.HeartBeatRepository;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 

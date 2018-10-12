@@ -1,8 +1,13 @@
 package com.tddapps.ioc;
 
-import com.tddapps.model.*;
 import com.tddapps.model.aws.*;
-import com.tddapps.infrastructure.*;
+import com.tddapps.model.heartbeats.HeartBeatRepository;
+import com.tddapps.model.heartbeats.RequestHandlerHelper;
+import com.tddapps.model.heartbeats.RequestHandlerHelperCurrentRegion;
+import com.tddapps.model.infrastructure.EnvironmentSettingsReader;
+import com.tddapps.model.infrastructure.InMemoryKeysCacheWithExpiration;
+import com.tddapps.model.infrastructure.KeysCache;
+import com.tddapps.model.infrastructure.SettingsReader;
 import com.tddapps.model.notifications.*;
 import com.tddapps.utils.*;
 import org.picocontainer.DefaultPicoContainer;

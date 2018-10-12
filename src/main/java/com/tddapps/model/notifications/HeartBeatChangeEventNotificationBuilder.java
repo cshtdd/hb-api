@@ -1,7 +1,6 @@
 package com.tddapps.model.notifications;
 
-import com.tddapps.model.HeartBeatChangeEvent;
-import com.tddapps.model.notifications.Notification;
+import com.tddapps.model.heartbeats.HeartBeatChangeEvent;
 
 public interface HeartBeatChangeEventNotificationBuilder {
     Notification[] build(HeartBeatChangeEvent[] events);

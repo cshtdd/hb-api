@@ -2,13 +2,17 @@ package com.tddapps.handlers;
 
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.model.*;
+import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.heartbeats.HeartBeatRepository;
+import com.tddapps.model.infrastructure.Settings;
+import com.tddapps.model.infrastructure.SettingsReader;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static com.tddapps.model.test.HeartBeatFactory.TEST_REGION_DEFAULT;
+import static com.tddapps.model.heartbeats.test.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;

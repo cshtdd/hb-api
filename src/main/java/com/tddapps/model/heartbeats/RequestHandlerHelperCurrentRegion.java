@@ -1,4 +1,6 @@
-package com.tddapps.model;
+package com.tddapps.model.heartbeats;
+import com.tddapps.model.infrastructure.Settings;
+import com.tddapps.model.infrastructure.SettingsReader;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 

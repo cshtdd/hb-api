@@ -1,6 +1,6 @@
 package com.tddapps.model.notifications.test;
 
-import com.tddapps.model.HeartBeat;
+import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.notifications.HeartBeatNotificationBuilder;
 import com.tddapps.model.notifications.Notification;
 import com.tddapps.model.notifications.NotificationMetadata;

@@ -3,9 +3,9 @@ package com.tddapps.model.aws;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.*;
-import com.tddapps.model.HeartBeat;
-import com.tddapps.model.Settings;
-import com.tddapps.model.SettingsReader;
+import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.infrastructure.Settings;
+import com.tddapps.model.infrastructure.SettingsReader;
 import lombok.val;
 
 import java.util.ArrayList;

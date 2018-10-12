@@ -1,4 +1,4 @@
-package com.tddapps.model;
+package com.tddapps.model.heartbeats;
 
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
-import static com.tddapps.model.test.HeartBeatFactory.TEST_REGION_DEFAULT;
+import static com.tddapps.model.heartbeats.test.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.*;
 import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
 import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;

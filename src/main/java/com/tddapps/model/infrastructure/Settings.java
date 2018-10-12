@@ -1,4 +1,4 @@
-package com.tddapps.model;
+package com.tddapps.model.infrastructure;
 
 public abstract class Settings {
     public final static String AWS_REGION = "AWS_REGION";

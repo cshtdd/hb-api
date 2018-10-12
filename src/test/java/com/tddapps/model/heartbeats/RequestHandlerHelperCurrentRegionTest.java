@@ -1,14 +1,16 @@
-package com.tddapps.model;
+package com.tddapps.model.heartbeats;
 
-import com.tddapps.model.test.HeartBeatFactory;
+import com.tddapps.model.infrastructure.Settings;
+import com.tddapps.model.infrastructure.SettingsReader;
+import com.tddapps.model.heartbeats.test.HeartBeatFactory;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static com.tddapps.model.test.HeartBeatFactory.TEST_REGION_DEFAULT;
-import static com.tddapps.model.test.HeartBeatListTestHelper.ShouldMatch;
+import static com.tddapps.model.heartbeats.test.HeartBeatFactory.TEST_REGION_DEFAULT;
+import static com.tddapps.model.heartbeats.test.HeartBeatListTestHelper.ShouldMatch;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

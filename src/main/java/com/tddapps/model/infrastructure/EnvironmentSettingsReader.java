@@ -1,4 +1,4 @@
-package com.tddapps.model;
+package com.tddapps.model.infrastructure;
 
 import lombok.val;
 

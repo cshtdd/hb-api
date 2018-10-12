@@ -1,4 +1,4 @@
-package com.tddapps.model;
+package com.tddapps.model.heartbeats;
 
 import lombok.Data;
 import lombok.NonNull;

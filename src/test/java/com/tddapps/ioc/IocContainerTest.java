@@ -2,10 +2,14 @@ package com.tddapps.ioc;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.tddapps.model.*;
 import com.tddapps.model.aws.*;
-import com.tddapps.infrastructure.InMemoryKeysCacheWithExpiration;
-import com.tddapps.infrastructure.KeysCache;
+import com.tddapps.model.infrastructure.InMemoryKeysCacheWithExpiration;
+import com.tddapps.model.infrastructure.KeysCache;
+import com.tddapps.model.heartbeats.HeartBeatRepository;
+import com.tddapps.model.heartbeats.RequestHandlerHelper;
+import com.tddapps.model.heartbeats.RequestHandlerHelperCurrentRegion;
+import com.tddapps.model.infrastructure.EnvironmentSettingsReader;
+import com.tddapps.model.infrastructure.SettingsReader;
 import com.tddapps.model.notifications.*;
 import com.tddapps.utils.NowReader;
 import com.tddapps.utils.NowReaderImpl;

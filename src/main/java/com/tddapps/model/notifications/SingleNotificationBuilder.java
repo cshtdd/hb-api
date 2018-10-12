@@ -1,9 +1,6 @@
 package com.tddapps.model.notifications;
 
-import com.tddapps.model.HeartBeat;
-import com.tddapps.model.notifications.HeartBeatNotificationBuilder;
-import com.tddapps.model.notifications.Notification;
-import com.tddapps.model.notifications.NotificationMetadata;
+import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.utils.NowReader;
 import lombok.val;
 import java.util.Arrays;

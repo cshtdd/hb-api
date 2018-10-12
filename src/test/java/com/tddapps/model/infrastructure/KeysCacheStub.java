@@ -1,4 +1,6 @@
-package com.tddapps.infrastructure;
+package com.tddapps.model.infrastructure;
+
+import com.tddapps.model.infrastructure.KeysCache;
 
 import java.util.HashSet;
 

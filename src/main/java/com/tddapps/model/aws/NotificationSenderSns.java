@@ -4,6 +4,8 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sns.model.Topic;
 import com.tddapps.model.*;
+import com.tddapps.model.infrastructure.Settings;
+import com.tddapps.model.infrastructure.SettingsReader;
 import com.tddapps.model.notifications.Notification;
 import com.tddapps.model.notifications.NotificationSender;
 import com.tddapps.model.notifications.NotificationSenderStatus;

@@ -1,4 +1,4 @@
-package com.tddapps.model;
+package com.tddapps.model.infrastructure;
 
 public interface SettingsReader {
     String ReadString(String name);

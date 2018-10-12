@@ -3,17 +3,19 @@ package com.tddapps.handlers;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.DynamoDBEventParser;
+import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.heartbeats.RequestHandlerHelper;
 import com.tddapps.model.notifications.test.HeartBeatChangeEventNotificationBuilderOneToOneStub;
 import com.tddapps.model.notifications.Notification;
 import com.tddapps.model.notifications.NotificationSender;
-import com.tddapps.model.test.HeartBeatFactory;
+import com.tddapps.model.heartbeats.test.HeartBeatFactory;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.tddapps.model.test.HeartBeatFactory.TEST_REGION_DEFAULT;
+import static com.tddapps.model.heartbeats.test.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.*;

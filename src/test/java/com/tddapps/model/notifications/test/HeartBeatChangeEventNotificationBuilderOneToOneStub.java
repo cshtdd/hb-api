@@ -1,6 +1,6 @@
 package com.tddapps.model.notifications.test;
 
-import com.tddapps.model.HeartBeatChangeEvent;
+import com.tddapps.model.heartbeats.HeartBeatChangeEvent;
 import com.tddapps.model.notifications.HeartBeatChangeEventNotificationBuilder;
 import com.tddapps.model.notifications.Notification;
 

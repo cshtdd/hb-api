@@ -1,4 +1,4 @@
-package com.tddapps.infrastructure;
+package com.tddapps.model.infrastructure;
 
 public interface KeysCache {
     boolean Contains(String key);

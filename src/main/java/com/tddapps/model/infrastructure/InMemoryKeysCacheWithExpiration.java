@@ -1,4 +1,4 @@
-package com.tddapps.infrastructure;
+package com.tddapps.model.infrastructure;
 
 import lombok.val;
 import org.ehcache.Cache;

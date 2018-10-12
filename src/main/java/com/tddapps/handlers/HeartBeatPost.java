@@ -4,6 +4,10 @@ import com.tddapps.handlers.infrastructure.ApiGatewayHandler;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
+import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.heartbeats.HeartBeatRepository;
+import com.tddapps.model.infrastructure.Settings;
+import com.tddapps.model.infrastructure.SettingsReader;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 

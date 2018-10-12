@@ -1,4 +1,4 @@
-package com.tddapps.model;
+package com.tddapps.model.heartbeats;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
