@@ -10,4 +10,11 @@ public abstract class CollectionExtensions {
                 .filter(l2::contains)
                 .collect(Collectors.toList());
     }
+
+    public static <T> Collection<T> Difference(Collection<T> all, Collection<T> subset){
+        return all
+                .stream()
+                .filter(e -> !subset.contains(e))
+                .collect(Collectors.toList());
+    }
 }
