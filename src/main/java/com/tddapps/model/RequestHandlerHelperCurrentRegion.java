@@ -36,6 +36,7 @@ public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
         return Arrays.stream(heartBeats)
                 .filter(HeartBeat::isNotTest)
                 .filter(this::heartBeatLastUpdatedInCurrentRegion)
+                .distinct()
                 .toArray(HeartBeat[]::new);
     }
 

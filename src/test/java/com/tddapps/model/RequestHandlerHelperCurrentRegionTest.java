@@ -27,12 +27,14 @@ public class RequestHandlerHelperCurrentRegionTest {
     }
 
     @Test
-    public void FilterReturnsNonTestHeartBeatsFromTheCurrentRegion(){
-        val seededHeartBeats = HeartBeatFactory.Create(12);
+    public void FilterReturnsUniqueNonTestHeartBeatsFromTheCurrentRegion(){
+        val seededHeartBeats = HeartBeatFactory.Create(14);
         seededHeartBeats[8].setRegion("us-test-2");
         seededHeartBeats[9].setRegion("us-test-2");
         seededHeartBeats[10].setTest(true);
         seededHeartBeats[11].setTest(true);
+        seededHeartBeats[12] = seededHeartBeats[2];
+        seededHeartBeats[13] = seededHeartBeats[3];
         val expected = Arrays.copyOfRange(seededHeartBeats, 0, 8);
 
         val actual = helper.filter(seededHeartBeats);
