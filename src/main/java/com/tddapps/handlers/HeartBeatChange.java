@@ -58,11 +58,12 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     public Boolean handleRequest(DynamodbEvent input, Context context) {
         log.debug("HeartBeat Change");
 
-        val deletedRecords = readDeletedRecords(input);
-        val insertedRecords = readInsertedRecords(input);
+        val deletedHeartBeats = eventParser.readDeletions(input, HeartBeat.class);
+        val insertedHeartBeats = eventParser.readInsertions(input, HeartBeat.class);
+
         val events = new ArrayList<HeartBeatChangeEvent>(){{
-            addAll(buildEvents("Hosts missing", deletedRecords));
-            addAll(buildEvents("Hosts registered", insertedRecords));
+            addAll(buildEvents2("Hosts missing", deletedHeartBeats));
+            addAll(buildEvents2("Hosts registered", insertedHeartBeats));
         }}.toArray(new HeartBeatChangeEvent[0]);
 
         val notifications = notificationBuilder.build(events);
@@ -73,6 +74,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
+    @Deprecated
     private List<HeartBeatChangeEvent> buildEvents(String type, List<Map<String, AttributeValue>> records){
         val allHeartBeats = buildHeartBeats(records);
         val heartBeats = requestHandlerHelper.filter(allHeartBeats);
@@ -85,6 +87,18 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .collect(Collectors.toList());
     }
 
+    private List<HeartBeatChangeEvent> buildEvents2(String type, List<HeartBeat> heartBeats) {
+        val nonTestHeartBeats = heartBeats
+                .stream()
+                .filter(HeartBeat::isNotTest)
+                .toArray(HeartBeat[]::new);
+
+        val eventHeartBeats = requestHandlerHelper.filter(nonTestHeartBeats);
+
+        return buildEvents(type, eventHeartBeats);
+    }
+
+    @Deprecated
     private HeartBeat[] buildHeartBeats(List<Map<String, AttributeValue>> records) {
         return records
                 .stream()
@@ -108,6 +122,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
+    @Deprecated
     private List<Map<String, AttributeValue>> readDeletedRecords(DynamodbEvent input){
         return input.getRecords()
                 .stream()
@@ -117,6 +132,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .collect(Collectors.toList());
     }
 
+    @Deprecated
     private List<Map<String, AttributeValue>> readInsertedRecords(DynamodbEvent input){
         return input.getRecords()
                 .stream()
@@ -126,14 +142,17 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .collect(Collectors.toList());
     }
 
+    @Deprecated
     private HeartBeat buildHeartBeat(Map<String, AttributeValue> map) {
         return mapper.marshallIntoObject(HeartBeat.class, map);
     }
 
+    @Deprecated
     private static boolean isRecordDeletion(DynamodbEvent.DynamodbStreamRecord record){
         return record.getEventName().equals("REMOVE");
     }
 
+    @Deprecated
     private static boolean isRecordInsertion(DynamodbEvent.DynamodbStreamRecord record){
         return record.getEventName().equals("INSERT");
     }
