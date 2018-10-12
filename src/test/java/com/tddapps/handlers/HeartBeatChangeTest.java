@@ -37,6 +37,7 @@ public class HeartBeatChangeTest {
     private final String ttlNowString = String.format("%d", ttlNow);
     private final String reversedUtcMinuteNowString = ToReverseUtcMinuteString(ttlNow);
 
+    @Deprecated
     @Data
     private static class HeartBeatEvent{
         final String name;
@@ -148,6 +149,7 @@ public class HeartBeatChangeTest {
         assertFalse(result);
     }
 
+    @Deprecated
     private boolean handleRequest(HeartBeatEvent ... seededEvents){
         List<DynamodbEvent.DynamodbStreamRecord> seededRecords = Arrays.stream(seededEvents)
                 .map(e -> {
