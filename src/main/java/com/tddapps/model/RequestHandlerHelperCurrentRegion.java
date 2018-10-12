@@ -22,7 +22,7 @@ public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
 
     private void logHeartBeats(HeartBeat[] heartBeats) {
         for (val hb : heartBeats){
-            log.info(String.format("Host missing; currentRegion: %s; %s",
+            log.info(String.format("Host Change; currentRegion: %s; %s",
                     ReadRegion(), hb.toString()));
         }
     }
