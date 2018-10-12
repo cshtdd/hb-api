@@ -1,21 +1,12 @@
 package com.tddapps.handlers;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.StreamRecord;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
-import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.DynamoDBEventParser;
-import lombok.Data;
-import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
@@ -32,7 +23,6 @@ public class HeartBeatChangeTest {
     private final HeartBeatChange handler = new HeartBeatChange(
             notificationBuilder,
             notificationSender,
-            IocContainer.getInstance().Resolve(DynamoDBMapper.class),
             requestHandlerHelper,
             eventParser
     );
@@ -40,7 +30,6 @@ public class HeartBeatChangeTest {
     private final DynamodbEvent seededInput = new DynamodbEvent();
 
     private final long ttlNow = EpochSecondsNow();
-    private final String ttlNowString = String.format("%d", ttlNow);
     private final String reversedUtcMinuteNowString = ToReverseUtcMinuteString(ttlNow);
 
     @Test
