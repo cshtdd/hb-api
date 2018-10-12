@@ -41,7 +41,7 @@ public abstract class HeartBeatFactory {
                 ttl,
                 ToReverseUtcMinuteString(ttl),
                 TEST_REGION_DEFAULT,
-                true
+                false
         );
     }
 
