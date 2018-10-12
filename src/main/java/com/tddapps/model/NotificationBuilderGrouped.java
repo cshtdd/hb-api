@@ -30,26 +30,6 @@ public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder 
                 .toArray(Notification[]::new);
     }
 
-    @Deprecated
-    @Override
-    public Notification[] build(HeartBeat[] heartBeats) {
-        val expiredHeartBeats = Arrays.stream(heartBeats)
-                .filter(HeartBeat::isExpired)
-                .toArray(HeartBeat[]::new);
-        val notificationHostsMissing = BuildSingleNotificationWithHeader("Hosts missing", expiredHeartBeats);
-
-        val registeredHeartBeats = Arrays.stream(heartBeats)
-                .filter(HeartBeat::isNotExpired)
-                .toArray(HeartBeat[]::new);
-        val notificationHostsRegistered = BuildSingleNotificationWithHeader("Hosts registered", registeredHeartBeats);
-
-        val result = new ArrayList<Notification>() {{
-            addAll(notificationHostsMissing);
-            addAll(notificationHostsRegistered);
-        }};
-        return result.toArray(new Notification[0]);
-    }
-
     private List<Notification> BuildSingleNotification(List<HeartBeatChangeEvent> events){
         val header = events.get(0).type;
         val heartBeats = events

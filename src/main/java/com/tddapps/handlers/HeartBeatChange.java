@@ -67,19 +67,6 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
-    @Deprecated
-    private HeartBeat[] readHeartBeats(DynamodbEvent input) {
-        val records = new ArrayList<Map<String, AttributeValue>>(){{
-            addAll(readDeletedRecords(input));
-            addAll(readInsertedRecords(input));
-        }};
-        return records
-                .stream()
-                .map(this::buildHeartBeat)
-                .filter(HeartBeat::isNotTest)
-                .toArray(HeartBeat[]::new);
-    }
-
     private List<HeartBeatChangeEvent> buildEvents(String type, List<Map<String, AttributeValue>> records){
         val allHeartBeats = buildHeartBeats(records);
         val heartBeats = requestHandlerHelper.filter(allHeartBeats);
