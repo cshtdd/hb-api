@@ -13,6 +13,7 @@ import lombok.var;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.tddapps.utils.CollectionExtensions.Difference;
@@ -73,15 +74,15 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     }
 
     private List<HeartBeat> readDeletedHeartBeats(DynamodbEvent input){
-        val all = eventParser.readDeletions(input, HeartBeat.class)
-                .toArray(new HeartBeat[0]);
-        return Arrays.stream(requestHandlerHelper.filter(all))
-                .collect(Collectors.toList());
+        return filter(() -> eventParser.readDeletions(input, HeartBeat.class));
     }
 
     private List<HeartBeat> readInsertedHeartBeats(DynamodbEvent input){
-        val all = eventParser.readInsertions(input, HeartBeat.class)
-                .toArray(new HeartBeat[0]);
+        return filter(() -> eventParser.readInsertions(input, HeartBeat.class));
+    }
+
+    private List<HeartBeat> filter(Supplier<List<HeartBeat>> fn){
+        val all = fn.get().toArray(new HeartBeat[0]);
         return Arrays.stream(requestHandlerHelper.filter(all))
                 .collect(Collectors.toList());
     }
