@@ -16,7 +16,7 @@ public class HeartBeatNotificationBuilderOneToOneStub implements HeartBeatNotifi
 
     private static Notification toNotification(HeartBeatChangeEvent input){
         return new Notification(
-                "S-" + input.heartBeat.getHostId() + "-" + input.type,
+                "S-" + input.heartBeat.getHostId(),
                 "M-" + input.heartBeat.getHostId() + "-" + input.type
         );
     }
