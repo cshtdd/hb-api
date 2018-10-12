@@ -13,9 +13,11 @@ import static java.util.stream.Collectors.groupingBy;
 public class NotificationBuilderGrouped implements HeartBeatChangeEventNotificationBuilder {
     @Deprecated
     private final NowReader nowReader;
+    private final HeartBeatNotificationBuilder notificationBuilder;
 
-    public NotificationBuilderGrouped(NowReader nowReader) {
+    public NotificationBuilderGrouped(NowReader nowReader, HeartBeatNotificationBuilder notificationBuilder) {
         this.nowReader = nowReader;
+        this.notificationBuilder = notificationBuilder;
     }
 
     @Override

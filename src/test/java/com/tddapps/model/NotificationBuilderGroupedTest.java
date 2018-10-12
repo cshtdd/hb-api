@@ -14,11 +14,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class NotificationBuilderGroupedTest {
+    @Deprecated
     private final NowReader nowReaderMock = mock(NowReader.class);
-    private final NotificationBuilderGrouped builder = new NotificationBuilderGrouped(nowReaderMock);
+    private final HeartBeatNotificationBuilder notificationBuilderMock = mock(HeartBeatNotificationBuilder.class);
+    private final NotificationBuilderGrouped builder = new NotificationBuilderGrouped(nowReaderMock, notificationBuilderMock);
 
     private String utcNowFormatted;
 
+    @Deprecated
     @BeforeEach
     public void Setup(){
         val seededDate = UtcNowPlusMs(1000);
