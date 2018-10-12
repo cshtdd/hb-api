@@ -90,6 +90,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         }
     }
 
+    @Deprecated
     private static List<HeartBeat> intersection(List<HeartBeat> l1, List<HeartBeat> l2){
         return l1
                 .stream()
@@ -97,6 +98,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .collect(Collectors.toList());
     }
 
+    @Deprecated
     private static List<HeartBeat> difference(List<HeartBeat> all, List<HeartBeat> subset){
         return all
                 .stream()
