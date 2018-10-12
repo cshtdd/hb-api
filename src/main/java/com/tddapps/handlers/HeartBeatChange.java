@@ -52,8 +52,8 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         val insertedHeartBeats = eventParser.readInsertions(input, HeartBeat.class);
 
         val events = new ArrayList<HeartBeatChangeEvent>(){{
-            addAll(buildEvents2("Hosts missing", deletedHeartBeats));
-            addAll(buildEvents2("Hosts registered", insertedHeartBeats));
+            addAll(buildEvents("Hosts missing", deletedHeartBeats));
+            addAll(buildEvents("Hosts registered", insertedHeartBeats));
         }}.toArray(new HeartBeatChangeEvent[0]);
 
         val notifications = notificationBuilder.build(events);
@@ -64,13 +64,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         return result;
     }
 
-    private List<HeartBeatChangeEvent> buildEvents(String type, HeartBeat[] heartBeats){
-        return Arrays.stream(heartBeats)
-                .map(hb -> new HeartBeatChangeEvent(type, hb))
-                .collect(Collectors.toList());
-    }
-
-    private List<HeartBeatChangeEvent> buildEvents2(String type, List<HeartBeat> heartBeats) {
+    private List<HeartBeatChangeEvent> buildEvents(String type, List<HeartBeat> heartBeats) {
         val nonTestHeartBeats = heartBeats
                 .stream()
                 .filter(HeartBeat::isNotTest)
@@ -78,7 +72,9 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
 
         val eventHeartBeats = requestHandlerHelper.filter(nonTestHeartBeats);
 
-        return buildEvents(type, eventHeartBeats);
+        return Arrays.stream(eventHeartBeats)
+                .map(hb -> new HeartBeatChangeEvent(type, hb))
+                .collect(Collectors.toList());
     }
 
     private Boolean sendNotifications(Notification[] notifications) {
