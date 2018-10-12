@@ -11,6 +11,7 @@ import static com.tddapps.utils.DateExtensions.*;
 import static java.util.stream.Collectors.groupingBy;
 
 public class NotificationBuilderGrouped implements HeartBeatChangeEventNotificationBuilder {
+    @Deprecated
     private final NowReader nowReader;
 
     public NotificationBuilderGrouped(NowReader nowReader) {
