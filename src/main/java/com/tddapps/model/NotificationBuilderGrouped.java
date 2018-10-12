@@ -6,8 +6,11 @@ import lombok.val;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.tddapps.utils.DateExtensions.*;
+import static java.util.stream.Collectors.groupingBy;
 
 public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder {
     private final NowReader nowReader;
@@ -18,7 +21,22 @@ public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder 
 
     @Override
     public Notification[] build(HeartBeatChangeEvent[] events) {
-        return new Notification[0];
+        val groupedEvents = Arrays.stream(events)
+                .collect(groupingBy(HeartBeatChangeEvent::getType));
+
+        return groupedEvents
+                .keySet()
+                .stream()
+                .map(k -> {
+                    val heartBeats = groupedEvents
+                            .get(k)
+                            .stream()
+                            .map(HeartBeatChangeEvent::getHeartBeat)
+                            .toArray(HeartBeat[]::new);
+                    return BuildSingleNotificationWithHeader(k, heartBeats);
+                })
+                .flatMap(List::stream)
+                .toArray(Notification[]::new);
     }
 
     @Deprecated
