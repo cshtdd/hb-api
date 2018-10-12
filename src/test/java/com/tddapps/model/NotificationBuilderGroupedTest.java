@@ -1,36 +1,16 @@
 package com.tddapps.model;
 
-import com.tddapps.utils.NowReader;
 import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.tddapps.model.HeartBeatFactory.TEST_REGION_DEFAULT;
-import static com.tddapps.utils.DateExtensions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
+import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NotificationBuilderGroupedTest {
-    @Deprecated
-    private final NowReader nowReaderMock = mock(NowReader.class);
     private final HeartBeatNotificationBuilder notificationBuilderMock = new HeartBeatNotificationBuilderOneToOneStub();
-    private final NotificationBuilderGrouped builder = new NotificationBuilderGrouped(nowReaderMock, notificationBuilderMock);
-
-    private String utcNowFormatted;
-
-    @Deprecated
-    @BeforeEach
-    public void Setup(){
-        val seededDate = UtcNowPlusMs(1000);
-        utcNowFormatted = ToUtcString(seededDate);
-
-        when(nowReaderMock.ReadUtc())
-                .thenReturn(seededDate);
-    }
+    private final NotificationBuilderGrouped builder = new NotificationBuilderGrouped(notificationBuilderMock);
 
     @Test
     public void DoesNotAllowANullInput(){
@@ -48,7 +28,7 @@ public class NotificationBuilderGroupedTest {
     }
 
     @Test
-    public void SendsNotificationForASingleEvent2() {
+    public void SendsNotificationForASingleEvent() {
         val hb1 = new HeartBeat("host1", EpochSecondsNow(), ToReverseUtcMinuteString(EpochSecondsNow()), TEST_REGION_DEFAULT, false);
         val event1 = new HeartBeatChangeEvent("deleted", hb1);
 
@@ -60,7 +40,7 @@ public class NotificationBuilderGroupedTest {
     }
 
     @Test
-    public void GroupsNotificationsByEventType2(){
+    public void GroupsNotificationsByEventType(){
         val input = new HeartBeatChangeEvent[]{
                 new HeartBeatChangeEvent("deleted", HeartBeatFactory.Create("host1")),
                 new HeartBeatChangeEvent("deleted", HeartBeatFactory.Create("host2")),
