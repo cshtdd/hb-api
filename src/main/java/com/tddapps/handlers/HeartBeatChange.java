@@ -65,12 +65,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     }
 
     private List<HeartBeatChangeEvent> buildEvents(String type, List<HeartBeat> heartBeats) {
-        val nonTestHeartBeats = heartBeats
-                .stream()
-                .filter(HeartBeat::isNotTest)
-                .toArray(HeartBeat[]::new);
-
-        val eventHeartBeats = requestHandlerHelper.filter(nonTestHeartBeats);
+        val eventHeartBeats = requestHandlerHelper.filter(heartBeats.toArray(new HeartBeat[0]));
 
         return Arrays.stream(eventHeartBeats)
                 .map(hb -> new HeartBeatChangeEvent(type, hb))

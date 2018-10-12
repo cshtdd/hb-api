@@ -93,22 +93,6 @@ public class HeartBeatChangeTest {
     }
 
     @Test
-    public void DoesNotSendNotificationForTestRecords() throws DalException {
-        when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
-        when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
-            add(new HeartBeat("host1", ttlNow, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, true));
-        }});
-        when(eventParser.readInsertions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
-            add(new HeartBeat("host5", ttlNow, reversedUtcMinuteNowString, TEST_REGION_DEFAULT, true));
-        }});
-
-        assertTrue(run());
-
-        verify(notificationSender, times(0))
-                .Send(any(Notification.class));
-    }
-
-    @Test
     public void ReturnsFalseWhenNotificationsCannotBeSent() throws DalException {
         doThrow(new DalException("Send failed"))
                 .when(notificationSender)
