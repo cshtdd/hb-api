@@ -3,6 +3,7 @@ package com.tddapps.handlers;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
+import com.amazonaws.util.CollectionUtils;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.DynamoDBEventParser;
@@ -48,8 +49,20 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     public Boolean handleRequest(DynamodbEvent input, Context context) {
         log.debug("HeartBeat Change");
 
-        val deletedHeartBeats = eventParser.readDeletions(input, HeartBeat.class);
-        val insertedHeartBeats = eventParser.readInsertions(input, HeartBeat.class);
+        val allDeletedHeartBeats = eventParser.readDeletions(input, HeartBeat.class);
+        val allInsertedHeartBeats = eventParser.readInsertions(input, HeartBeat.class);
+        val intersection = allDeletedHeartBeats
+                .stream()
+                .filter(allInsertedHeartBeats::contains)
+                .collect(Collectors.toList());
+        val deletedHeartBeats = allDeletedHeartBeats
+                .stream()
+                .filter(hb -> !intersection.contains(hb))
+                .collect(Collectors.toList());
+        val insertedHeartBeats = allInsertedHeartBeats
+                .stream()
+                .filter(hb -> !intersection.contains(hb))
+                .collect(Collectors.toList());
 
         val events = new ArrayList<HeartBeatChangeEvent>(){{
             addAll(buildEvents("Hosts missing", deletedHeartBeats));

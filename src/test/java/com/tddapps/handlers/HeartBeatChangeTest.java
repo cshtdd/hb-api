@@ -3,6 +3,7 @@ package com.tddapps.handlers;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.tddapps.model.*;
 import com.tddapps.model.aws.DynamoDBEventParser;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -38,6 +39,40 @@ public class HeartBeatChangeTest {
     }
 
     @Test
+    public void SendsANotificationForEachDeletedRecord() throws DalException {
+        when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
+        when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
+            add(HeartBeatFactory.Create("host3"));
+            add(HeartBeatFactory.Create("host4"));
+        }});
+        when(eventParser.readInsertions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<>());
+
+        assertTrue(run());
+
+        verify(notificationSender, times(2))
+                .Send(any(Notification.class));
+        verify(notificationSender).Send(new Notification("S-host3", "M-host3-Hosts missing"));
+        verify(notificationSender).Send(new Notification("S-host4", "M-host4-Hosts missing"));
+    }
+
+    @Test
+    public void SendsANotificationForEachInsertedRecord() throws DalException {
+        when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
+        when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<>());
+        when(eventParser.readInsertions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
+            add(HeartBeatFactory.Create("host3"));
+            add(HeartBeatFactory.Create("host4"));
+        }});
+
+        assertTrue(run());
+
+        verify(notificationSender, times(2))
+                .Send(any(Notification.class));
+        verify(notificationSender).Send(new Notification("S-host3", "M-host3-Hosts registered"));
+        verify(notificationSender).Send(new Notification("S-host4", "M-host4-Hosts registered"));
+    }
+
+    @Test
     public void SendsANotificationForEachDeletedOrInsertedRecord() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
@@ -59,6 +94,27 @@ public class HeartBeatChangeTest {
         verify(notificationSender).Send(new Notification("S-host4", "M-host4-Hosts missing"));
         verify(notificationSender).Send(new Notification("S-host5", "M-host5-Hosts registered"));
         verify(notificationSender).Send(new Notification("S-host6", "M-host6-Hosts registered"));
+    }
+
+    @Test
+    public void DoesNotSendNotificationsForHostsWhoseStatusChangedTwice() throws DalException {
+        when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
+        val hb3 = HeartBeatFactory.Create("host3");
+        when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
+            add(hb3);
+            add(HeartBeatFactory.Create("host4"));
+        }});
+        when(eventParser.readInsertions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
+            add(hb3);
+            add(HeartBeatFactory.Create("host2"));
+        }});
+
+        assertTrue(run());
+
+        verify(notificationSender, times(2))
+                .Send(any(Notification.class));
+        verify(notificationSender).Send(new Notification("S-host2", "M-host2-Hosts registered"));
+        verify(notificationSender).Send(new Notification("S-host4", "M-host4-Hosts missing"));
     }
 
     @Test
