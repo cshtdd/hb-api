@@ -29,6 +29,7 @@ public class IocContainer {
     private PicoContainer RegisterBindings() {
         return new DefaultPicoContainer()
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
+                .addComponent(DynamoDBEventParser.class, DynamoDBEventParserMarshaller.class)
                 .addComponent(NotificationSender.class, NotificationSenderSns.class)
                 .addComponent(SettingsReader.class, EnvironmentSettingsReader.class)
                 .addComponent(NowReader.class, NowReaderImpl.class)

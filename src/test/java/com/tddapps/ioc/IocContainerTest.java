@@ -31,6 +31,7 @@ public class IocContainerTest {
         assertTrue(IocContainer.getInstance().Resolve(NotificationSenderStatus.class) instanceof NotificationSenderSns);
         assertTrue(IocContainer.getInstance().Resolve(SettingsReader.class) instanceof EnvironmentSettingsReader);
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatNotificationBuilder.class) instanceof NotificationBuilderGrouped);
+        assertTrue(IocContainer.getInstance().Resolve(DynamoDBEventParser.class) instanceof DynamoDBEventParserMarshaller);
 
         assertNotNull(IocContainer.getInstance().Resolve(AmazonDynamoDB.class));
     }
