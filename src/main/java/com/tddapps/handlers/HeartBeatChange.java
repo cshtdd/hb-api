@@ -23,14 +23,14 @@ import static com.tddapps.utils.CollectionExtensions.Intersection;
 @SuppressWarnings("unused")
 public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     private static final String FALSE_NUMERIC_STRING = "0";
-    private final HeartBeatNotificationBuilder notificationBuilder;
+    private final HeartBeatChangeEventNotificationBuilder notificationBuilder;
     private final NotificationSender notificationSender;
     private final RequestHandlerHelper requestHandlerHelper;
     private final DynamoDBEventParser eventParser;
 
     public HeartBeatChange(){
         this(
-                IocContainer.getInstance().Resolve(HeartBeatNotificationBuilder.class),
+                IocContainer.getInstance().Resolve(HeartBeatChangeEventNotificationBuilder.class),
                 IocContainer.getInstance().Resolve(NotificationSender.class),
                 IocContainer.getInstance().Resolve(RequestHandlerHelper.class),
                 IocContainer.getInstance().Resolve(DynamoDBEventParser.class)
@@ -38,7 +38,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     }
 
     public HeartBeatChange(
-            HeartBeatNotificationBuilder notificationBuilder,
+            HeartBeatChangeEventNotificationBuilder notificationBuilder,
             NotificationSender notificationSender,
             RequestHandlerHelper requestHandlerHelper,
             DynamoDBEventParser eventParser) {

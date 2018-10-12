@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 public class HeartBeatChangeTest {
     private final NotificationSender notificationSender = mock(NotificationSender.class);
     private final RequestHandlerHelper requestHandlerHelper = mock(RequestHandlerHelper.class);
-    private final HeartBeatNotificationBuilderOneToOneStub notificationBuilder = new HeartBeatNotificationBuilderOneToOneStub();
+    private final HeartBeatChangeEventNotificationBuilderOneToOneStub notificationBuilder = new HeartBeatChangeEventNotificationBuilderOneToOneStub();
     private final DynamoDBEventParser eventParser = mock(DynamoDBEventParser.class);
     private final HeartBeatChange handler = new HeartBeatChange(
             notificationBuilder,

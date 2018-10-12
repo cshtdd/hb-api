@@ -6,13 +6,11 @@ import lombok.val;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.tddapps.utils.DateExtensions.*;
 import static java.util.stream.Collectors.groupingBy;
 
-public class NotificationBuilderGrouped implements HeartBeatNotificationBuilder {
+public class NotificationBuilderGrouped implements HeartBeatChangeEventNotificationBuilder {
     private final NowReader nowReader;
 
     public NotificationBuilderGrouped(NowReader nowReader) {

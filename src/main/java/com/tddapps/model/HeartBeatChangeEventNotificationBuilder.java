@@ -1,5 +1,5 @@
 package com.tddapps.model;
 
-public interface HeartBeatNotificationBuilder {
+public interface HeartBeatChangeEventNotificationBuilder {
     Notification[] build(HeartBeatChangeEvent[] events);
 }

@@ -2,7 +2,7 @@ package com.tddapps.model;
 
 import java.util.Arrays;
 
-public class HeartBeatNotificationBuilderOneToOneStub implements HeartBeatNotificationBuilder {
+public class HeartBeatChangeEventNotificationBuilderOneToOneStub implements HeartBeatChangeEventNotificationBuilder {
     @Override
     public Notification[] build(HeartBeatChangeEvent[] events) {
         if (events == null){
@@ -10,7 +10,7 @@ public class HeartBeatNotificationBuilderOneToOneStub implements HeartBeatNotifi
         }
 
         return Arrays.stream(events)
-                .map(HeartBeatNotificationBuilderOneToOneStub::toNotification)
+                .map(HeartBeatChangeEventNotificationBuilderOneToOneStub::toNotification)
                 .toArray(Notification[]::new);
     }
 
