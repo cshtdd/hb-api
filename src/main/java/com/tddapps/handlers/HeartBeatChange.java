@@ -9,6 +9,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
+import com.tddapps.model.aws.DynamoDBEventParser;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import lombok.var;
@@ -25,15 +26,18 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     private static final String FALSE_NUMERIC_STRING = "0";
     private final HeartBeatNotificationBuilder notificationBuilder;
     private final NotificationSender notificationSender;
+    @Deprecated
     private final DynamoDBMapper mapper;
     private final RequestHandlerHelper requestHandlerHelper;
+    private final DynamoDBEventParser eventParser;
 
     public HeartBeatChange(){
         this(
                 IocContainer.getInstance().Resolve(HeartBeatNotificationBuilder.class),
                 IocContainer.getInstance().Resolve(NotificationSender.class),
                 IocContainer.getInstance().Resolve(DynamoDBMapper.class),
-                IocContainer.getInstance().Resolve(RequestHandlerHelper.class)
+                IocContainer.getInstance().Resolve(RequestHandlerHelper.class),
+                IocContainer.getInstance().Resolve(DynamoDBEventParser.class)
         );
     }
 
@@ -41,11 +45,13 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
             HeartBeatNotificationBuilder notificationBuilder,
             NotificationSender notificationSender,
             DynamoDBMapper mapper,
-            RequestHandlerHelper requestHandlerHelper) {
+            RequestHandlerHelper requestHandlerHelper,
+            DynamoDBEventParser eventParser) {
         this.notificationBuilder = notificationBuilder;
         this.notificationSender = notificationSender;
         this.mapper = mapper;
         this.requestHandlerHelper = requestHandlerHelper;
+        this.eventParser = eventParser;
     }
 
     @Override

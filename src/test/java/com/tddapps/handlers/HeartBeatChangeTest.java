@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.model.StreamRecord;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
+import com.tddapps.model.aws.DynamoDBEventParser;
 import lombok.Data;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -26,11 +27,13 @@ public class HeartBeatChangeTest {
     private final NotificationSender notificationSender = mock(NotificationSender.class);
     private final RequestHandlerHelper requestHandlerHelper = mock(RequestHandlerHelper.class);
     private final HeartBeatNotificationBuilderOneToOneStub notificationBuilder = new HeartBeatNotificationBuilderOneToOneStub();
+    private final DynamoDBEventParser eventParser = mock(DynamoDBEventParser.class);
     private final HeartBeatChange handler = new HeartBeatChange(
             notificationBuilder,
             notificationSender,
             IocContainer.getInstance().Resolve(DynamoDBMapper.class),
-            requestHandlerHelper
+            requestHandlerHelper,
+            eventParser
     );
 
     private final long ttlNow = EpochSecondsNow();
