@@ -55,6 +55,8 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
                 .stream()
                 .filter(allInsertedHeartBeats::contains)
                 .collect(Collectors.toList());
+        logHeartBeatsThatFlipped(intersection.toArray(new HeartBeat[0]));
+
         val deletedHeartBeats = allDeletedHeartBeats
                 .stream()
                 .filter(hb -> !intersection.contains(hb))
@@ -75,6 +77,12 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
         log.info(String.format("HeartBeat Change Completed; Result: %s", result));
 
         return result;
+    }
+
+    private void logHeartBeatsThatFlipped(HeartBeat[] heartBeats){
+        for (val hb : heartBeats){
+            log.info(String.format("Flipped Host; %s", hb.toString()));
+        }
     }
 
     private List<HeartBeatChangeEvent> buildEvents(String type, List<HeartBeat> heartBeats) {

@@ -28,7 +28,7 @@ public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
     }
 
     private void logMismatch(HeartBeat[] allHeartBeats, HeartBeat[] subsetCount) {
-        log.info(String.format("AllHeartBeatCount: %d; CurrentRegionCount: %d;",
+        log.info(String.format("AllHeartBeatCount: %d; ResultCount: %d;",
                 allHeartBeats.length, subsetCount.length));
     }
 
