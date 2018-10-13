@@ -1,3 +1,5 @@
+#!/bin/bash
+
 STACKNAME=hb-api-dev
 REGION=us-east-1
 

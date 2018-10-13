@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SUBDOMAIN=$1
 TLD=$2
 STACKNAME=hb-api-dev

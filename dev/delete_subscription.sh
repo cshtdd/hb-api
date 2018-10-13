@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 INPUT_ENDPOINT=$1
 REGION=$2

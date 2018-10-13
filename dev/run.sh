@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 if [[ "$1" == "--debug" ]]; then
     DEBUG_INFO="-d 5858 "

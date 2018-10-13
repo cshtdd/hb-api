@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 HOST_ID=$1
 REGION=$2
