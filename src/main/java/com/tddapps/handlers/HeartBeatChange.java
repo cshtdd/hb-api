@@ -70,6 +70,7 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
             addAll(buildEvents("Hosts missing", deletedHeartBeats));
             addAll(buildEvents("Hosts registered", insertedHeartBeats));
         }}.toArray(new HeartBeatChangeEvent[0]);
+        logEvents(events);
 
         val notifications = notificationBuilder.build(events);
         val result = sendNotifications(notifications);
@@ -80,17 +81,33 @@ public class HeartBeatChange implements RequestHandler<DynamodbEvent, Boolean> {
     }
 
     private List<HeartBeat> readDeletedHeartBeats(DynamodbEvent input){
-        return filter(() -> eventParser.readDeletions(input, HeartBeat.class));
+        return filter("Deletions", () -> eventParser.readDeletions(input, HeartBeat.class));
     }
 
     private List<HeartBeat> readInsertedHeartBeats(DynamodbEvent input){
-        return filter(() -> eventParser.readInsertions(input, HeartBeat.class));
+        return filter("Insertions", () -> eventParser.readInsertions(input, HeartBeat.class));
     }
 
-    private List<HeartBeat> filter(Supplier<List<HeartBeat>> fn){
+    private List<HeartBeat> filter(String listName, Supplier<List<HeartBeat>> fn){
         val all = fn.get().toArray(new HeartBeat[0]);
-        return Arrays.stream(requestHandlerHelper.filter(all))
+
+        val result = Arrays.stream(requestHandlerHelper.filter(all))
                 .collect(Collectors.toList());
+
+        logMismatch(listName, all, result.toArray(new HeartBeat[0]));
+
+        return result;
+    }
+
+    private void logEvents(HeartBeatChangeEvent[] events) {
+        for (val e : events){
+            log.info(String.format("Host Change; %s", e.toString()));
+        }
+    }
+
+    private void logMismatch(String listName, HeartBeat[] allHeartBeats, HeartBeat[] subsetCount) {
+        log.info(String.format("%sHeartBeatCount: %d; ResultCount: %d;",
+                listName, allHeartBeats.length, subsetCount.length));
     }
 
     private static void logHeartBeatsThatFlipped(List<HeartBeat> heartBeats){

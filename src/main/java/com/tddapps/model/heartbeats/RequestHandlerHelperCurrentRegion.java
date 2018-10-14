@@ -2,8 +2,6 @@ package com.tddapps.model.heartbeats;
 import com.tddapps.model.infrastructure.Settings;
 import com.tddapps.model.infrastructure.SettingsReader;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
-
 import java.util.Arrays;
 
 @Log4j2
@@ -16,25 +14,6 @@ public class RequestHandlerHelperCurrentRegion implements RequestHandlerHelper {
 
     @Override
     public HeartBeat[] filter(HeartBeat[] heartBeats) {
-        logHeartBeats(heartBeats);
-        val result = filterInternal(heartBeats);
-        logMismatch(heartBeats, result);
-        return result;
-    }
-
-    private void logHeartBeats(HeartBeat[] heartBeats) {
-        for (val hb : heartBeats){
-            log.info(String.format("Host Change; currentRegion: %s; %s",
-                    ReadRegion(), hb.toString()));
-        }
-    }
-
-    private void logMismatch(HeartBeat[] allHeartBeats, HeartBeat[] subsetCount) {
-        log.info(String.format("AllHeartBeatCount: %d; ResultCount: %d;",
-                allHeartBeats.length, subsetCount.length));
-    }
-
-    private HeartBeat[] filterInternal(HeartBeat[] heartBeats){
         return Arrays.stream(heartBeats)
                 .filter(HeartBeat::isNotTest)
                 .filter(this::heartBeatLastUpdatedInCurrentRegion)
