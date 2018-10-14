@@ -48,3 +48,6 @@
 # 0.6.1 - 2018-10-11 - Notifications on host registration  
 - Better separation between notification logic  
 - Reduce the number of healthcheckers  
+
+# 0.6.2 - 2018-10-11 - Notifications on host registration  
+- Logging enhancements on HeartBeat change  
