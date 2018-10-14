@@ -35,16 +35,18 @@ if [[ "${HEALTH_CHECK_ID}" == "" ]]; then
       "Type": "HTTPS",
       "ResourcePath": "'${RESOURCE_PATH}'",
       "FullyQualifiedDomainName": "'${HEALTH_CHECK_DOMAIN}'",
-      "MeasureLatency": true
+      "MeasureLatency": true,
+      "Regions": ["us-east-1", "us-west-1", "us-west-2"]
     }'
 fi
 
 HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${HEALTH_CHECK_DOMAIN}'`].Id')
 # echo "DEBUG: existing healthCheckId: ${HEALTH_CHECK_ID}"
 
-echo "INFO: Updating the existing one ${HEALTH_CHECK_ID}"
+echo "INFO: Updating the existing one ${HEALTH_CHECK_ID} at ${RESOURCE_PATH}, ${HEALTH_CHECK_DOMAIN}"
 aws route53 update-health-check --health-check-id ${HEALTH_CHECK_ID} \
   --resource-path ${RESOURCE_PATH} \
   --port 443 \
   --fully-qualified-domain-name ${HEALTH_CHECK_DOMAIN} \
-  --failure-threshold 1
+  --failure-threshold 1 \
+  --regions "us-east-1" "us-west-1" "us-west-2"
