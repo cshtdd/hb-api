@@ -45,9 +45,9 @@
 # 0.6.0 - 2018-10-11 - Notifications on host registration  
 - Notifications are sent whenever a new host is registered or reappears  
 
-# 0.6.1 - 2018-10-11 - Notifications on host registration  
+# 0.6.1 - 2018-10-14 - Notifications on host registration  
 - Better separation between notification logic  
 - Reduce the number of healthcheckers  
 
-# 0.6.2 - 2018-10-11 - Notifications on host registration  
+# 0.6.2 - 2018-10-14 - Notifications on host registration  
 - Logging enhancements on HeartBeat change  
