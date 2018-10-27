@@ -17,7 +17,7 @@ import com.tddapps.model.notifications.*;
 import com.tddapps.model.notifications.internal.NotificationBuilderGrouped;
 import com.tddapps.model.notifications.internal.SingleNotificationBuilder;
 import com.tddapps.utils.NowReader;
-import com.tddapps.utils.NowReaderImpl;
+import com.tddapps.utils.internal.NowReaderImpl;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,6 @@
-package com.tddapps.utils;
+package com.tddapps.utils.internal;
+
+import com.tddapps.utils.NowReader;
 
 import java.util.Date;
 

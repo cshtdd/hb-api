@@ -11,7 +11,8 @@ import com.tddapps.model.internal.aws.*;
 import com.tddapps.model.notifications.*;
 import com.tddapps.model.notifications.internal.NotificationBuilderGrouped;
 import com.tddapps.model.notifications.internal.SingleNotificationBuilder;
-import com.tddapps.utils.*;
+import com.tddapps.utils.NowReader;
+import com.tddapps.utils.internal.NowReaderImpl;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.PicoContainer;
 
