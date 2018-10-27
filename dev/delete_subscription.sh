@@ -45,7 +45,7 @@ if [[ "${TOPIC_ARN}" == "" ]]; then
 fi
 
 SUBSCRIPTIONS_BY_TOPIC=$(aws sns list-subscriptions-by-topic --topic-arn ${TOPIC_ARN} --region ${REGION})
-SUBSCRIPTION_ARN=$(echo $SUBSCRIPTIONS_BY_TOPIC | jq -r ".Subscriptions[] | select(.Endpoint==\"${INPUT_ENDPOINT}\") | .SubscriptionArn")
+SUBSCRIPTION_ARN=$(echo ${SUBSCRIPTIONS_BY_TOPIC} | jq -r ".Subscriptions[] | select(.Endpoint==\"${INPUT_ENDPOINT}\") | .SubscriptionArn")
 echo "DEBUG: SubscriptionArn=${SUBSCRIPTION_ARN}"
 
 aws sns unsubscribe --subscription-arn "${SUBSCRIPTION_ARN}" --region ${REGION}

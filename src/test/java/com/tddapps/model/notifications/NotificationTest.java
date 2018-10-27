@@ -1,16 +1,15 @@
 package com.tddapps.model.notifications;
 
-import com.tddapps.model.notifications.Notification;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-import static com.tddapps.utils.EqualityAssertions.*;
+import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
+import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;
 import static org.junit.jupiter.api.Assertions.*;
 
-
-public class NotificationTest {
+class NotificationTest {
     @Test
-    public void SubjectCannotBeNull(){
+    void SubjectCannotBeNull(){
         try{
             new Notification(null, "");
             fail("Should have thrown exception");
@@ -21,7 +20,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void MessageCannotBeNull(){
+    void MessageCannotBeNull(){
         try{
             new Notification("", null);
             fail("Should have thrown exception");
@@ -32,7 +31,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void CanBeCompared(){
+    void CanBeCompared(){
         val n1 = new Notification("subject 1", "msg1");
         val n2 = new Notification("subject 2", "msg2");
         val n1Clone = new Notification("subject 1", "msg1");
@@ -50,7 +49,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void HasASensibleStringRepresentation(){
+    void HasASensibleStringRepresentation(){
         val actual = new Notification("you got bills", "your total balance is 1000").toString();
 
         assertEquals("Notification, subject: you got bills, message: your total balance is 1000", actual);

@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ArrayBatchExtensionsTest {
+class ArrayBatchExtensionsTest {
     @Test
-    public void CannotSplitNull(){
+    void CannotSplitNull(){
         try {
             ArrayBatchExtensions.Split(null, 10);
             fail("Should have thrown");
@@ -17,7 +17,7 @@ public class ArrayBatchExtensionsTest {
     }
 
     @Test
-    public void CannotSplitNegativeSizes(){
+    void CannotSplitNegativeSizes(){
         try {
             ArrayBatchExtensions.Split(new Object[]{}, -1);
             fail("Should have thrown");
@@ -27,7 +27,7 @@ public class ArrayBatchExtensionsTest {
     }
 
     @Test
-    public void CannotSplitSizesSmallerThanOne(){
+    void CannotSplitSizesSmallerThanOne(){
         try {
             ArrayBatchExtensions.Split(new Object[]{}, 0);
             fail("Should have thrown");
@@ -37,12 +37,12 @@ public class ArrayBatchExtensionsTest {
     }
 
     @Test
-    public void ReturnsEmptyWhenInputIsEmpty(){
+    void ReturnsEmptyWhenInputIsEmpty(){
         assertEquals(0, ArrayBatchExtensions.Split(new Integer[]{}, 1).length);
     }
 
     @Test
-    public void DoesNotSplitAnythingWhenBatchSizeEqualsInputSize(){
+    void DoesNotSplitAnythingWhenBatchSizeEqualsInputSize(){
         val input = new Integer[]{
                 1, 2, 3
         };
@@ -54,7 +54,7 @@ public class ArrayBatchExtensionsTest {
     }
 
     @Test
-    public void DoesNotSplitAnythingWhenBatchSizeIsTooLargerThanTheInputSize(){
+    void DoesNotSplitAnythingWhenBatchSizeIsTooLargerThanTheInputSize(){
         val input = new Integer[]{
                 1, 2, 3
         };
@@ -66,7 +66,7 @@ public class ArrayBatchExtensionsTest {
     }
 
     @Test
-    public void SplitsArrayInBatchesOfOne(){
+    void SplitsArrayInBatchesOfOne(){
         val input = new Integer[]{
                 1, 2, 3, 4, 5
         };
@@ -82,7 +82,7 @@ public class ArrayBatchExtensionsTest {
     }
 
     @Test
-    public void SplitsArrayInLargerBatches(){
+    void SplitsArrayInLargerBatches(){
         val input = new Integer[]{
                 1, 2, 3, 4, 5
         };
@@ -96,7 +96,7 @@ public class ArrayBatchExtensionsTest {
     }
 
     @Test
-    public void CanProducePerfectBatchesWhenLengthsAreMultipleOfEachOther(){
+    void CanProducePerfectBatchesWhenLengthsAreMultipleOfEachOther(){
         val input = new Integer[]{
                 1, 2, 3, 4, 5, 6
         };

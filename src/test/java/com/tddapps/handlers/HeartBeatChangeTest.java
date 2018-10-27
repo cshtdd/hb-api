@@ -19,10 +19,9 @@ import static com.tddapps.model.heartbeats.test.HeartBeatFactory.TEST_REGION_DEF
 import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class HeartBeatChangeTest {
+class HeartBeatChangeTest {
     private final NotificationSender notificationSender = mock(NotificationSender.class);
     private final RequestHandlerHelper requestHandlerHelper = mock(RequestHandlerHelper.class);
     private final HeartBeatChangeEventNotificationBuilderOneToOneStub notificationBuilder = new HeartBeatChangeEventNotificationBuilderOneToOneStub();
@@ -40,12 +39,12 @@ public class HeartBeatChangeTest {
     private final String reversedUtcMinuteNowString = ToReverseUtcMinuteString(ttlNow);
 
     @Test
-    public void CanBeConstructedUsingTheDefaultConstructor(){
+    void CanBeConstructedUsingTheDefaultConstructor(){
         assertNotNull(new HeartBeatChange());
     }
 
     @Test
-    public void SendsANotificationForEachDeletedRecord() throws DalException {
+    void SendsANotificationForEachDeletedRecord() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
             add(HeartBeatFactory.Create("host3"));
@@ -62,7 +61,7 @@ public class HeartBeatChangeTest {
     }
 
     @Test
-    public void SendsANotificationForEachInsertedRecord() throws DalException {
+    void SendsANotificationForEachInsertedRecord() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<>());
         when(eventParser.readInsertions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
@@ -79,7 +78,7 @@ public class HeartBeatChangeTest {
     }
 
     @Test
-    public void SendsANotificationForEachDeletedOrInsertedRecord() throws DalException {
+    void SendsANotificationForEachDeletedOrInsertedRecord() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
             add(HeartBeatFactory.Create("host3"));
@@ -103,7 +102,7 @@ public class HeartBeatChangeTest {
     }
 
     @Test
-    public void DoesNotSendNotificationsForHostsWhoseStatusChangedTwice() throws DalException {
+    void DoesNotSendNotificationsForHostsWhoseStatusChangedTwice() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> i.getArgument(0));
         val hb3 = HeartBeatFactory.Create("host3");
         when(eventParser.readDeletions(seededInput, HeartBeat.class)).thenReturn(new ArrayList<HeartBeat>(){{
@@ -124,7 +123,7 @@ public class HeartBeatChangeTest {
     }
 
     @Test
-    public void SendsNotificationOnlyForRecordsInTheCurrentRegion() throws DalException {
+    void SendsNotificationOnlyForRecordsInTheCurrentRegion() throws DalException {
         when(requestHandlerHelper.filter(any())).then(i -> {
             HeartBeat[] heartBeats = i.getArgument(0);
             return Arrays.stream(heartBeats)
@@ -155,7 +154,7 @@ public class HeartBeatChangeTest {
     }
 
     @Test
-    public void ReturnsFalseWhenNotificationsCannotBeSent() throws DalException {
+    void ReturnsFalseWhenNotificationsCannotBeSent() throws DalException {
         doThrow(new DalException("Send failed"))
                 .when(notificationSender)
                 .Send(any(Notification.class));

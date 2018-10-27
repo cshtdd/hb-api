@@ -1,4 +1,4 @@
-package com.tddapps.model.internal.aws;
+package com.tddapps.model.internal.aws.test;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -6,6 +6,8 @@ import com.amazonaws.services.dynamodbv2.model.*;
 import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.infrastructure.Settings;
 import com.tddapps.model.infrastructure.SettingsReader;
+import com.tddapps.model.internal.aws.AmazonDynamoDBFactory;
+import com.tddapps.model.internal.aws.DynamoDBMapperFactory;
 import lombok.val;
 
 import java.util.ArrayList;
@@ -13,8 +15,8 @@ import java.util.ArrayList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class DynamoHelperIntegrationTests {
-    public static final String HEARTBEATS_TABLE_NAME = "dev-int-heartbeats";
+public abstract class DynamoIntegrationTestHelper {
+    private static final String HEARTBEATS_TABLE_NAME = "dev-int-heartbeats";
 
     public static DynamoDBMapper createMapper(){
         val settingsReader = mock(SettingsReader.class);
@@ -25,7 +27,7 @@ public abstract class DynamoHelperIntegrationTests {
                 .createMapper(settingsReader, createClient());
     }
 
-    public static AmazonDynamoDB createClient(){
+    private static AmazonDynamoDB createClient(){
         val settingsReader = mock(SettingsReader.class);
         when(settingsReader.ReadString(Settings.DYNAMO_DB_ENDPOINT_OVERRIDE))
                 .thenReturn("http://localhost:8001");
@@ -41,7 +43,7 @@ public abstract class DynamoHelperIntegrationTests {
         CreateEmptyHeartBeatsTable(mapper, client);
     }
 
-    public static void CreateEmptyHeartBeatsTable(DynamoDBMapper dbMapper, AmazonDynamoDB client) {
+    private static void CreateEmptyHeartBeatsTable(DynamoDBMapper dbMapper, AmazonDynamoDB client) {
         val heartBeatsTableExists = client.listTables()
                 .getTableNames()
                 .contains(HEARTBEATS_TABLE_NAME);

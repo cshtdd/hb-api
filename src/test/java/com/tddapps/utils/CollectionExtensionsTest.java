@@ -9,14 +9,14 @@ import static com.tddapps.utils.CollectionExtensions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CollectionExtensionsTest {
+class CollectionExtensionsTest {
     @Test
-    public void TheIntersectionOfTwoEmptyListsIsEmpty(){
+    void TheIntersectionOfTwoEmptyListsIsEmpty(){
         assertTrue(Intersection(new ArrayList<Integer>(), new ArrayList<>()).isEmpty());
     }
 
     @Test
-    public void TheIntersectionWithAnEmptyListIsEmpty(){
+    void TheIntersectionWithAnEmptyListIsEmpty(){
         val l1 = new ArrayList<Integer>(){{
             add(1);
             add(2);
@@ -28,7 +28,7 @@ public class CollectionExtensionsTest {
     }
 
     @Test
-    public void TheIntersectionReturnsTheCommonElements(){
+    void TheIntersectionReturnsTheCommonElements(){
         val l1 = new ArrayList<Integer>(){{
             add(1);
             add(2);
@@ -53,7 +53,7 @@ public class CollectionExtensionsTest {
     }
 
     @Test
-    public void TheIntersectionIsEmptyWhenThereAreNoCommonElements(){
+    void TheIntersectionIsEmptyWhenThereAreNoCommonElements(){
         val l1 = new ArrayList<Integer>(){{
             add(1);
             add(2);
@@ -70,12 +70,12 @@ public class CollectionExtensionsTest {
     }
 
     @Test
-    public void TheDifferenceOfTwoEmptyListsIsEmpty(){
+    void TheDifferenceOfTwoEmptyListsIsEmpty(){
         assertTrue(Difference(new ArrayList<Integer>(), new ArrayList<>()).isEmpty());
     }
 
     @Test
-    public void TheDifferenceWithAnEmptySubsetIsTheLargeList(){
+    void TheDifferenceWithAnEmptySubsetIsTheLargeList(){
         val l1 = new ArrayList<Integer>(){{
             add(1);
             add(2);
@@ -85,7 +85,7 @@ public class CollectionExtensionsTest {
     }
 
     @Test
-    public void AnEmptyListHasNoDifference(){
+    void AnEmptyListHasNoDifference(){
         val l1 = new ArrayList<Integer>(){{
             add(1);
             add(2);
@@ -95,7 +95,7 @@ public class CollectionExtensionsTest {
     }
 
     @Test
-    public void TheDifferenceAreTheElementsNotInTheSmallerList(){
+    void TheDifferenceAreTheElementsNotInTheSmallerList(){
         val l1 = new ArrayList<Integer>(){{
             add(1);
             add(2);

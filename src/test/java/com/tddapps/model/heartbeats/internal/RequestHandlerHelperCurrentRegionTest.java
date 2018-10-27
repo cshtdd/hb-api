@@ -16,22 +16,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RequestHandlerHelperCurrentRegionTest {
+class RequestHandlerHelperCurrentRegionTest {
     private final SettingsReader settingsReader = mock(SettingsReader.class);
     private final RequestHandlerHelperCurrentRegion helper = new RequestHandlerHelperCurrentRegion(settingsReader);
 
     @BeforeEach
-    public void Setup(){
+    void Setup(){
         when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn(TEST_REGION_DEFAULT);
     }
 
     @Test
-    public void FilterReturnsAnEmptyListWhenGivenAnEmptyList(){
+    void FilterReturnsAnEmptyListWhenGivenAnEmptyList(){
         assertEquals(0, helper.filter(new HeartBeat[]{}).length);
     }
 
     @Test
-    public void FilterReturnsUniqueNonTestHeartBeatsFromTheCurrentRegion(){
+    void FilterReturnsUniqueNonTestHeartBeatsFromTheCurrentRegion(){
         val seededHeartBeats = HeartBeatFactory.Create(14);
         seededHeartBeats[8].setRegion("us-test-2");
         seededHeartBeats[9].setRegion("us-test-2");

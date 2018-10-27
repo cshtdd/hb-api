@@ -17,26 +17,25 @@ import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class HeartBeatPostTest {
+class HeartBeatPostTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final SettingsReader settingsReader = mock(SettingsReader.class);
     private final HeartBeatPost handler = new HeartBeatPost(heartBeatRepository, settingsReader);
 
     @BeforeEach
-    public void Setup(){
+    void Setup(){
         when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn(TEST_REGION_DEFAULT);
     }
 
     @Test
-    public void CanBeConstructedUsingADefaultConstructor(){
+    void CanBeConstructedUsingADefaultConstructor(){
         assertNotNull(new HeartBeatPost());
     }
 
     @Test
-    public void ReturnsClientErrorWhenInputIsInvalid() throws DalException{
+    void ReturnsClientErrorWhenInputIsInvalid() throws DalException{
         val result = handleRequest("{incorrect json");
 
         assertEquals(400, result.getStatusCode());
@@ -45,7 +44,7 @@ public class HeartBeatPostTest {
     }
 
     @Test
-    public void ProcessWritesTheHeartBeat() throws DalException {
+    void ProcessWritesTheHeartBeat() throws DalException {
         val expectedHeartBeats = new HeartBeat[] {
                 new HeartBeat(
                         "testHostA",
@@ -64,7 +63,7 @@ public class HeartBeatPostTest {
     }
 
     @Test
-    public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved() throws DalException {
+    void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved() throws DalException {
         doThrow(new DalException("Save failed"))
                 .when(heartBeatRepository)
                 .Save(any(HeartBeat[].class));

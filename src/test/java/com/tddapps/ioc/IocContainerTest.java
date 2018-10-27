@@ -23,9 +23,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IocContainerTest {
+class IocContainerTest {
     @Test
-    public void DependenciesAreNotSingletonByDefault(){
+    void DependenciesAreNotSingletonByDefault(){
         val repository1 = IocContainer.getInstance().Resolve(HeartBeatRepository.class);
         val repository2 = IocContainer.getInstance().Resolve(HeartBeatRepository.class);
 
@@ -33,7 +33,7 @@ public class IocContainerTest {
     }
 
     @Test
-    public void RegisterDependencies(){
+    void RegisterDependencies(){
         assertTrue(IocContainer.getInstance().Resolve(NowReader.class) instanceof NowReaderImpl);
         assertTrue(IocContainer.getInstance().Resolve(RequestHandlerHelper.class) instanceof RequestHandlerHelperCurrentRegion);
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatRepository.class) instanceof HeartBeatRepositoryDynamo);
@@ -58,7 +58,7 @@ public class IocContainerTest {
     }
 
     @Test
-    public void RegistersInMemoryKeysCacheWithExpirationAsASingleton(){
+    void RegistersInMemoryKeysCacheWithExpirationAsASingleton(){
         assertTrue(IocContainer.getInstance().Resolve(KeysCache.class) instanceof InMemoryKeysCacheWithExpiration);
 
         val cache1 = IocContainer.getInstance().Resolve(KeysCache.class);

@@ -12,13 +12,12 @@ import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
 import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HeartBeatTest {
+class HeartBeatTest {
     private final String MAXIMUM_LENGTH_ALLOWED_STRING = StringUtils.leftPad("", 100, "0");
     private final String INVALID_HOST_ID = "Invalid hostId";
-    private final String INVALID_INTERVAL_MS = "Invalid intervalMs";
 
     @Test
-    public void HasSensibleStringRepresentation(){
+    void HasSensibleStringRepresentation(){
         val seededTtl = EpochSecondsPlusMs(5000);
         val expectedExpirationString = ToUtcString(seededTtl);
 
@@ -35,7 +34,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void HeartBeatsAreExpiredWhenTtlIsInThePast(){
+    void HeartBeatsAreExpiredWhenTtlIsInThePast(){
         long ttlInThePast = EpochSecondsPlusMs(-1001);
         val heartBeat = new HeartBeat("host1", ttlInThePast, "AAAA", "region1",false);
 
@@ -44,7 +43,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void HeartBeatsAreNotExpiredWhenTtlIsInTheFuture(){
+    void HeartBeatsAreNotExpiredWhenTtlIsInTheFuture(){
         long ttlInTheFuture = EpochSecondsPlusMs(1001);
         val heartBeat = new HeartBeat("host1", ttlInTheFuture, "AAAA", "region1",false);
 
@@ -53,14 +52,14 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void HasSensibleStringRepresentationForEmptyObject(){
+    void HasSensibleStringRepresentationForEmptyObject(){
         assertEquals(
                 "HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, expirationMinuteUtc: , region: , isTest: false, isExpired: true",
                 new HeartBeat().toString());
     }
 
     @Test
-    public void CanBeConstructedWithoutSpecifyingTheExpirationMinuteUtc(){
+    void CanBeConstructedWithoutSpecifyingTheExpirationMinuteUtc(){
         long ttlNow = EpochSecondsNow();
 
         val hb1 = new HeartBeat("host1", ttlNow, ToReverseUtcMinuteString(ttlNow), TEST_REGION_DEFAULT, true);
@@ -70,7 +69,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void IsTestIsConsideredForEquality(){
+    void IsTestIsConsideredForEquality(){
         val ttl1 = EpochSecondsNow();
 
         val hb1 = new HeartBeat("host1", ttl1, "AAAA", "us-west-1", false);
@@ -87,7 +86,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void CanBeCompared(){
+    void CanBeCompared(){
         val ttl1 = EpochSecondsNow();
 
         val hbNoHost = new HeartBeat(null, ttl1, "AAAA", "us-west-1", false);
@@ -114,7 +113,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ParseJsonBuildsAHeartBeat() throws ParseException {
+    void ParseJsonBuildsAHeartBeat() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(40000),
@@ -127,21 +126,21 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ParseJsonFailsWhenEmptyInput(){
+    void ParseJsonFailsWhenEmptyInput(){
         parseJsonShouldFailWithError(null, "Empty input");
         parseJsonShouldFailWithError("", "Empty input");
         parseJsonShouldFailWithError(" ", "Empty input");
     }
 
     @Test
-    public void ParseJsonFailsWhenInvalidJsonInput(){
+    void ParseJsonFailsWhenInvalidJsonInput(){
         parseJsonShouldFailWithError("fred", "Invalid json");
         parseJsonShouldFailWithError("{", "Invalid json");
         parseJsonShouldFailWithError("{\"hostId", "Invalid json");
     }
 
     @Test
-    public void ParseJsonReadsTheMaximumLengthHostId() throws ParseException{
+    void ParseJsonReadsTheMaximumLengthHostId() throws ParseException{
         val heartBeat = HeartBeat.parse(String.format(
                 "{\"hostId\": \"%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
         ));
@@ -150,26 +149,26 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ParseJsonFailsWhenHostIdIsMissing(){
+    void ParseJsonFailsWhenHostIdIsMissing(){
         parseJsonShouldFailWithError("{}", INVALID_HOST_ID);
         parseJsonShouldFailWithError("{\"hostId\": \"\"}", INVALID_HOST_ID);
         parseJsonShouldFailWithError("{\"hostId\": \"   \"}", INVALID_HOST_ID);
     }
 
     @Test
-    public void ParseJsonFailsWhenHostIdIsNotAlphanumeric(){
+    void ParseJsonFailsWhenHostIdIsNotAlphanumeric(){
         parseJsonShouldFailWithError("{\"hostId\": \"-!@#$$%^%^ &^&\"}", INVALID_HOST_ID);
     }
 
     @Test
-    public void ParseJsonFailsWhenHostIdIsTooLong(){
+    void ParseJsonFailsWhenHostIdIsTooLong(){
         parseJsonShouldFailWithError(String.format(
                 "{\"hostId\": \"X%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
         ), INVALID_HOST_ID);
     }
 
     @Test
-    public void ParseJsonSupportsMultipleDataTypesForIntervalMs() throws ParseException {
+    void ParseJsonSupportsMultipleDataTypesForIntervalMs() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(3000),
@@ -184,7 +183,7 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ParseJsonAssumesDefaultWhenIntervalMsIsNotNumeric() throws ParseException {
+    void ParseJsonAssumesDefaultWhenIntervalMsIsNotNumeric() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(HeartBeat.DEFAULT_INTERVAL_MS),
@@ -200,7 +199,9 @@ public class HeartBeatTest {
     }
 
     @Test
-    public void ParseJsonFailsWhenIntervalMsIsOutOfBoundaries(){
+    void ParseJsonFailsWhenIntervalMsIsOutOfBoundaries(){
+        val INVALID_INTERVAL_MS = "Invalid intervalMs";
+
         parseJsonShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": 999}", INVALID_INTERVAL_MS);
         parseJsonShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": \"999\"}", INVALID_INTERVAL_MS);
         parseJsonShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": 43200001}", INVALID_INTERVAL_MS);

@@ -29,5 +29,5 @@ curl -w "\n%{http_code}\n" https://hbapidev.cshtdd.com/v1/status
 Posting a heartbeat should succeed
 
 ```bash
-curl -w "\n%{http_code}\n" -H "x-api-key: $HB_API_KEY" -d '{"hostId": "testHost1"}' -X POST https://hbapidev.cshtdd.com/v1/hearbeat
+curl -w "\n%{http_code}\n" -H "x-api-key: ${HB_API_KEY}" -d '{"hostId": "testHost1"}' -X POST https://hbapidev.cshtdd.com/v1/hearbeat
 ```

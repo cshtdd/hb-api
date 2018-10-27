@@ -16,7 +16,7 @@ public class ApiGatewayResponse {
     private final Map<String, String> headers;
     private final boolean isBase64Encoded;
 
-    public ApiGatewayResponse(int statusCode, String body, Map<String, String> headers, boolean isBase64Encoded) {
+    private ApiGatewayResponse(int statusCode, String body, Map<String, String> headers, boolean isBase64Encoded) {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = headers;

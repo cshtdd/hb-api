@@ -13,14 +13,14 @@ import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class NotificationBuilderGroupedTest {
+class NotificationBuilderGroupedTest {
     private final HeartBeatNotificationBuilder notificationBuilderMock = new HeartBeatNotificationBuilderOneToOneStub();
     private final NotificationBuilderGrouped builder = new NotificationBuilderGrouped(notificationBuilderMock);
 
     @Test
-    public void DoesNotAllowANullInput(){
+    void DoesNotAllowANullInput(){
         try{
-            builder.build((HeartBeatChangeEvent[]) null);
+            builder.build(null);
             fail("Should have thrown");
         }catch (NullPointerException e){
             assertNotNull(e);
@@ -28,12 +28,12 @@ public class NotificationBuilderGroupedTest {
     }
 
     @Test
-    public void DoesNotSendNotificationWhenNoHeartBeatsAreProvided(){
+    void DoesNotSendNotificationWhenNoHeartBeatsAreProvided(){
         assertEquals(0, builder.build(new HeartBeatChangeEvent[]{}).length);
     }
 
     @Test
-    public void SendsNotificationForASingleEvent() {
+    void SendsNotificationForASingleEvent() {
         val hb1 = new HeartBeat("host1", EpochSecondsNow(), ToReverseUtcMinuteString(EpochSecondsNow()), TEST_REGION_DEFAULT, false);
         val event1 = new HeartBeatChangeEvent("deleted", hb1);
 
@@ -45,7 +45,7 @@ public class NotificationBuilderGroupedTest {
     }
 
     @Test
-    public void GroupsNotificationsByEventType(){
+    void GroupsNotificationsByEventType(){
         val input = new HeartBeatChangeEvent[]{
                 new HeartBeatChangeEvent("deleted", HeartBeatFactory.Create("host1")),
                 new HeartBeatChangeEvent("deleted", HeartBeatFactory.Create("host2")),

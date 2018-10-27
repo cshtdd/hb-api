@@ -7,9 +7,9 @@ import static com.tddapps.utils.EqualityAssertions.shouldBeEqual;
 import static com.tddapps.utils.EqualityAssertions.shouldNotBeEqual;
 import static org.junit.Assert.*;
 
-public class TextMessageTest {
+class TextMessageTest {
     @Test
-    public void MessageCannotBeNull(){
+    void MessageCannotBeNull(){
         try{
             TextMessage.create(null);
             fail("Should have thrown exception");
@@ -20,19 +20,19 @@ public class TextMessageTest {
     }
 
     @Test
-    public void ReturnsARelevantStringRepresentation(){
+    void ReturnsARelevantStringRepresentation(){
         assertEquals("TextMessage:", TextMessage.create("").toString());
         assertEquals("TextMessage:sample", TextMessage.create("sample").toString());
     }
 
     @Test
-    public void CanBeConvertedAsJson(){
+    void CanBeConvertedAsJson(){
         assertEquals("{\"message\": \"\"}", TextMessage.create("").asJson());
         assertEquals("{\"message\": \"sample\"}", TextMessage.create("sample").asJson());
     }
 
     @Test
-    public void CanBeCompared(){
+    void CanBeCompared(){
         val message1 = TextMessage.create("sample1");
         shouldBeEqual(message1, message1);
 
@@ -50,7 +50,7 @@ public class TextMessageTest {
     }
 
     @Test
-    public void PredefinedMessages(){
+    void PredefinedMessages(){
         assertEquals("OK", TextMessage.OK.getMessage());
     }
 

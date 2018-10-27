@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DynamoDBEventParserMarshallerTest {
+class DynamoDBEventParserMarshallerTest {
     private final DynamoDBEventParserMarshaller parser = new DynamoDBEventParserMarshaller(
             IocContainer.getInstance().Resolve(DynamoDBMapper.class)
     );
@@ -66,17 +66,17 @@ public class DynamoDBEventParserMarshallerTest {
     }
 
     @Test
-    public void ReadsDeletedRecordsReturnsEmptyWhenInputIsEmpty(){
+    void ReadsDeletedRecordsReturnsEmptyWhenInputIsEmpty(){
         assertTrue(parser.readDeletions(buildInput(), EventData.class).isEmpty());
     }
 
     @Test
-    public void ReadsInsertedRecordsReturnsEmptyWhenInputIsEmpty(){
+    void ReadsInsertedRecordsReturnsEmptyWhenInputIsEmpty(){
         assertTrue(parser.readInsertions(buildInput(), EventData.class).isEmpty());
     }
 
     @Test
-    public void ReadsDeletedRecordsReturnsEmptyWhenNoneFound(){
+    void ReadsDeletedRecordsReturnsEmptyWhenNoneFound(){
         val input = buildInput(
                 new SeededEventData("INSERT", "1", "10", "0"),
                 new SeededEventData("MODIFY", "2", "10", "0")
@@ -86,7 +86,7 @@ public class DynamoDBEventParserMarshallerTest {
     }
 
     @Test
-    public void ReadsInsertedRecordsReturnsEmptyWhenNoneFound(){
+    void ReadsInsertedRecordsReturnsEmptyWhenNoneFound(){
         val input = buildInput(
                 new SeededEventData("REMOVE", "1", "10", "0"),
                 new SeededEventData("MODIFY", "2", "10", "0")
@@ -96,7 +96,7 @@ public class DynamoDBEventParserMarshallerTest {
     }
 
     @Test
-    public void ReadsDeletedRecords(){
+    void ReadsDeletedRecords(){
         val input = buildInput(
                 new SeededEventData("INSERT", "1", "11", "0"),
                 new SeededEventData("MODIFY", "2", "12", "0"),
@@ -112,7 +112,7 @@ public class DynamoDBEventParserMarshallerTest {
     }
 
     @Test
-    public void ReadsInsertedRecords(){
+    void ReadsInsertedRecords(){
         val input = buildInput(
                 new SeededEventData("REMOVE", "1", "11", "0"),
                 new SeededEventData("MODIFY", "2", "12", "0"),

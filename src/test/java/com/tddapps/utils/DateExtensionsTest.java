@@ -10,19 +10,19 @@ import java.util.Date;
 import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.Assert.*;
 
-public class DateExtensionsTest {
+class DateExtensionsTest {
     @Test
-    public void ToUtcStringReturnsEmptyStringWhenThereIsNoDate(){
+    void ToUtcStringReturnsEmptyStringWhenThereIsNoDate(){
         assertEquals("", ToUtcString(null));
     }
 
     @Test
-    public void ToUtcStringReturnsTheDefaultValueWhenThereIsNoDate() {
+    void ToUtcStringReturnsTheDefaultValueWhenThereIsNoDate() {
         assertEquals("NO_DATE", ToUtcString(null, "NO_DATE"));
     }
 
     @Test
-    public void ToUtcStringIncludesIncludesMillisecondsOnlyWhenPresent(){
+    void ToUtcStringIncludesIncludesMillisecondsOnlyWhenPresent(){
         val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 32000000, ZoneId.of("UTC"));
         val date = Date.from(dateTime.toInstant());
 
@@ -30,7 +30,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToUtcStringReturnsTheIsoStringRepresentationOfAZonedDateTime(){
+    void ToUtcStringReturnsTheIsoStringRepresentationOfAZonedDateTime(){
         val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 0, ZoneId.of("UTC"));
         val date = Date.from(dateTime.toInstant());
 
@@ -38,7 +38,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToUtcStringReturnsTheIsoStringRepresentationOfALocalDateTime(){
+    void ToUtcStringReturnsTheIsoStringRepresentationOfALocalDateTime(){
         val dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31);
         val date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
 
@@ -46,7 +46,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToUtcStringReturnsTheIsoStringRepresentationWithTheTimezoneOffset(){
+    void ToUtcStringReturnsTheIsoStringRepresentationWithTheTimezoneOffset(){
         val dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31);
         val date = Date.from(dateTime.toInstant(ZoneOffset.ofHours(3)));
 
@@ -54,7 +54,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToUtcStringReturnsTheIsoStringRepresentationOfEpochSeconds(){
+    void ToUtcStringReturnsTheIsoStringRepresentationOfEpochSeconds(){
         val seededDate = ZonedDateTime.of(
                 2097, 7, 17,
                 20, 5, 31,
@@ -68,7 +68,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToReverseUtcMinuteStringReturnsTheExpectedValue(){
+    void ToReverseUtcMinuteStringReturnsTheExpectedValue(){
         val nowInstant = UtcNow().toInstant();
         val nowEpochSeconds = EpochSecondsNow();
         val expected = ZonedDateTime
@@ -79,7 +79,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToDynamoUtcStringThrowsWhenThereIsNoDate(){
+    void ToDynamoUtcStringThrowsWhenThereIsNoDate(){
         try{
             ToDynamoUtcString(null);
             fail("should have thrown");
@@ -90,7 +90,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToDynamoUtcStringReturnsTheCorrectRepresentationOfAZonedDateTime(){
+    void ToDynamoUtcStringReturnsTheCorrectRepresentationOfAZonedDateTime(){
         val dateTime = ZonedDateTime.of(2017, 7, 17, 20, 5, 31, 434000000, ZoneId.of("UTC"));
         val date = Date.from(dateTime.toInstant());
 
@@ -98,7 +98,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToDynamoUtcStringReturnsTheIsoStringRepresentationOfALocalDateTime(){
+    void ToDynamoUtcStringReturnsTheIsoStringRepresentationOfALocalDateTime(){
         val dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31, 214000000);
         val date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
 
@@ -106,7 +106,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void ToDynamoUtcStringReturnsTheIsoStringRepresentationWithTheTimezoneOffset(){
+    void ToDynamoUtcStringReturnsTheIsoStringRepresentationWithTheTimezoneOffset(){
         val dateTime = LocalDateTime.of(2017, 7, 17, 20, 5, 31, 998000000);
         val date = Date.from(dateTime.toInstant(ZoneOffset.ofHours(3)));
 
@@ -114,7 +114,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void UtcNowReturnsTheCorrectValue(){
+    void UtcNowReturnsTheCorrectValue(){
         val expected = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
         val actual = UtcNow().toInstant();
 
@@ -124,7 +124,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void UtcNowPlusAddsTheCorrectNumberOfMilliseconds(){
+    void UtcNowPlusAddsTheCorrectNumberOfMilliseconds(){
         val expected = ZonedDateTime.now(ZoneId.of("UTC"))
                 .plusNanos(40000)
                 .toInstant();
@@ -136,7 +136,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void UtcNowPlusDoesNotReturnNow(){
+    void UtcNowPlusDoesNotReturnNow(){
         val now = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
         val actual = UtcNowPlusMs(400).toInstant();
 
@@ -146,7 +146,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void UtcNowPlusSupportsNegativeParameters(){
+    void UtcNowPlusSupportsNegativeParameters(){
         val expected = ZonedDateTime.now(ZoneId.of("UTC"))
                 .plusNanos(-45000)
                 .toInstant();
@@ -158,7 +158,7 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void AreAlmostEqualsWorksAsExpected(){
+    void AreAlmostEqualsWorksAsExpected(){
         assertTrue(AreAlmostEquals(null, null));
         assertFalse(AreAlmostEquals(UtcNow(), null));
         assertFalse(AreAlmostEquals(null, UtcNow()));
@@ -186,35 +186,35 @@ public class DateExtensionsTest {
     }
 
     @Test
-    public void EpochSecondsNowReturnsNow(){
+    void EpochSecondsNowReturnsNow(){
         val expected = Instant.now().getEpochSecond();
         val actual = EpochSecondsNow();
         assertEquals(expected, actual);
     }
 
     @Test
-    public void EpochSecondsPlusMsReturnsNowWhenNoTimeAdded(){
+    void EpochSecondsPlusMsReturnsNowWhenNoTimeAdded(){
         val expected = Instant.now().getEpochSecond();
         val actual = EpochSecondsPlusMs(0);
         assertEquals(expected, actual);
     }
 
     @Test
-    public void EpochSecondsPlusMsReturnsNowWhenLessThanASecondAdded(){
+    void EpochSecondsPlusMsReturnsNowWhenLessThanASecondAdded(){
         val expected = Instant.now().getEpochSecond();
         val actual = EpochSecondsPlusMs(800);
         assertEquals(expected, actual);
     }
 
     @Test
-    public void EpochSecondsPlusMsReturnsTimeInTheFuture(){
+    void EpochSecondsPlusMsReturnsTimeInTheFuture(){
         val expected = UtcNowPlusMs(10000).toInstant().getEpochSecond();
         val actual = EpochSecondsPlusMs(10000);
         assertEquals(expected, actual);
     }
 
     @Test
-    public void EpochSecondsPlusMsReturnsTimeInThePast(){
+    void EpochSecondsPlusMsReturnsTimeInThePast(){
         val expected = UtcNowPlusMs(-110000).toInstant().getEpochSecond();
         val actual = EpochSecondsPlusMs(-110000);
         assertEquals(expected, actual);

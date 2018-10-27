@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.time.Duration;
 
 public class InMemoryKeysCacheWithExpiration implements KeysCache, Closeable {
-    public static final int TTL_SECONDS = 30;
-    public static final int MAX_CAPACITY = 100;
+    private static final int TTL_SECONDS = 30;
+    private static final int MAX_CAPACITY = 100;
 
     private final CacheManager cacheManager;
     private final Cache<String, String> cache;

@@ -15,7 +15,7 @@ import static com.tddapps.utils.DateExtensions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class HeartBeatExpiratorTest {
+class HeartBeatExpiratorTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final RequestHandlerHelper requestHandlerHelper = mock(RequestHandlerHelper.class);
     private final NowReader nowReader = mock(NowReader.class);
@@ -26,17 +26,17 @@ public class HeartBeatExpiratorTest {
     private final int MAX_COUNT = 25;
 
     @BeforeEach
-    public void Setup(){
+    void Setup(){
         when(nowReader.ReadEpochSecond()).thenReturn(NOW_EPOCH_SECOND);
     }
 
     @Test
-    public void CanBeConstructedUsingTheDefaultConstructor(){
+    void CanBeConstructedUsingTheDefaultConstructor(){
         assertNotNull(new HeartBeatExpirator());
     }
 
     @Test
-    public void ReadsTheExpiredHeartBeatsInThePreviousMinute() throws DalException {
+    void ReadsTheExpiredHeartBeatsInThePreviousMinute() throws DalException {
         when(heartBeatRepository.Read(PREVIOUS_MINUTE_STRING, MAX_COUNT))
                 .thenReturn(new HeartBeat[]{});
 
@@ -47,7 +47,7 @@ public class HeartBeatExpiratorTest {
     }
 
     @Test
-    public void ReturnsFalseWhenExpiredHeartBeatsCannotBeRead() throws DalException {
+    void ReturnsFalseWhenExpiredHeartBeatsCannotBeRead() throws DalException {
         doThrow(new DalException("Read failed"))
             .when(heartBeatRepository)
             .Read(any(String.class), any(int.class));
@@ -56,7 +56,7 @@ public class HeartBeatExpiratorTest {
     }
 
     @Test
-    public void DeletesTheExpiredHeartBeatsAfterFilteringThem() throws DalException{
+    void DeletesTheExpiredHeartBeatsAfterFilteringThem() throws DalException{
         val allHeartBeats = HeartBeatFactory.Create(30);
         val seededHeartBeats = Arrays.copyOfRange(allHeartBeats, 0, 15);
         val filteredHeartBeats = Arrays.copyOfRange(allHeartBeats, 15, 30);
@@ -69,7 +69,7 @@ public class HeartBeatExpiratorTest {
     }
 
     @Test
-    public void ReturnsFalseWhenExpiredHeartBeatsCannotBeDeleted() throws DalException{
+    void ReturnsFalseWhenExpiredHeartBeatsCannotBeDeleted() throws DalException{
         doThrow(new DalException("Delete failed"))
                 .when(heartBeatRepository)
                 .Delete(any());

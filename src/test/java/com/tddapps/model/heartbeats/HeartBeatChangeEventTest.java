@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class HeartBeatChangeEventTest {
+class HeartBeatChangeEventTest {
     @Test
-    public void HasSensibleStringRepresentation(){
+    void HasSensibleStringRepresentation(){
         val hb = HeartBeatFactory.Create("host1");
         val event = new HeartBeatChangeEvent("creation", hb);
 
@@ -17,7 +17,7 @@ public class HeartBeatChangeEventTest {
     }
 
     @Test
-    public void CanBeCompared(){
+    void CanBeCompared(){
         val hb1 = HeartBeatFactory.Create("host1");
         val hb2 = HeartBeatFactory.Create("host2");
         val hb1Copy = new HeartBeat(

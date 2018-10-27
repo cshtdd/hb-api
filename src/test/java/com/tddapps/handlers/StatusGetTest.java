@@ -21,10 +21,9 @@ import static com.tddapps.model.heartbeats.test.HeartBeatFactory.TEST_REGION_DEF
 import static com.tddapps.utils.DateExtensions.EpochSecondsPlusMs;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class StatusGetTest {
+class StatusGetTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final NotificationSenderStatus notificationSenderStatus = mock(NotificationSenderStatus.class);
     private final SettingsReader settingsReader = mock(SettingsReader.class);
@@ -32,7 +31,7 @@ public class StatusGetTest {
     private final StatusGet handler = new StatusGet(heartBeatRepository, notificationSenderStatus, settingsReader, keysCache);
 
     @BeforeEach
-    public void Setup(){
+    void Setup(){
         when(settingsReader.ReadString(Settings.AWS_REGION)).thenReturn(TEST_REGION_DEFAULT);
     }
 
@@ -41,12 +40,12 @@ public class StatusGetTest {
     }
 
     @Test
-    public void CanBeConstructedUsingADefaultConstructor(){
+    void CanBeConstructedUsingADefaultConstructor(){
         assertNotNull(new StatusGet());
     }
 
     @Test
-    public void VerifiesHeartBeatsCanBeSaved() throws DalException {
+    void VerifiesHeartBeatsCanBeSaved() throws DalException {
         val expectedHeartBeats = new HeartBeat[]{
                 new HeartBeat(
                         "StatusGet-us-test-1",
@@ -67,7 +66,7 @@ public class StatusGetTest {
     }
 
     @Test
-    public void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved() throws DalException {
+    void ProcessThrowsAnActionProcessExceptionWhenTheHeartBeatCouldNotBeSaved() throws DalException {
         doThrow(new DalException("Save failed"))
                 .when(heartBeatRepository)
                 .Save(any(HeartBeat[].class));
@@ -79,14 +78,14 @@ public class StatusGetTest {
     }
 
     @Test
-    public void VerifiesNotificationsCanBeSent() throws DalException{
+    void VerifiesNotificationsCanBeSent() throws DalException{
         handleRequest();
 
         verify(notificationSenderStatus).Verify();
     }
 
     @Test
-    public void ProcessThrowsAnActionProcessExceptionWhenTheNotificationsCannotBeSent() throws DalException {
+    void ProcessThrowsAnActionProcessExceptionWhenTheNotificationsCannotBeSent() throws DalException {
         doThrow(new DalException("Sent Notifications Fail"))
                 .when(notificationSenderStatus)
                 .Verify();
@@ -98,7 +97,7 @@ public class StatusGetTest {
     }
 
     @Test
-    public void ProcessCachesResult() throws DalException {
+    void ProcessCachesResult() throws DalException {
         final List<InvocationOnMock> invocations = new ArrayList<>();
         doAnswer(invocations::add)
                 .when(heartBeatRepository)
@@ -118,7 +117,7 @@ public class StatusGetTest {
     }
 
     @Test
-    public void ProcessDoesNotCacheFailures() throws DalException {
+    void ProcessDoesNotCacheFailures() throws DalException {
         doThrow(new DalException("Save failed"))
                 .when(heartBeatRepository)
                 .Save(any(HeartBeat[].class));

@@ -1,9 +1,9 @@
 package com.tddapps.model.internal.aws;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.tddapps.model.DalException;
 import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.heartbeats.test.HeartBeatFactory;
+import com.tddapps.model.internal.aws.test.DynamoIntegrationTestHelper;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,20 +20,19 @@ import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HeartBeatRepositoryDynamoIntegrationTest {
-    private DynamoDBMapper dbMapper = null;
+class HeartBeatRepositoryDynamoIntegrationTest {
     private HeartBeatRepositoryDynamo repository = null;
 
     @BeforeEach
-    public void Setup(){
-        DynamoHelperIntegrationTests.ResetDatabase();
+    void Setup(){
+        DynamoIntegrationTestHelper.ResetDatabase();
 
-        dbMapper = DynamoHelperIntegrationTests.createMapper();
+        val dbMapper = DynamoIntegrationTestHelper.createMapper();
         repository = new HeartBeatRepositoryDynamo(dbMapper);
     }
 
     @Test
-    public void ThereAreNoHeartBeatsByDefault() throws DalException {
+    void ThereAreNoHeartBeatsByDefault() throws DalException {
         assertEquals(0, repository.All().length);
 
         val ttlNow = EpochSecondsNow();
@@ -42,7 +41,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
     }
 
     @Test
-    public void MultipleHeartBeatsCanBeSavedInASingleOperation() throws DalException {
+    void MultipleHeartBeatsCanBeSavedInASingleOperation() throws DalException {
         val seededHeartBeats = HeartBeatFactory.Create(20001);
 
         repository.Save(seededHeartBeats);
@@ -51,7 +50,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
     }
 
     @Test
-    public void ReadsHeartBeatsWithTTLInThePast() throws DalException {
+    void ReadsHeartBeatsWithTTLInThePast() throws DalException {
         // 2097-07-17T20:05:31Z[UTC]
         val seededDate = ZonedDateTime.of(
                 2097, 7, 17,
@@ -102,7 +101,7 @@ public class HeartBeatRepositoryDynamoIntegrationTest {
     }
 
     @Test
-    public void CanDeleteHeartBeats() throws DalException {
+    void CanDeleteHeartBeats() throws DalException {
         val seededHeartBeats = HeartBeatFactory.Create(2001);
         repository.Save(seededHeartBeats);
 

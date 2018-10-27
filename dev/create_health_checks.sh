@@ -1,28 +1,28 @@
 #!/bin/bash
 
-STACKNAME=hb-api-dev
+STACK_NAME=hb-api-dev
 REGION=us-east-1
 
 if [[ $1 ]]; then
-    STACKNAME=$1
+    STACK_NAME=$1
 fi
 
 if [[ $2 ]]; then
     REGION=$2
 fi
 
-HEALTH_CHECK_NAME="${STACKNAME}-${REGION}-${RANDOM}"
+HEALTH_CHECK_NAME="${STACK_NAME}-${REGION}-${RANDOM}"
 echo "INFO: Creating Health Check: ${HEALTH_CHECK_NAME}"
 
-SERVICE_ENDPOINT=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)
+SERVICE_ENDPOINT=$(aws cloudformation describe-stacks --stack-name ${STACK_NAME} --region ${REGION} --query 'Stacks[0].Outputs[?OutputKey==`ServiceEndpoint`].OutputValue' --output text)
 # echo "DEBUG: endpoint: ${SERVICE_ENDPOINT}"
 # # https://stackoverflow.com/questions/2497215/extract-domain-name-from-url
-HEALTH_CHECK_DOMAIN=$(echo $SERVICE_ENDPOINT | awk -F[/:] '{print $4}')
+HEALTH_CHECK_DOMAIN=$(echo ${SERVICE_ENDPOINT} | awk -F[/:] '{print $4}')
 # echo "DEBUG: domain: ${HEALTH_CHECK_DOMAIN}"
 HEALTH_CHECK_ID=$(aws route53 list-health-checks --region ${REGION} --output text --query 'HealthChecks[?HealthCheckConfig.FullyQualifiedDomainName==`'${HEALTH_CHECK_DOMAIN}'`].Id')
 # echo "DEBUG: existing healthCheckId: ${HEALTH_CHECK_ID}"
 
-STAGE=$(aws cloudformation describe-stacks --stack-name ${STACKNAME} --region ${REGION} --query 'Stacks[0].Tags[?Key==`STAGE`].Value' --output text)
+STAGE=$(aws cloudformation describe-stacks --stack-name ${STACK_NAME} --region ${REGION} --query 'Stacks[0].Tags[?Key==`STAGE`].Value' --output text)
 # echo "DEBUG: stage: ${STAGE}"
 RESOURCE_PATH="/${STAGE}/v1/status"
 # echo "DEBUG: ResourcePath: ${RESOURCE_PATH}"
