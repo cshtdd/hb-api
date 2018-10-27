@@ -23,7 +23,7 @@ mvn clean test
 ## Running the Integration Tests  
 
 ```bash
-mvn clean integration-test
+npm run int-tests-db && mvn clean integration-test
 ```
 
 ## Dependency vulnerability scan  
