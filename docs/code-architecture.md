@@ -11,9 +11,15 @@ In general these classes should throw no exceptions. They should handle them gra
 
 Where most of the code and business logic will live. This package should be independent of implementation details.  
 
+## `utils` package  
+
+Reusable helpers that are not specific to the project. This could potentially live in a separate repository altogether.  
+
 ## `internal` packages  
 
 Contain concrete implementations. Should not be directly referenced.  
+These packages are a way to circumvent the disadvantage of having to mark every class as `public`.  
+Ideally, interface implementations should be package-private. But this would required many factory classes.  
 
 ## `model.internal.aws` package  
 
