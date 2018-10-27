@@ -1,4 +1,4 @@
-package com.tddapps.model.aws;
+package com.tddapps.model.internal.aws;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;

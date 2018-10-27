@@ -1,9 +1,10 @@
-package com.tddapps.model.notifications;
+package com.tddapps.model.notifications.internal;
 
 import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.heartbeats.HeartBeatChangeEvent;
-import com.tddapps.model.notifications.test.HeartBeatNotificationBuilderOneToOneStub;
 import com.tddapps.model.heartbeats.test.HeartBeatFactory;
+import com.tddapps.model.notifications.HeartBeatNotificationBuilder;
+import com.tddapps.model.notifications.test.HeartBeatNotificationBuilderOneToOneStub;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 

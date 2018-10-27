@@ -1,4 +1,4 @@
-package com.tddapps.model.aws;
+package com.tddapps.model.internal.aws;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;

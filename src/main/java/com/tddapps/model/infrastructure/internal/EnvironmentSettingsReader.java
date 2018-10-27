@@ -1,5 +1,6 @@
-package com.tddapps.model.infrastructure;
+package com.tddapps.model.infrastructure.internal;
 
+import com.tddapps.model.infrastructure.SettingsReader;
 import lombok.val;
 
 public class EnvironmentSettingsReader implements SettingsReader {

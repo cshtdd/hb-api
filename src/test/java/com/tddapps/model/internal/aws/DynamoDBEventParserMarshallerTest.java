@@ -1,11 +1,11 @@
-package com.tddapps.model.aws;
+package com.tddapps.model.internal.aws;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.StreamRecord;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.tddapps.ioc.IocContainer;
-import com.tddapps.model.aws.test.EventData;
+import com.tddapps.model.internal.aws.test.EventData;
 import lombok.Data;
 import lombok.val;
 import org.junit.jupiter.api.Test;

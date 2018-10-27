@@ -5,7 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
-import com.tddapps.model.aws.DynamoDBEventParser;
+import com.tddapps.model.internal.aws.DynamoDBEventParser;
 import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.heartbeats.HeartBeatChangeEvent;
 import com.tddapps.model.heartbeats.RequestHandlerHelper;

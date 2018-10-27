@@ -1,8 +1,9 @@
-package com.tddapps.model.heartbeats;
+package com.tddapps.model.heartbeats.internal;
 
+import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.heartbeats.test.HeartBeatFactory;
 import com.tddapps.model.infrastructure.Settings;
 import com.tddapps.model.infrastructure.SettingsReader;
-import com.tddapps.model.heartbeats.test.HeartBeatFactory;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

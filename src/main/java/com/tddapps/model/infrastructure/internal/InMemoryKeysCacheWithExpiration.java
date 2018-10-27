@@ -1,5 +1,6 @@
-package com.tddapps.model.infrastructure;
+package com.tddapps.model.infrastructure.internal;
 
+import com.tddapps.model.infrastructure.KeysCache;
 import lombok.val;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;

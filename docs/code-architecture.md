@@ -11,7 +11,11 @@ In general these classes should throw no exceptions. They should handle them gra
 
 Where most of the code and business logic will live. This package should be independent of implementation details.  
 
-## `model.aws` package  
+## `internal` packages  
+
+Contain concrete implementations. Should not be directly referenced.  
+
+## `model.internal.aws` package  
 
 The concrete implementation of many of the interfaces. These classes can only be tested with integration tests. When the day comes the cloud provider needs to be replaced, only the equivalent for these classes should need to be implemented.    
 

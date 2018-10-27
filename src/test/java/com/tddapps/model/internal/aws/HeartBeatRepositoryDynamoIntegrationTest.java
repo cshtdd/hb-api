@@ -1,4 +1,4 @@
-package com.tddapps.model.aws;
+package com.tddapps.model.internal.aws;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.tddapps.model.DalException;
