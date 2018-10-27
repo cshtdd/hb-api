@@ -2,6 +2,7 @@ package com.tddapps.handlers;
 
 import com.tddapps.handlers.infrastructure.ApiGatewayHandler;
 import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
+import com.tddapps.handlers.infrastructure.TextMessage;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import com.tddapps.model.heartbeats.HeartBeat;

@@ -2,7 +2,6 @@ package com.tddapps.handlers.infrastructure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tddapps.model.TextMessage;
 import lombok.extern.log4j.Log4j2;
 
 import java.nio.charset.StandardCharsets;
