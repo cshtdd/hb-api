@@ -51,3 +51,6 @@
 
 # 0.6.2 - 2018-10-14 - Notifications on host registration  
 - Logging enhancements on HeartBeat change  
+
+# 0.7.0 - 2018-11-06 - Single Region Support  
+- Support single region deployments  
