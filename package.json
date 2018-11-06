@@ -4,9 +4,9 @@
     "stage": "dev",
     "region1": "us-east-1",
     "region2": "us-west-2",
-    "domainname": "hbapidev.cshtdd.com",
-    "subdomain": "hbapidev",
-    "tld": "cshtdd.com"
+    "domainname": "api.notfound.com",
+    "subdomain": "api",
+    "tld": "notfound.com"
   },
   "scripts": {
     "create-domain": "run-s create-health-checks create-dns-records create-custom-domain",
