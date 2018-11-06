@@ -8,7 +8,8 @@ provider:
   name: aws
   runtime: java8
   region: ${opt:region, 'us-east-1'}
-  endpointType: regional
+  endpointType: ${opt:endpointType, 'regional'}
+  basePath: ${opt:basePath, ''}
   stage: ${opt:stage, 'dev'}
   domainName: ${opt:domainName, 'invalid.url'}
 
@@ -84,7 +85,7 @@ custom:
     stage: ${self:provider.stage}
     endpointType: ${self:provider.endpointType}
     certificateRegion: ${self:provider.region}
-    basePath: ''
+    basePath: ${self:provider.basePath}
     createRoute53Record: false
 
   dynamodb:
