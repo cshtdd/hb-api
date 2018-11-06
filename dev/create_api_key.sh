@@ -46,8 +46,10 @@ Enabled,Name,key,UsageplanIds
 true,${API_KEY_NAME},${API_KEY_VALUE},${USAGE_PLAN_ID_2}
 EOF"
 
-KEY_IMPORT_RESULT=$(aws apigateway import-api-keys --body file://${TMP_KEY_FILE} --format csv --region ${REGION_2})
-# echo "DEBUG: created key:${API_KEY_NAME} region:${REGION_2}"
+if [[ "${REGION_1}" != "${REGION_2}" ]]; then
+  KEY_IMPORT_RESULT=$(aws apigateway import-api-keys --body file://${TMP_KEY_FILE} --format csv --region ${REGION_2})
+  # echo "DEBUG: created key:${API_KEY_NAME} region:${REGION_2}"
+fi
 
 rm ${TMP_KEY_FILE}
 
