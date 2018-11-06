@@ -32,6 +32,11 @@
     "deploy:region1": "sls deploy --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
     "deploy:region2": "sls deploy --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
 
+    "destroy": "run-s destroy:region1 destroy:region2",
+    "destroy-single-region": "run-s destroy:region1",
+    "destroy:region1": "sls remove --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
+    "destroy:region2": "sls remove --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
+
     "osa": "mvn clean verify -DskipTests",
 
     "start": "sh ./dev/run.sh",
