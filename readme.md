@@ -45,7 +45,7 @@ This pattern is known as [Heartbeat](https://en.wikipedia.org/wiki/Heartbeat_(co
 Configure a cronjob to post heartbeats following the steps from the [Usage](docs/usage.md) document.  
 
 ```bash
-*/5 * * * * curl -i -H "x-api-key: ${HB_API_KEY}" -d '{"hostId": "'${HOSTNAME}'"}' -X POST https://hbapidev.cshtdd.com/v1/hearbeat | logger -p local0.notice
+*/5 * * * * curl -i -H "x-api-key: ${HB_API_KEY}" -d '{"hostId": "'${HOSTNAME}'"}' -X POST https://api.yourdomain.com/v1/hearbeat | logger -p local0.notice
 ```
 
 ## Design considerations  

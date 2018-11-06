@@ -23,11 +23,11 @@ Prerequisite, store the api key in a variable
 The status page should be up
 
 ```bash
-curl -w "\n%{http_code}\n" https://hbapidev.cshtdd.com/v1/status
+curl -w "\n%{http_code}\n" https://api.yourdomain.com/v1/status
 ```
 
 Posting a heartbeat should succeed
 
 ```bash
-curl -w "\n%{http_code}\n" -H "x-api-key: ${HB_API_KEY}" -d '{"hostId": "testHost1"}' -X POST https://hbapidev.cshtdd.com/v1/hearbeat
+curl -w "\n%{http_code}\n" -H "x-api-key: ${HB_API_KEY}" -d '{"hostId": "testHost1"}' -X POST https://api.yourdomain.com/v1/hearbeat
 ```

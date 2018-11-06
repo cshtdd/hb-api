@@ -20,7 +20,7 @@ Add the following lines to the file
 HB_API_KEY=SUPER_SECRET_KEY
 HOST_ID=YOUR_HOST_NAME
 
-*/5 * * * * curl -i -H "x-api-key: ${HB_API_KEY}" -d '{"hostId": "'${HOST_ID}'"}' -X POST https://hbapidev.cshtdd.com/v1/hearbeat | logger -p local0.notice
+*/5 * * * * curl -i -H "x-api-key: ${HB_API_KEY}" -d '{"hostId": "'${HOST_ID}'"}' -X POST https://api.yourdomain.com/v1/hearbeat | logger -p local0.notice
 ```
 
 ## Verification  
