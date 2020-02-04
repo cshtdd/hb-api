@@ -7,6 +7,7 @@
 - Maven
 - Node
 - `npm install`
+- `source dev/setup_java.sh`
 
 ## Building the Code  
 
