@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes><![CDATA[
+      Ignore any vulnerability in NPM modules: package.json
+      ]]></notes>
+        <filePath regex="true">.*package\.json</filePath>
+        <vulnerabilityName regex="true">.*</vulnerabilityName>
+    </suppress>
+</suppressions>
