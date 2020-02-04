@@ -2,7 +2,7 @@
 
 
 # desired java versions
-JAVA_VERSION_8=8.0.192-zulu
+JAVA_VERSION_11=11.0.6-amzn
 
 
 # determine if this program is being sourced
@@ -23,13 +23,13 @@ fi
 if [[ $1 == '--skip-install' ]]; then
   echo "Skipping installation"
 else
-  echo "Install Java ${JAVA_VERSION_8}"
-  sdk install java $JAVA_VERSION_8
+  echo "Install Java ${JAVA_VERSION_11}"
+  sdk install java $JAVA_VERSION_11
 fi
 
 
 # reading all the java version installation paths
-JAVA_HOME_8="$HOME/.sdkman/candidates/java/${JAVA_VERSION_8}"
+JAVA_HOME_8="$HOME/.sdkman/candidates/java/${JAVA_VERSION_11}"
 echo "JAVA_HOME_8='${JAVA_HOME_8}'"
 
 
@@ -38,7 +38,7 @@ cat > /tmp/scorbot-proxy-java-vars <<EOL
 export JAVA8_HOME=${JAVA_HOME_8}
 export RUNTIME_JAVA_HOME=${JAVA_HOME_8}
 
-sdk use java ${JAVA_VERSION_8}
+sdk use java ${JAVA_VERSION_11}
 EOL
 
 

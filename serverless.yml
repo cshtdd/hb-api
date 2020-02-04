@@ -6,7 +6,7 @@ service: hb-api
 
 provider:
   name: aws
-  runtime: java8
+  runtime: java11
   region: ${opt:region, 'us-east-1'}
   endpointType: ${opt:endpointType, 'regional'}
   basePath: ${opt:basePath, ''}
