@@ -31,7 +31,7 @@ sh ./dev/create_global_heartbeats_table.sh
 
 ```bash
 npm config set hb-api:stage prod &&
-  npm config set hb-api:region1 us-east-2 &&
+  npm config set hb-api:region1 us-east-1 &&
   npm config set hb-api:domainname hbapi.tddapps.com &&
   npm config set hb-api:subdomain hbapi &&
   npm config set hb-api:tld tddapps.com &&
