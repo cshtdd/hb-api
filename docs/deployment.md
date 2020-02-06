@@ -4,6 +4,16 @@
   
 1- Make sure your domain is managed by Route53  
 2- Manually create a certificate using AWS ACM. They are free. The certificate can allow any subdomain `*.mydomain.com`  
+3- Manually create an S3 bucket for the Terraform state  
+
+## Terraform Steps (WIP)  
+
+Initialize the terraform project  
+
+```bash
+cd terraform
+sh ../dev/init_terraform.sh tddapps-terraform-state us-east-1
+```
 
 ## Deployment process  
 
