@@ -163,12 +163,19 @@ resources:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
 
-
     HeartBeatNotificationsTopic:
       Type: AWS::SNS::Topic
       Properties:
         DisplayName: ${self:custom.tablePrefix}heartbeat-notifications
         TopicName: ${self:custom.tablePrefix}heartbeat-notifications
+
+    StatusGetApi:
+      Type: AWS::ApiGatewayV2::Api
+      Properties:
+        Name: ${self:service}-${self:provider.stage}-StatusGet
+        ProtocolType: HTTP
+        Target: "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-StatusGet/invocations"
+
 
   Outputs:
     HeartBeatNotificationsTopicArn:
