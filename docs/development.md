@@ -6,6 +6,8 @@
 - [aws sam cli](https://github.com/awslabs/aws-sam-cli/blob/develop/docs/installation.rst)  
 - Maven
 - Node
+- Terraform
+- An S3 bucket for the terraform state
 - `npm install`
 - `source dev/setup_java.sh`
 
