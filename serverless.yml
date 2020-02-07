@@ -202,6 +202,7 @@ resources:
         IntegrationMethod: POST
         ConnectionType: INTERNET
         PayloadFormatVersion: "1.0"
+        TimeoutInMillis: 29000
         IntegrationUri: !Join
           - ''
           - - 'arn:aws:apigateway:'
