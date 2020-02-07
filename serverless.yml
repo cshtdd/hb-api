@@ -186,13 +186,25 @@ resources:
       Type: AWS::ApiGatewayV2::Route
       Properties:
         ApiId: !Ref RestApi
-        RouteKey: "ANY /v1/status"
+        RouteKey: "GET /v1/status"
         AuthorizationType: NONE
         AuthorizationScopes: []
         Target: !Join
           - /
           - - integrations
             - !Ref StatusGetIntegration
+
+    HeartBeatPostRoute:
+      Type: AWS::ApiGatewayV2::Route
+      Properties:
+        ApiId: !Ref RestApi
+        RouteKey: "POST /v1/heartbeat"
+        AuthorizationType: NONE
+        AuthorizationScopes: []
+        Target: !Join
+          - /
+          - - integrations
+            - !Ref HeartBeatPostIntegration
 
     StatusGetIntegration:
       Type: AWS::ApiGatewayV2::Integration
@@ -215,11 +227,52 @@ resources:
             - !Ref StatusGetLambdaFunction
             - '/invocations'
 
+    HeartBeatPostIntegration:
+      Type: AWS::ApiGatewayV2::Integration
+      Properties:
+        ApiId: !Ref RestApi
+        IntegrationType: AWS_PROXY
+        IntegrationMethod: POST
+        ConnectionType: INTERNET
+        PayloadFormatVersion: "1.0"
+        TimeoutInMillis: 29000
+        IntegrationUri: !Join
+          - ''
+          - - 'arn:aws:apigateway:'
+            - !Ref 'AWS::Region'
+            - ':lambda:path/2015-03-31/functions/arn:aws:lambda:'
+            - !Ref 'AWS::Region'
+            - ':'
+            - !Ref 'AWS::AccountId'
+            - ':function:'
+            - !Ref HeartBeatPostLambdaFunction
+            - '/invocations'
+
     StatusGetPermissions:
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName: !GetAtt
           - StatusGetLambdaFunction
+          - Arn
+        Action: 'lambda:InvokeFunction'
+        Principal: apigateway.amazonaws.com
+        SourceArn: !Join
+          - ''
+          - - 'arn:'
+            - !Ref 'AWS::Partition'
+            - ':execute-api:'
+            - !Ref 'AWS::Region'
+            - ':'
+            - !Ref 'AWS::AccountId'
+            - ':'
+            - !Ref RestApi
+            - /*/*
+
+    HeartBeatPostPermissions:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName: !GetAtt
+          - HeartBeatPostLambdaFunction
           - Arn
         Action: 'lambda:InvokeFunction'
         Principal: apigateway.amazonaws.com
