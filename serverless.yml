@@ -40,19 +40,10 @@ functions:
   StatusGet:
     handler: com.tddapps.handlers.StatusGet
     timeout: 30
-    events:
-      - http:
-          path: /v1/status
-          method: get
 
   HeartBeatPost:
     handler: com.tddapps.handlers.HeartBeatPost
     timeout: 30
-    events:
-      - http:
-          private: true
-          path: /v1/hearbeat
-          method: post
 
   HeartBeatChange:
     handler: com.tddapps.handlers.HeartBeatChange
@@ -73,7 +64,6 @@ functions:
         rate: cron(* * * * ? *)
 
 plugins:
-  - serverless-domain-manager
   - serverless-sam
   - serverless-dynamodb-local
   - serverless-dynamodb-autoscaling
@@ -81,13 +71,6 @@ plugins:
 
 custom:
   tablePrefix: ${self:service}-${self:provider.stage}-
-  customDomain:
-    domainName: ${self:provider.domainName}
-    stage: ${self:provider.stage}
-    endpointType: ${self:provider.endpointType}
-    certificateRegion: ${self:provider.region}
-    basePath: ${self:provider.basePath}
-    createRoute53Record: false
 
   dynamodb:
     stages:
