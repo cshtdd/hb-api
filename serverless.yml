@@ -31,6 +31,9 @@ provider:
         - "dynamodb:*"
         - "SNS:Publish"
         - "SNS:ListTopics"
+        - "sqs:SendMessage"
+        - "sqs:ReceiveMessage"
+        - "sqs:DeleteMessage"
       Resource: "*"
 
 package:
