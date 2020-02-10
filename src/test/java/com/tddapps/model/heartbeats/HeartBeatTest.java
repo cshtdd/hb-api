@@ -68,6 +68,14 @@ class HeartBeatTest {
     }
 
     @Test
+    void SecondsUntilExpirationCannotBeMoreThanTheMaximumAllowedSQSDelay(){
+        long ttl = EpochSecondsPlusMs(901000);
+        val heartBeat = new HeartBeat("host1", ttl, "AAAA", "region1",false);
+
+        assertEquals(900, heartBeat.secondsUntilExpiration());
+    }
+
+    @Test
     void HasSensibleStringRepresentationForEmptyObject(){
         assertEquals(
                 "HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, expirationMinuteUtc: , region: , isTest: false, isExpired: true",

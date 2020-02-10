@@ -27,6 +27,7 @@ import static com.tddapps.utils.StringExtensions.EmptyWhenNull;
 @DynamoDBTable(tableName = "heartbeats")
 @Log4j2
 public class HeartBeat{
+    private static final int MAX_SQS_DELAY_SECONDS = 900;
     public static final int MIN_INTERVAL_MS = 1000;
     public static final int MAX_INTERVAL_MS = 12*60*60*1000;
     public static final int DEFAULT_INTERVAL_MS = 10*60*1000;
@@ -68,7 +69,9 @@ public class HeartBeat{
             return 0;
         }
 
-        return (ttl - EpochSecondsNow()) + 1;
+        val result = (ttl - EpochSecondsNow()) + 1;
+
+        return Math.min(MAX_SQS_DELAY_SECONDS, result);
     }
 
     public HeartBeat(String hostId, long ttl, String region, boolean isTest){
