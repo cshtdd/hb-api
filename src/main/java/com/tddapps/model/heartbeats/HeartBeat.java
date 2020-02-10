@@ -62,6 +62,11 @@ public class HeartBeat{
         return !isExpired();
     }
 
+    @DynamoDBIgnore
+    public long secondsUntilExpiration() {
+        return (ttl - EpochSecondsNow()) + 1;
+    }
+
     public HeartBeat(String hostId, long ttl, String region, boolean isTest){
         this(hostId, ttl, ToReverseUtcMinuteString(ttl), region, isTest);
     }
