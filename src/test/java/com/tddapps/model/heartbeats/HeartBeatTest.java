@@ -60,6 +60,14 @@ class HeartBeatTest {
     }
 
     @Test
+    void SecondsUntilExpirationIsZeroWhenHeartBeatExpired(){
+        long ttl = EpochSecondsPlusMs(-3000);
+        val heartBeat = new HeartBeat("host1", ttl, "AAAA", "region1",false);
+
+        assertEquals(0, heartBeat.secondsUntilExpiration());
+    }
+
+    @Test
     void HasSensibleStringRepresentationForEmptyObject(){
         assertEquals(
                 "HeartBeat, expirationUtc: 1970-01-01T00:00:00Z[UTC], hostId: , ttl: 0, expirationMinuteUtc: , region: , isTest: false, isExpired: true",

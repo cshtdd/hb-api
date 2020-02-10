@@ -64,6 +64,10 @@ public class HeartBeat{
 
     @DynamoDBIgnore
     public long secondsUntilExpiration() {
+        if (isExpired()){
+            return 0;
+        }
+
         return (ttl - EpochSecondsNow()) + 1;
     }
 
