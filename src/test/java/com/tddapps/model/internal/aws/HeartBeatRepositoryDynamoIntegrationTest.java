@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.tddapps.model.heartbeats.test.HeartBeatFactory.TEST_REGION_DEFAULT;
 import static com.tddapps.model.heartbeats.test.HeartBeatListTestHelper.ShouldMatch;
@@ -47,6 +48,19 @@ class HeartBeatRepositoryDynamoIntegrationTest {
         repository.Save(seededHeartBeats);
 
         ShouldMatch(seededHeartBeats, repository.All());
+    }
+
+    @Test
+    void ReadsHeartBeatsByIds() throws DalException {
+        val hostIds = IntStream.range(0, 100)
+                .mapToObj(i -> String.format("test-host-%d", i + 100))
+                .toArray(String[]::new);
+        val seededHeartBeats = HeartBeatFactory.Create(2001);
+        repository.Save(seededHeartBeats);
+
+        val heartBeats = repository.Read(hostIds);
+
+        assertEquals(100, heartBeats.length);
     }
 
     @Test

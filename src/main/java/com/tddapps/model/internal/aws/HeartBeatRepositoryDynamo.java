@@ -4,16 +4,17 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.KeyPair;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.tddapps.model.DalException;
 import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.heartbeats.HeartBeatRepository;
+import com.tddapps.model.notifications.Notification;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.tddapps.utils.ArrayBatchExtensions.Split;
 
@@ -22,7 +23,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
     public static final int DYNAMO_MAX_BATCH_SIZE = 25;
     private final DynamoDBMapper mapper;
 
-    public HeartBeatRepositoryDynamo(DynamoDBMapper mapper){
+    public HeartBeatRepositoryDynamo(DynamoDBMapper mapper) {
         this.mapper = mapper;
     }
 
@@ -34,7 +35,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
                 log.debug(String.format("Save; batchIndex:%s, batchCount:%s", i, batches.length));
                 mapper.batchWrite(Arrays.asList(batches[i]), new ArrayList<HeartBeat>());
             }
-        } catch (AmazonClientException e){
+        } catch (AmazonClientException e) {
             log.debug("HeartBeat Save Error", e);
             throw new DalException(e.getMessage());
         }
@@ -45,7 +46,7 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
             return mapper
                     .scan(HeartBeat.class, new DynamoDBScanExpression())
                     .toArray(new HeartBeat[0]);
-        } catch (AmazonClientException e){
+        } catch (AmazonClientException e) {
             log.debug("HeartBeat All Error", e);
             throw new DalException(e.getMessage());
         }
@@ -59,31 +60,54 @@ public class HeartBeatRepositoryDynamo implements HeartBeatRepository {
                     .withIndexName("ExpirationMinuteIndex")
                     .withConsistentRead(false)
                     .withKeyConditionExpression("#name1 = :val1")
-                    .withExpressionAttributeNames(new HashMap<String, String>(){{
+                    .withExpressionAttributeNames(new HashMap<String, String>() {{
                         put("#name1", "expiration_minute_utc");
                     }})
-                    .withExpressionAttributeValues(new HashMap<String, AttributeValue>(){{
+                    .withExpressionAttributeValues(new HashMap<String, AttributeValue>() {{
                         put(":val1", new AttributeValue().withS(expirationMinuteUtc));
                     }});
 
             return mapper.queryPage(HeartBeat.class, query)
                     .getResults()
                     .toArray(new HeartBeat[0]);
-        } catch (AmazonClientException e){
+        } catch (AmazonClientException e) {
             log.debug("HeartBeat ReadOlderThan Error", e);
             throw new DalException(e.getMessage());
         }
     }
 
     @Override
-    public void Delete(HeartBeat[] heartBeats) throws DalException{
-        try{
+    public HeartBeat[] Read(String[] hostIds) throws DalException {
+        try {
+            val hashIds = Arrays.stream(hostIds)
+                    .map(s -> new KeyPair().withHashKey(s))
+                    .collect(Collectors.toList());
+
+            val queryParameters = new HashMap<Class<?>, List<KeyPair>>() {{
+                put(HeartBeat.class, hashIds);
+            }};
+
+            return mapper.batchLoad(queryParameters)
+                    .values()
+                    .stream()
+                    .flatMap(List::stream)
+                    .map(HeartBeat.class::cast)
+                    .toArray(HeartBeat[]::new);
+        } catch (AmazonClientException e) {
+            log.debug("HeartBeat Read Error", e);
+            throw new DalException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void Delete(HeartBeat[] heartBeats) throws DalException {
+        try {
             val batches = Split(heartBeats, DYNAMO_MAX_BATCH_SIZE);
             for (int i = 0; i < batches.length; i++) {
                 log.debug(String.format("Delete; batchIndex:%s, batchCount:%s", i, batches.length));
                 mapper.batchDelete(Arrays.asList(batches[i]));
             }
-        } catch (AmazonClientException e){
+        } catch (AmazonClientException e) {
             log.debug("HeartBeat Delete Error", e);
             throw new DalException(e.getMessage());
         }
