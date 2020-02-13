@@ -150,6 +150,21 @@ class HeartBeatTest {
     }
 
     @Test
+    void ParseJsonIgnoresTheRegionAndTest() throws ParseException {
+        val expected = new HeartBeat(
+                "superHost1",
+                EpochSecondsPlusMs(40000),
+                ToReverseUtcMinuteString(EpochSecondsPlusMs(40000)),
+                "",
+                false
+        );
+
+        shouldBeEqual(expected, HeartBeat.parse(
+                "{\"hostId\": \"superHost1\", \"intervalMs\": 40000, \"region\":\"us-east-1\", \"test\":true}"
+        ));
+    }
+
+    @Test
     void ParseJsonFailsWhenEmptyInput(){
         parseJsonShouldFailWithError(null, "Empty input");
         parseJsonShouldFailWithError("", "Empty input");
