@@ -14,7 +14,7 @@ skip=false
 if [[ $skip == true ]]; then
   echo "This file needs to be run with sourced"
   echo "so that sdkman can be found. e.g:"
-  echo "   source setup_elastic_search_java.sh"
+  echo "   source setup_java.sh"
   exit 1
 fi
 
