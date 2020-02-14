@@ -81,6 +81,7 @@ plugins:
   - serverless-sam
   - serverless-dynamodb-local
   - serverless-dynamodb-autoscaling
+#  - serverless-localstack
 
 custom:
   tablePrefix: ${self:service}-${self:provider.stage}-
@@ -98,6 +99,11 @@ custom:
     start:
       inMemory: true
       migrate: true
+
+#  localstack:
+#    stages:
+#    - local
+#    autostart: true
 
   capacities:
   - table: HeartBeatsTable
