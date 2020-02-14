@@ -2,6 +2,7 @@ package com.tddapps.model.heartbeats.internal;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.heartbeats.HeartBeatJsonConverter;
 import com.tddapps.model.heartbeats.HeartBeatParser;
 import com.tddapps.utils.JsonNodeHelper;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +17,7 @@ import static com.tddapps.utils.JsonNodeHelper.readInt;
 import static com.tddapps.utils.JsonNodeHelper.readString;
 
 @Log4j2
-public class HeartBeatSerializer implements HeartBeatParser {
+public class HeartBeatSerializer implements HeartBeatParser, HeartBeatJsonConverter {
     private static final int MIN_INTERVAL_MS = 1000;
     private static final int MAX_INTERVAL_MS = 12*60*60*1000;
     public static final int DEFAULT_INTERVAL_MS = 10*60*1000;
@@ -67,5 +68,15 @@ public class HeartBeatSerializer implements HeartBeatParser {
         }
 
         return result;
+    }
+
+    @Override
+    public HeartBeat fromJson(String jsonString) throws ParseException {
+        return null;
+    }
+
+    @Override
+    public String toJson(HeartBeat heartBeat) {
+        return null;
     }
 }

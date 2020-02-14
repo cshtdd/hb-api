@@ -2,6 +2,7 @@ package com.tddapps.ioc;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.tddapps.model.heartbeats.HeartBeatJsonConverter;
 import com.tddapps.model.heartbeats.HeartBeatParser;
 import com.tddapps.model.heartbeats.internal.HeartBeatSerializer;
 import com.tddapps.model.infrastructure.internal.InMemoryKeysCacheWithExpiration;
@@ -46,6 +47,7 @@ class IocContainerTest {
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatChangeEventNotificationBuilder.class) instanceof NotificationBuilderGrouped);
         assertTrue(IocContainer.getInstance().Resolve(DynamoDBEventParser.class) instanceof DynamoDBEventParserMarshaller);
         assertTrue(IocContainer.getInstance().Resolve(HeartBeatParser.class) instanceof HeartBeatSerializer);
+        assertTrue(IocContainer.getInstance().Resolve(HeartBeatJsonConverter.class) instanceof HeartBeatSerializer);
 
         assertNotNull(IocContainer.getInstance().Resolve(AmazonDynamoDB.class));
     }
