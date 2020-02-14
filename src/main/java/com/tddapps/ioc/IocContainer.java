@@ -1,7 +1,9 @@
 package com.tddapps.ioc;
 
+import com.tddapps.model.heartbeats.HeartBeatParser;
 import com.tddapps.model.heartbeats.HeartBeatRepository;
 import com.tddapps.model.heartbeats.RequestHandlerHelper;
+import com.tddapps.model.heartbeats.internal.HeartBeatSerializer;
 import com.tddapps.model.heartbeats.internal.RequestHandlerHelperCurrentRegion;
 import com.tddapps.model.infrastructure.internal.EnvironmentSettingsReader;
 import com.tddapps.model.infrastructure.internal.InMemoryKeysCacheWithExpiration;
@@ -37,6 +39,7 @@ public class IocContainer {
 
     private PicoContainer RegisterBindings() {
         return new DefaultPicoContainer()
+                .addComponent(HeartBeatParser.class, HeartBeatSerializer.class)
                 .addComponent(HeartBeatRepository.class, HeartBeatRepositoryDynamo.class)
                 .addComponent(DynamoDBEventParser.class, DynamoDBEventParserMarshaller.class)
                 .addComponent(NotificationSender.class, NotificationSenderSns.class)

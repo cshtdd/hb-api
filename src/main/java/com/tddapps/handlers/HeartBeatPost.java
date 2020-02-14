@@ -6,7 +6,9 @@ import com.tddapps.handlers.infrastructure.TextMessage;
 import com.tddapps.ioc.IocContainer;
 import com.tddapps.model.*;
 import com.tddapps.model.heartbeats.HeartBeat;
+import com.tddapps.model.heartbeats.HeartBeatParser;
 import com.tddapps.model.heartbeats.HeartBeatRepository;
+import com.tddapps.model.heartbeats.internal.HeartBeatSerializer;
 import com.tddapps.model.infrastructure.Settings;
 import com.tddapps.model.infrastructure.SettingsReader;
 import lombok.extern.log4j.Log4j2;
@@ -20,24 +22,27 @@ import java.util.Map;
 public class HeartBeatPost extends ApiGatewayHandler {
     private final HeartBeatRepository heartBeatRepository;
     private final SettingsReader settingsReader;
+    private final HeartBeatParser heartBeatParser;
 
     public HeartBeatPost(){
         this(
                 IocContainer.getInstance().Resolve(HeartBeatRepository.class),
-                IocContainer.getInstance().Resolve(SettingsReader.class)
+                IocContainer.getInstance().Resolve(SettingsReader.class),
+                IocContainer.getInstance().Resolve(HeartBeatParser.class)
         );
     }
 
-    public HeartBeatPost(HeartBeatRepository heartBeatRepository, SettingsReader settingsReader) {
+    public HeartBeatPost(HeartBeatRepository heartBeatRepository, SettingsReader settingsReader, HeartBeatParser heartBeatParser) {
         this.heartBeatRepository = heartBeatRepository;
         this.settingsReader = settingsReader;
+        this.heartBeatParser = heartBeatParser;
     }
 
     @Override
     protected ApiGatewayResponse processRequest(Map<String, Object> input){
         try {
             val requestBody = readBodyFrom(input);
-            val heartBeat = HeartBeat.parse(requestBody);
+            val heartBeat = heartBeatParser.parseUnsanitizedJson(requestBody);
             heartBeat.setRegion(ReadRegion());
 
             log.info(String.format("hostId: %s", heartBeat.getHostId()));

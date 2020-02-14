@@ -4,6 +4,7 @@ import com.tddapps.handlers.infrastructure.ApiGatewayResponse;
 import com.tddapps.model.*;
 import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.heartbeats.HeartBeatRepository;
+import com.tddapps.model.heartbeats.internal.HeartBeatSerializer;
 import com.tddapps.model.infrastructure.Settings;
 import com.tddapps.model.infrastructure.SettingsReader;
 import lombok.val;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 class HeartBeatPostTest {
     private final HeartBeatRepository heartBeatRepository = mock(HeartBeatRepository.class);
     private final SettingsReader settingsReader = mock(SettingsReader.class);
-    private final HeartBeatPost handler = new HeartBeatPost(heartBeatRepository, settingsReader);
+    private final HeartBeatPost handler = new HeartBeatPost(heartBeatRepository, settingsReader, new HeartBeatSerializer());
 
     @BeforeEach
     void Setup(){
