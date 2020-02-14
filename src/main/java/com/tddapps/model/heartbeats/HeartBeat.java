@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,21 +38,25 @@ public class HeartBeat{
     private boolean isTest;
 
     @DynamoDBIgnore
+    @JsonIgnore
     public boolean isNotTest(){
         return !isTest();
     }
 
     @DynamoDBIgnore
+    @JsonIgnore
     public boolean isExpired() {
         return ttl < EpochSecondsNow();
     }
 
     @DynamoDBIgnore
+    @JsonIgnore
     public boolean isNotExpired() {
         return !isExpired();
     }
 
     @DynamoDBIgnore
+    @JsonIgnore
     public long secondsUntilExpiration() {
         if (isExpired()){
             return 0;

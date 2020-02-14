@@ -139,4 +139,18 @@ public class HeartBeatSerializerTest {
         }
     }
 
+    @Test
+    void jsonSerialization() throws ParseException{
+        val heartBeat = new HeartBeat(
+                "123abc",
+                EpochSecondsPlusMs(1000),
+                "us-east-1",
+                true
+        );
+
+        val jsonString = serializer.toJson(heartBeat);
+
+        val actual = serializer.fromJson(jsonString);
+        assertEquals(heartBeat, actual);
+    }
 }

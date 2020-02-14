@@ -1,6 +1,8 @@
 package com.tddapps.model.heartbeats.internal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.heartbeats.HeartBeatJsonConverter;
 import com.tddapps.model.heartbeats.HeartBeatParser;
@@ -72,11 +74,17 @@ public class HeartBeatSerializer implements HeartBeatParser, HeartBeatJsonConver
 
     @Override
     public HeartBeat fromJson(String jsonString) throws ParseException {
-        return null;
+        try {
+            return new ObjectMapper().readValue(jsonString, HeartBeat.class);
+        } catch (JsonProcessingException e) {
+            throw new ParseException(e.getMessage(), (int)e.getLocation().getCharOffset());
+        }
     }
 
     @Override
     public String toJson(HeartBeat heartBeat) {
-        return null;
+        return new ObjectMapper()
+                .valueToTree(heartBeat)
+                .toString();
     }
 }
