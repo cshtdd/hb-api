@@ -1,6 +1,7 @@
 #!/bin/bash
 
 pip install --user localstack awscli-local
+docker pull localstack/localstack
 
 #docker rm -f localstack_main
 #
