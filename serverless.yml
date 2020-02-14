@@ -16,6 +16,7 @@ provider:
   environment:
     TABLE_PREFIX: ${self:custom.tablePrefix}
     DYNAMO_DB_ENDPOINT_OVERRIDE: ${opt:dynamoDbEndpointOverride, ''}
+    HEARTBEAT_QUEUE_URL: !Ref HeartBeatQueue
 
   usagePlan:
     quota:
@@ -171,6 +172,11 @@ resources:
       Properties:
         DisplayName: ${self:custom.tablePrefix}heartbeat-notifications
         TopicName: ${self:custom.tablePrefix}heartbeat-notifications
+
+    HeartBeatQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:custom.tablePrefix}heartbeats
 
   Outputs:
     HeartBeatNotificationsTopicArn:
