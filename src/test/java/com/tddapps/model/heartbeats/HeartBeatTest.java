@@ -137,7 +137,7 @@ class HeartBeatTest {
     }
 
     @Test
-    void ParseJsonBuildsAHeartBeat() throws ParseException {
+    void ParseBuildsAHeartBeat() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(40000),
@@ -150,7 +150,7 @@ class HeartBeatTest {
     }
 
     @Test
-    void ParseJsonIgnoresTheRegionAndTest() throws ParseException {
+    void ParseIgnoresTheRegionAndTest() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(40000),
@@ -165,21 +165,21 @@ class HeartBeatTest {
     }
 
     @Test
-    void ParseJsonFailsWhenEmptyInput(){
-        parseJsonShouldFailWithError(null, "Empty input");
-        parseJsonShouldFailWithError("", "Empty input");
-        parseJsonShouldFailWithError(" ", "Empty input");
+    void ParseFailsWhenEmptyInput(){
+        parseShouldFailWithError(null, "Empty input");
+        parseShouldFailWithError("", "Empty input");
+        parseShouldFailWithError(" ", "Empty input");
     }
 
     @Test
-    void ParseJsonFailsWhenInvalidJsonInput(){
-        parseJsonShouldFailWithError("fred", "Invalid json");
-        parseJsonShouldFailWithError("{", "Invalid json");
-        parseJsonShouldFailWithError("{\"hostId", "Invalid json");
+    void ParseFailsWhenInvalidJsonInput(){
+        parseShouldFailWithError("fred", "Invalid json");
+        parseShouldFailWithError("{", "Invalid json");
+        parseShouldFailWithError("{\"hostId", "Invalid json");
     }
 
     @Test
-    void ParseJsonReadsTheMaximumLengthHostId() throws ParseException{
+    void ParseReadsTheMaximumLengthHostId() throws ParseException{
         val heartBeat = HeartBeat.parse(String.format(
                 "{\"hostId\": \"%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
         ));
@@ -188,26 +188,26 @@ class HeartBeatTest {
     }
 
     @Test
-    void ParseJsonFailsWhenHostIdIsMissing(){
-        parseJsonShouldFailWithError("{}", INVALID_HOST_ID);
-        parseJsonShouldFailWithError("{\"hostId\": \"\"}", INVALID_HOST_ID);
-        parseJsonShouldFailWithError("{\"hostId\": \"   \"}", INVALID_HOST_ID);
+    void ParseFailsWhenHostIdIsMissing(){
+        parseShouldFailWithError("{}", INVALID_HOST_ID);
+        parseShouldFailWithError("{\"hostId\": \"\"}", INVALID_HOST_ID);
+        parseShouldFailWithError("{\"hostId\": \"   \"}", INVALID_HOST_ID);
     }
 
     @Test
-    void ParseJsonFailsWhenHostIdIsNotAlphanumeric(){
-        parseJsonShouldFailWithError("{\"hostId\": \"-!@#$$%^%^ &^&\"}", INVALID_HOST_ID);
+    void ParseFailsWhenHostIdIsNotAlphanumeric(){
+        parseShouldFailWithError("{\"hostId\": \"-!@#$$%^%^ &^&\"}", INVALID_HOST_ID);
     }
 
     @Test
-    void ParseJsonFailsWhenHostIdIsTooLong(){
-        parseJsonShouldFailWithError(String.format(
+    void ParseFailsWhenHostIdIsTooLong(){
+        parseShouldFailWithError(String.format(
                 "{\"hostId\": \"X%s\"}", MAXIMUM_LENGTH_ALLOWED_STRING
         ), INVALID_HOST_ID);
     }
 
     @Test
-    void ParseJsonSupportsMultipleDataTypesForIntervalMs() throws ParseException {
+    void ParseSupportsMultipleDataTypesForIntervalMs() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(3000),
@@ -222,7 +222,7 @@ class HeartBeatTest {
     }
 
     @Test
-    void ParseJsonAssumesDefaultWhenIntervalMsIsNotNumeric() throws ParseException {
+    void ParseAssumesDefaultWhenIntervalMsIsNotNumeric() throws ParseException {
         val expected = new HeartBeat(
                 "superHost1",
                 EpochSecondsPlusMs(HeartBeat.DEFAULT_INTERVAL_MS),
@@ -238,16 +238,16 @@ class HeartBeatTest {
     }
 
     @Test
-    void ParseJsonFailsWhenIntervalMsIsOutOfBoundaries(){
+    void ParseFailsWhenIntervalMsIsOutOfBoundaries(){
         val INVALID_INTERVAL_MS = "Invalid intervalMs";
 
-        parseJsonShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": 999}", INVALID_INTERVAL_MS);
-        parseJsonShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": \"999\"}", INVALID_INTERVAL_MS);
-        parseJsonShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": 43200001}", INVALID_INTERVAL_MS);
-        parseJsonShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": \"43200001\"}", INVALID_INTERVAL_MS);
+        parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": 999}", INVALID_INTERVAL_MS);
+        parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": \"999\"}", INVALID_INTERVAL_MS);
+        parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": 43200001}", INVALID_INTERVAL_MS);
+        parseShouldFailWithError("{\"hostId\": \"host1\", \"intervalMs\": \"43200001\"}", INVALID_INTERVAL_MS);
     }
 
-    private void parseJsonShouldFailWithError(String requestBody, String errorMessage){
+    private void parseShouldFailWithError(String requestBody, String errorMessage){
         try {
             HeartBeat.parse(requestBody);
             fail("Should have thrown");
