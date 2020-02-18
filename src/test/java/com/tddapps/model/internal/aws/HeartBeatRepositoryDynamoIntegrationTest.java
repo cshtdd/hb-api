@@ -43,7 +43,7 @@ class HeartBeatRepositoryDynamoIntegrationTest {
 
     @Test
     void MultipleHeartBeatsCanBeSavedInASingleOperation() throws DalException {
-        val seededHeartBeats = HeartBeatFactory.Create(20001);
+        val seededHeartBeats = HeartBeatFactory.Create(201);
 
         repository.Save(seededHeartBeats);
 
@@ -55,7 +55,7 @@ class HeartBeatRepositoryDynamoIntegrationTest {
         val hostIds = IntStream.range(0, 100)
                 .mapToObj(i -> String.format("test-host-%d", i + 100))
                 .toArray(String[]::new);
-        val seededHeartBeats = HeartBeatFactory.Create(2001);
+        val seededHeartBeats = HeartBeatFactory.Create(201);
         repository.Save(seededHeartBeats);
 
         val heartBeats = repository.Read(hostIds);
@@ -116,11 +116,11 @@ class HeartBeatRepositoryDynamoIntegrationTest {
 
     @Test
     void CanDeleteHeartBeats() throws DalException {
-        val seededHeartBeats = HeartBeatFactory.Create(2001);
+        val seededHeartBeats = HeartBeatFactory.Create(201);
         repository.Save(seededHeartBeats);
 
-        val DELETION_START = 500;
-        val COUNT = 1001;
+        val DELETION_START = 50;
+        val COUNT = 101;
         val heartBeatsToDelete = Arrays.stream(seededHeartBeats, DELETION_START, DELETION_START + COUNT)
                 .toArray(HeartBeat[]::new);
         val expectedRemainingList = new ArrayList<HeartBeat>();
