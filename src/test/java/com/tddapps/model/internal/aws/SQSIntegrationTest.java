@@ -1,34 +1,20 @@
 package com.tddapps.model.internal.aws;
 
 import cloud.localstack.docker.LocalstackDockerExtension;
-import cloud.localstack.docker.annotation.IEnvironmentVariableProvider;
 import cloud.localstack.docker.annotation.LocalstackDockerProperties;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.CreateQueueRequest;
-import com.amazonaws.services.sqs.model.Message;
+import com.tddapps.model.internal.aws.test.TestEnvironment;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(LocalstackDockerExtension.class)
-@LocalstackDockerProperties(services = { "sqs" }, environmentVariableProvider = SQSIntegrationTest.TestEnvironment.class)
+@LocalstackDockerProperties(services = { "sqs" }, environmentVariableProvider = TestEnvironment.class)
 public class SQSIntegrationTest {
-    public static class TestEnvironment implements IEnvironmentVariableProvider {
-        @Override
-        public Map<String, String> getEnvironmentVariables() {
-            return new HashMap<String, String>(){{
-                put("DEFAULT_REGION", "test_sandbox");
-            }};
-        }
-    }
-
     @Test
     void SampleTest1(){
         val sqs = AmazonSQSClientBuilder.standard()
