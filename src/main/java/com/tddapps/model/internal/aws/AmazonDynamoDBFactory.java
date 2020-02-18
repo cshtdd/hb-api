@@ -28,19 +28,20 @@ public class AmazonDynamoDBFactory extends FactoryInjector<AmazonDynamoDB> {
             return getDefaultClient();
         }
 
-        return getLocalClient(dynamoDbEndpointOverride);
+        val region = settingsReader.ReadString(Settings.DEFAULT_REGION, Regions.DEFAULT_REGION.getName());
+        return getLocalClient(dynamoDbEndpointOverride, region);
     }
 
     AmazonDynamoDB getDefaultClient() {
         return AmazonDynamoDBClientBuilder.defaultClient();
     }
 
-    AmazonDynamoDB getLocalClient(String dynamoDbEndpointOverride) {
+    AmazonDynamoDB getLocalClient(String dynamoDbEndpointOverride, String region) {
         log.debug(String.format("Override Dynamo DB Endpoint; endpoint: %s", dynamoDbEndpointOverride));
 
         val endpointConfiguration = new AwsClientBuilder.EndpointConfiguration(
                 dynamoDbEndpointOverride,
-                Regions.DEFAULT_REGION.getName()
+                region
         );
 
         return AmazonDynamoDBClientBuilder
