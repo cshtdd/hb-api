@@ -18,7 +18,7 @@ public class SQSIntegrationTest {
     @Test
     void SampleTest1(){
         val sqs = AmazonSQSClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:4576", "test_sandbox"))
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(TestEnvironment.ENDPOINT_URL_SQS, TestEnvironment.DEFAULT_REGION))
                 .build();
         sqs.createQueue(new CreateQueueRequest("sample_queue_1"));
 
