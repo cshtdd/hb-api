@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class TestEnvironment implements IEnvironmentVariableProvider {
     public final static String ENDPOINT_URL_SQS = "http://localhost:4576";
+    public final static String ENDPOINT_URL_DYNAMO_DB = "http://localhost:4569";
     public final static String DEFAULT_REGION = "test_sandbox";
 
     @Override
