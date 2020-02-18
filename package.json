@@ -19,7 +19,6 @@
     "create-custom-domain": "run-s create-custom-domain:region1 create-custom-domain:region2",
     "create-custom-domain:region1": "sls create_domain --region $npm_package_config_region1 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
     "create-custom-domain:region2": "sls create_domain --region $npm_package_config_region2 --stage $npm_package_config_stage --domainName $npm_package_config_domainname",
-    "int-tests-db": "sh ./dev/start_local_dynamo.sh 8001 && sh ./dev/start_local_sqs.sh",
     "deploy": "run-s int-tests-db deploy:clean create-domain deploy:region1 deploy:region2",
     "deploy-single-region": "run-s int-tests-db deploy:clean create-custom-domain:region1 deploy:region1",
     "deploy:clean": "mvn clean install -Dversion=$npm_package_config_stage",
