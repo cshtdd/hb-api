@@ -1,5 +1,6 @@
 package com.tddapps.model.internal.aws.test;
 
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.*;
@@ -30,7 +31,9 @@ public abstract class DynamoIntegrationTestHelper {
     private static AmazonDynamoDB createClient(){
         val settingsReader = mock(SettingsReader.class);
         when(settingsReader.ReadString(Settings.DYNAMO_DB_ENDPOINT_OVERRIDE))
-                .thenReturn("http://localhost:8001");
+                .thenReturn(TestEnvironment.ENDPOINT_URL_DYNAMO_DB);
+        when(settingsReader.ReadString(Settings.DEFAULT_REGION, Regions.DEFAULT_REGION.getName()))
+                .thenReturn(TestEnvironment.DEFAULT_REGION);
 
         return new AmazonDynamoDBFactory()
                 .createClient(settingsReader);

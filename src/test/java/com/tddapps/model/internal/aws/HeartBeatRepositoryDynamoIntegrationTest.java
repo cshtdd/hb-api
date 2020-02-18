@@ -1,12 +1,16 @@
 package com.tddapps.model.internal.aws;
 
+import cloud.localstack.docker.LocalstackDockerExtension;
+import cloud.localstack.docker.annotation.LocalstackDockerProperties;
 import com.tddapps.model.DalException;
 import com.tddapps.model.heartbeats.HeartBeat;
 import com.tddapps.model.heartbeats.test.HeartBeatFactory;
 import com.tddapps.model.internal.aws.test.DynamoIntegrationTestHelper;
+import com.tddapps.model.internal.aws.test.TestEnvironment;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -21,6 +25,8 @@ import static com.tddapps.utils.DateExtensions.EpochSecondsNow;
 import static com.tddapps.utils.DateExtensions.ToReverseUtcMinuteString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(LocalstackDockerExtension.class)
+@LocalstackDockerProperties(services = { "dynamodb" }, environmentVariableProvider = TestEnvironment.class)
 class HeartBeatRepositoryDynamoIntegrationTest {
     private HeartBeatRepositoryDynamo repository = null;
 
