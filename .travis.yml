@@ -1,9 +1,10 @@
 dist: bionic
 language: java
 env:
-  - AWS_REGION=us-east-1
-  - AWS_ACCESS_KEY_ID=AKXXXXXXXXXXXXXXX
-  - AWS_SECRET_KEY=YYYYYYYYYYYYYYYYYY
+  global:
+    - AWS_REGION=us-east-1
+    - AWS_ACCESS_KEY_ID=AKXXXXXXXXXXXXXXX
+    - AWS_SECRET_KEY=YYYYYYYYYYYYYYYYYY
 jdk:
   - openjdk11
 services:
