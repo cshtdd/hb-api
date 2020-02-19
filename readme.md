@@ -1,5 +1,7 @@
 # hb-api  
 
+[![Build Status](https://travis-ci.org/cshtdd/hb-api.svg?branch=master)](https://travis-ci.org/cshtdd/hb-api)  
+
 AWS Serverless API to receive heartbeats and send notifications when computers disappear.  
 
 ## Table of Contents  
