@@ -4,7 +4,7 @@
         <notes><![CDATA[
       Ignore any vulnerability in NPM modules: package.json
       ]]></notes>
-        <filePath regex="true">.*package\.json</filePath>
+        <filePath regex="true">.*package(-lock)?\.json(\?.+)?$</filePath>
         <vulnerabilityName regex="true">.*</vulnerabilityName>
     </suppress>
 </suppressions>
